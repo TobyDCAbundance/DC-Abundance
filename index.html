@@ -489,6 +489,8 @@ h2 {
 
 /* ================================================================
    READING LIST
+   Not currently used — the lists were pulled from the Resources page
+   pending more work on them. Styles kept so they can be restored.
    ================================================================ */
 .res-list { margin-top: 14px; }
 .res-list li {
@@ -534,10 +536,15 @@ h2 {
 .topics { margin-top: 14px; }
 .topic { padding: 36px 0; border-top: 1px solid var(--line); max-width: 52em; }
 .topic:last-child { border-bottom: 1px solid var(--line); }
-.topic-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
-.topic-head h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 30px; }
-.topic-tag { font-size: 13.5px; font-weight: 600; color: var(--accent); }
+.topic h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 30px; margin-bottom: 10px; }
 .topic > p { font-size: 17.5px; color: var(--body); }
+/* The one-line argument under each heading. Written as .topic p.topic-claim
+   rather than .topic-claim so it outranks .topic > p above — otherwise that
+   rule wins on specificity and the claim renders as ordinary body text. */
+.topic p.topic-claim {
+  font-size: 20px; line-height: 1.35; color: var(--accent);
+  font-weight: 600; margin-bottom: 18px; max-width: 34em;
+}
 .deeper { margin-top: 18px; }
 .deeper summary {
   cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px;
@@ -651,7 +658,8 @@ footer .flag-mark { margin-bottom: 22px; }
   .kinds h3 { font-size: 24px; }
   .topic { padding: 28px 0; }
   .fw-jump { grid-template-columns: 1fr; gap: 8px; }
-  .topic-head h3 { font-size: 25px; }
+  .topic h3 { font-size: 25px; }
+  .topic p.topic-claim { font-size: 18px; }
   .lede { font-size: 19px; }
   .btn-big { font-size: 18px; padding: 17px 30px; display: block; }
   .hero-cta-row { display: block; }
@@ -914,112 +922,74 @@ footer .flag-mark { margin-bottom: 22px; }
     <div class="wrap">
       <div class="flag-mark reveal" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
       <p class="eyebrow reveal">Resources</p>
-      <h1 class="reveal reveal-2">How we think about abundance</h1>
-      <p class="reveal reveal-3">Where the binding constraint is our capacity to produce more of something, rather than our willingness to pay for it.</p>
+      <h1 class="reveal reveal-2">What Abundance Means to Us</h1>
+      <p class="reveal reveal-3">We view abundance as a frame through which a whole swath of policy problems can be viewed.</p>
       <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="draft-note reveal">First draft. The reading lists below are unverified placeholders and still need checking.</div>
-      <div class="lede reveal reveal-2">
-        <p>Abundance starts from an observation. A lot of what makes life expensive or out of reach is not scarce because of nature or because of money, but because of choices we made about how to build, who gets to decide, and how long deciding should take.</p>
-      </div>
     </div>
   </section>
 
   <section class="section" id="framework-nav">
     <div class="wrap">
-      <div class="fw-jump reveal">
-        <button class="fw-btn" data-scroll="sec-need"><span class="fw-n">Part one</span><span class="fw-q">What do we need more of?</span><span class="arrow">&rarr;</span></button>
-        <button class="fw-btn" data-scroll="sec-how"><span class="fw-n">Part two</span><span class="fw-q">How do we get more of it?</span><span class="arrow">&rarr;</span></button>
+      <p class="lede reveal">The basic formula starts by asking two questions:</p>
+      <div class="fw-jump reveal reveal-2">
+        <button class="fw-btn" data-scroll="sec-need"><span class="fw-n">Part one</span><span class="fw-q">What are the things we need most to solve our biggest problems?</span><span class="arrow">&rarr;</span></button>
+        <button class="fw-btn" data-scroll="sec-how"><span class="fw-n">Part two</span><span class="fw-q">How do we get more of those things?</span><span class="arrow">&rarr;</span></button>
       </div>
-
     </div>
   </section>
 
   <section class="section section-alt" id="sec-need">
     <div class="wrap">
       <span class="section-label reveal">Part one</span>
-      <h2 class="reveal">What do we need more of?</h2>
+      <h2 class="reveal">The things we need more of</h2>
 
       <div class="topics">
         <article class="topic reveal" id="t-housing">
-          <div class="topic-head"><h3>Housing</h3><span class="topic-tag">Protected scarcity, with a permitting component</span></div>
-          <p>Housing costs have outpaced incomes for decades, most severely in the places with the most jobs. The cause is straightforward: we have not built enough homes to keep up with the people who want to live there, so the existing stock gets bid up. What blocks new construction is mostly law rather than economics, since in much of the country the buildings that would meet demand are illegal to build and the ones that are legal are slow enough to deter anyone without deep pockets. Housing is the most developed abundance policy area, largely thanks to a decade of work by the Yes In My Backyard movement.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>M. Nolan Gray, <em>Arbitrary Lines</em></li>
-              <li>Katherine Levine Einstein, David Glick and Maxwell Palmer, <em>Neighborhood Defenders</em></li>
-              <li>Jerusalem Demsas's housing writing in <em>The Atlantic</em></li>
-              <li class="counter">A complicating view: how much and how quickly new market-rate supply lowers rents</li>
-            </ul>
-          </details>
+          <h3>Housing</h3>
+          <p class="topic-claim">Housing is expensive because it's illegal to build more of it</p>
+          <p>Housing costs have climbed for decades, and the worst of it is in the places with the most jobs. We haven't built enough to keep up with demand. That raises the cost of living, and it makes it harder for people to move somewhere with better work.</p>
+          <p>Two things drive the shortage. In most of the country, zoning rules make it illegal to build the kind of housing people actually need. And in the places where building is legal, opponents use lawsuits and discretionary review to stall projects until they're too expensive to finish.</p>
+          <p>Housing is the most developed piece of the abundance agenda, mostly thanks to a decade of YIMBY organizing in cities across the country.</p>
         </article>
 
         <article class="topic reveal" id="t-transportation">
-          <div class="topic-head"><h3>Transportation</h3><span class="topic-tag">State capacity — delivery and process</span></div>
-          <p>The United States pays several times what peer countries pay to build transportation infrastructure. That gap changes what is possible, because when a mile of subway costs what it costs here, the question stops being whether a city wants better transit and becomes whether it can afford any. It is a large part of why American cities have not built the rail networks their peers have, and why intercity high-speed rail keeps failing to materialize. Why costs are so high remains genuinely contested, which is worth knowing before anyone tells you it is settled.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>The Transit Costs Project at NYU Marron</li>
-              <li>Institute for Progress, <em>Transit Abundance Playbook</em></li>
-              <li>Eno Center for Transportation research on project delivery</li>
-              <li class="counter">A complicating view: arguments that cost gaps reflect geography and labor markets rather than institutional failure</li>
-            </ul>
-          </details>
+          <h3>Transportation</h3>
+          <p class="topic-claim">Transportation costs so much to build that American cities can't afford what's standard elsewhere</p>
+          <p>Transportation and housing are the same problem from a different angle. Good transit widens the ring of land people can live on and still reach job-rich places.</p>
+          <p>Our system lags behind peer countries mainly because building here costs up to three times more. Cost decides what gets built, which is a big part of why we have so few new metro lines and no high-speed rail. The usual culprits: weaponized legal review, overreliance on consultants hired to do work the government no longer has the in-house talent to do, and procurement rules that reward the lowest bid over reliable delivery.</p>
         </article>
 
         <article class="topic reveal" id="t-energy">
-          <div class="topic-head"><h3>Energy</h3><span class="topic-tag">State capacity</span></div>
-          <p>Everything else on this page runs on energy, and cheaper power makes a long list of climate and development goals achievable rather than aspirational. The encouraging part is that the technology has largely arrived, with clean generation now competitive with new gas in many markets. The discouraging part is that we cannot deploy it fast enough, because the country has lost the general ability to build large energy infrastructure on a reasonable timeline. That constraint binds transmission, nuclear and geothermal alongside wind and solar.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>Lawrence Berkeley National Laboratory's interconnection queue research</li>
-              <li>Work on transmission buildout and siting reform</li>
-              <li>Construction Physics on energy project costs</li>
-              <li class="counter">A complicating view: the argument that faster permitting would accelerate fossil infrastructure alongside clean</li>
-            </ul>
-          </details>
+          <h3>Energy</h3>
+          <p class="topic-claim">Cheap, abundant energy is already possible. Rules block the infrastructure.</p>
+          <p>The price of energy shows up in nearly everything people pay for. It sets what it costs to cool a house and it's baked into the price of groceries. Cost and reliability also decide where job-creating industries decide to locate.</p>
+          <p>Demand for power is only going up. Solar and wind now cost less than fossil fuels in most of the country, without the same environmental damage.</p>
+          <p>The bottleneck is physical infrastructure. Building it at the scale we need means clearing overlapping permitting rules, legal reviews, and local approvals, each of which adds delay. No energy source escapes this, but transmission has it worst, because lines cross jurisdictions and need a yes from each.</p>
         </article>
 
-        <article class="topic reveal" id="t-healthcare">
-          <div class="topic-head"><h3>Healthcare</h3><span class="topic-tag">Protected scarcity</span></div>
-          <p>Americans pay more for healthcare than people in any comparable country and get worse outcomes on many measures. Some of that gap is about how we pay, which is a real problem but a different one. The part that belongs here is supply: there are not enough people licensed to deliver care, they are restricted in where and how they can deliver it, and new treatments take a long time to reach patients. This is the least developed area on this page, and the abundance frame has real purchase on the supply questions and much less on the rest.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>Research on certificate of need laws and facility supply</li>
-              <li>Work on scope of practice regulation and outcomes across states</li>
-              <li>Research on physician supply, residency caps and licensure for internationally trained doctors</li>
-              <li class="counter">A complicating view: analyses arguing US spending tracks US consumption levels rather than dysfunction</li>
-            </ul>
-          </details>
+        <article class="topic reveal" id="t-science">
+          <h3>Science</h3>
+          <p class="topic-claim">We're spending more on science and getting less back</p>
+          <p>Technological progress has driven rising living standards since the industrial revolution. Lately we're getting fewer big breakthroughs per dollar spent.</p>
+          <p>Part of that is how science gets funded in the US. Grantmakers reward projects likely to produce a result, even a small one, over ambitious projects that might fail but change everything, like mRNA technology. Applications also take longer than they used to, so scientists spend a growing share of their careers writing them instead of doing the work.</p>
+          <p>Discovery is only half of it. A breakthrough only helps anyone once someone finds a place to build it, manufactures it at scale, connects it to the grid, and gets all of that approved. Every one of those steps has a gatekeeper who can hold up the benefits for years.</p>
+        </article>
+
+        <article class="topic reveal" id="t-health">
+          <h3>Health</h3>
+          <p class="topic-claim">Healthcare is expensive because we decided to produce less of it</p>
+          <p>Americans pay more for healthcare than any comparable country and get worse outcomes. Most of the debate is about subsidizing the price of care. The abundance argument is that you can also bring the price down by increasing the volume of care and medicine.</p>
+          <p>Supply is constricted, often on purpose. Medicare-funded residency slots have been capped near 1996 levels, which limits how many new doctors we get. Certificate of Need laws let existing hospitals block competitors from entering their market. Scope of practice rules stop nurse practitioners and pharmacists from doing work they're trained to do. A small group of providers set prices.</p>
+          <p>Reformers point to Operation Warp Speed as proof that approval timelines can be cut without cutting corners, and argue that should be the standard rather than an emergency measure.</p>
         </article>
 
         <article class="topic reveal" id="t-childcare">
-          <div class="topic-head"><h3>Childcare</h3><span class="topic-tag">Protected scarcity</span></div>
-          <p>For many families, childcare costs approach or exceed rent, and in much of the country the supply does not exist at any price. Because the cost is mostly labor, the rules governing how many children one adult can supervise largely determine the price, and states set those rules very differently without much evidence that the strictest are safer. Providers also face facility requirements, credential mandates and zoning rules that make home-based care hard to run legally. Some of these protect children and should stay, and the honest question is which ones buy safety and which ones buy scarcity.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>Research on state childcare regulation and its effect on price and supply</li>
-              <li>Work on home-based care and zoning barriers</li>
-              <li class="counter">A complicating view: the case that thin margins and low pay are the binding constraint, and subsidy the more direct fix</li>
-            </ul>
-          </details>
-        </article>
-
-        <article class="topic reveal" id="t-innovation">
-          <div class="topic-head"><h3>Innovation</h3><span class="topic-tag">State capacity, plus norms inside science</span></div>
-          <p>Technological progress has been the main driver of rising living standards since the industrial revolution, and there is now a serious argument that the rate has slowed. Research dollars appear to buy fewer breakthroughs than they used to, and our institutions have grown better at producing incremental results than paradigm-shifting ones. Part of this is how we fund science, where grant systems reward projects likely to succeed and select against the high-variance work that produces the largest advances. Part of it is the scientific community itself, in how it allocates status and risk, which is not something government can fix by improving its own operations.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>Matt Clancy, <em>New Things Under the Sun</em></li>
-              <li>Bloom, Jones, Van Reenen and Webb, "Are Ideas Getting Harder to Find?"</li>
-              <li>Institute for Progress work on metascience and funding design</li>
-              <li class="counter">A complicating view: the argument that measured slowdowns reflect measurement problems</li>
-            </ul>
-          </details>
+          <h3>Childcare</h3>
+          <p class="topic-claim">Childcare is expensive partly because opening a daycare is harder than it needs to be</p>
+          <p>For families across the country, childcare now costs as much as rent or more. Caring for children is labor intensive, so cost-cutting is difficult. Most families will need help paying for it.</p>
+          <p>New Mexico shows why subsidies aren't the whole answer. It became the first state to offer free childcare to every family. However, the state is short more than 15,000 seats for kids under six.</p>
+          <p>When there aren't enough spots, the ones that exist go to the parents who have a car and can drive across town, take an afternoon off to tour a center, and figure out which waitlists to get on. Everyone else keeps their kid home or relies on informal care.</p>
+          <p>There aren't enough spots because opening a daycare is harder than it needs to be. Zoning bans formal daycare centers from most residential neighborhoods. Fire codes and staffing rules contradict each other. Each rule had a reason. Together they make it slow and expensive to open the slots to use a subsidy on.</p>
         </article>
       </div>
     </div>
@@ -1028,79 +998,30 @@ footer .flag-mark { margin-bottom: 22px; }
   <section class="section" id="sec-how">
     <div class="wrap">
       <span class="section-label reveal">Part two</span>
-      <h2 class="reveal">How do we get more of it?</h2>
-      <p class="lede reveal">Two mechanisms account for most of what blocks supply across every area above. They call for different fixes and appeal to different people, and telling them apart is most of the work.</p>
+      <h2 class="reveal">Why we don't have more of these things</h2>
 
       <div class="topics">
         <article class="topic reveal" id="t-state">
-          <div class="topic-head"><h3>State capacity</h3><span class="topic-tag">Binds hardest in transportation, energy and permitting</span></div>
-          <p>Government has priorities it is actively trying to deliver on and cannot. Sometimes this is about people and systems, in hiring, procurement and expertise agencies used to hold in-house and now buy. Just as often it is about process, because we built an administrative structure in which saying no is cheap and saying yes is expensive. The two halves feed each other, since thin expertise makes an agency more vulnerable to challenge, which makes it more defensive, which consumes the capacity it did not have.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>Jennifer Pahlka, <em>Recoding America</em></li>
-              <li>Niskanen Center, <em>The How We Need Now</em></li>
-              <li>Nicholas Bagley, "The Procedure Fetish"</li>
-              <li>Marc Dunkelman, <em>Why Nothing Works</em></li>
-            </ul>
-          </details>
+          <h3>State capacity</h3>
+          <p class="topic-claim">Government has lost the capacity to do what we ask of it</p>
+          <p>We argue constantly about what government should do and not enough about whether it can do what we've tasked it to do.</p>
+          <p>Government projects run late and over budget. The people running it mean well but are working inside systems built for a different era. An agency that needs engineers must spend months in a hiring process or hire a consulting firm with its own bottom line. Public servants get rewarded for following the process even when it produces a bad outcome, and punished for deviating even when it produces a good one. The government views software as something to be bought rather than built iteratively, which has wasted hundreds of millions of dollars. Much of this stems from the lack of engagement between the people who write policy and the people who implement it.</p>
+          <p>Most of these rules were put in place to stop fraud and favoritism. Now they prevent the government from fixing bridges or making healthcare sign-up websites.</p>
+          <p>This isn't an argument for more government or less of it. It's that we'd have more of what we need if government could do the things we need it to do.</p>
         </article>
 
         <article class="topic reveal" id="t-scarcity">
-          <div class="topic-head"><h3>Protected scarcity</h3><span class="topic-tag">Binds hardest in housing, healthcare and childcare</span></div>
-          <p>The second mechanism is different in kind, because here government is not failing at anything. The rule works exactly as designed, and the design restricts who is allowed to enter a market. Zoning does not slow housing construction, it prohibits it; certificate of need does not make opening a clinic hard, it requires permission from a board that competitors help staff. The diagnostic is to ask who benefits from the restriction, and if you can name them, no amount of administrative improvement will help, because nothing is broken.</p>
-          <details class="deeper"><summary>Go deeper</summary>
-            <ul>
-              <li>Brink Lindsey and Steven Teles, <em>The Captured Economy</em></li>
-              <li>Institute for Justice research on occupational licensing</li>
-              <li>Research on certificate of need laws</li>
-              <li>Mancur Olson, <em>The Logic of Collective Action</em></li>
-            </ul>
-          </details>
+          <h3>Artificial scarcity</h3>
+          <p class="topic-claim">Some scarcity is written into the law</p>
+          <p>Some things are scarce because they're hard to make. Others are scarce because you need permission to make them, and the people already in the business help decide who gets it.</p>
+          <p>In about 30 states, opening a clinic means proving that the area needs one. The hospitals already there can lobby to argue it doesn't. It's not only businesses: in Napa, where there are ten babies for every daycare spot, neighbors sued to stop a daycare from expanding into a church building.</p>
+          <p>These rules usually started with a real purpose. What they sometimes do now is protect whoever got there first. The people who benefit fight hard to keep those rules.</p>
+          <p>The people who pay higher prices for medical care, roof repair, or haircuts rarely know the rule exists. They just see their lives get more expensive until they must leave the neighborhood they grew up in or switch to a doctor far from their home.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt">
-    <div class="wrap">
-      <span class="section-label reveal">Start here</span>
-      <h2 class="reveal">If you are new to this</h2>
-      <ul class="res-list">
-        <li class="reveal">
-          <span class="res-kind">Book</span>
-          <div class="res-main">
-            <a href="https://www.simonandschuster.com/books/Abundance/Ezra-Klein/9781668023488" target="_blank" rel="noopener">Abundance</a>
-            <span class="res-by">Ezra Klein and Derek Thompson, 2025</span>
-            <p class="res-note">The book that carried the argument into the mainstream. Start here if you are starting anywhere.</p>
-          </div>
-        </li>
-        <li class="reveal">
-          <span class="res-kind">Essay</span>
-          <div class="res-main">
-            <a href="https://www.theatlantic.com/ideas/archive/2022/01/scarcity-crisis-college-housing-health-care/621221/" target="_blank" rel="noopener">A Simple Plan to Solve All of America's Problems</a>
-            <span class="res-by">Derek Thompson, The Atlantic, 2022</span>
-            <p class="res-note">The essay that coined the abundance agenda. Short, and still the cleanest statement of the case.</p>
-          </div>
-        </li>
-        <li class="reveal">
-          <span class="res-kind">Newsletter</span>
-          <div class="res-main">
-            <a href="https://www.construction-physics.com" target="_blank" rel="noopener">Construction Physics</a>
-            <span class="res-by">Brian Potter</span>
-            <p class="res-note">Why it is genuinely hard to build things in the physical world.</p>
-          </div>
-        </li>
-        <li class="reveal">
-          <span class="res-kind">Newsletter</span>
-          <div class="res-main">
-            <a href="https://www.statecraft.pub" target="_blank" rel="noopener">Statecraft</a>
-            <span class="res-by">Santi Ruiz</span>
-            <p class="res-note">Interviews on how things actually get done inside government. Unusually specific.</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
 
 </div>
 
