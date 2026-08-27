@@ -534,10 +534,11 @@ h2 {
   padding: 4px 0 4px 16px; margin-bottom: 30px; max-width: 44em;
 }
 .topics { margin-top: 14px; }
-.topic { padding: 36px 0; border-top: 1px solid var(--line); max-width: 52em; }
+.topic { padding: 44px 0; border-top: 1px solid var(--line); max-width: 52em; }
 .topic:last-child { border-bottom: 1px solid var(--line); }
 .topic h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 30px; margin-bottom: 10px; }
-.topic > p { font-size: 17.5px; color: var(--body); }
+.topic > p { font-size: 17.5px; line-height: 1.65; color: var(--body); margin-bottom: 1.15em; }
+.topic > p:last-child { margin-bottom: 0; }
 /* The one-line argument under each heading. Written as .topic p.topic-claim
    rather than .topic-claim so it outranks .topic > p above — otherwise that
    rule wins on specificity and the claim renders as ordinary body text. */
