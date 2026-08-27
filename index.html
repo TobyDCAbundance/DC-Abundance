@@ -863,16 +863,16 @@ footer .flag-mark { margin-bottom: 22px; }
 
   <section class="section section-alt">
     <div class="wrap">
-      <span class="section-label reveal">Our team</span>
-      <h2 class="reveal">The people organizing this</h2>
-      <!-- Photo framing. --pos shifts the crop left/right to centre the face;
-           --zoom enlarges the image so every head reads the same size.
-           Measured from the source photos: heads occupy roughly 57% of frame
-           height (Tobias), 53% (Abi) and 50% (Allister), so the latter two are
-           zoomed up to match. Keep --zoom at 1 or above. -->
+      <h2 class="reveal">Our team</h2>
+      <!-- Photo framing. --pos shifts the crop left/right to centre the face.
+           --zoom is left at 1 on purpose: Abi's and Allister's photos are small
+           to begin with, and enlarging them to match a tighter portrait made
+           them visibly soft. Matching head sizes is better done by supplying a
+           wider original than by zooming a low-resolution one. Never set --zoom
+           below 1 — cover already fills the frame, so it would leave bare edges. -->
       <div class="team">
         <div class="member reveal">
-          <figure class="member-photo" style="--pos: 49%; --zoom: 1.08;">
+          <figure class="member-photo" style="--pos: 49%; --zoom: 1;">
             <img src="images/abi-olvera.jpg" alt="Abi Olvera">
           </figure>
           <h3>Abi Olvera</h3>
@@ -885,10 +885,10 @@ footer .flag-mark { margin-bottom: 22px; }
           </figure>
           <h3>Tobias Amstutz</h3>
           <p class="role">Co-founder &amp; Programs Director</p>
-          <p>Tobias runs the day to day: building the calendar, booking speakers, and talking one on one with everyone who joins. He met Abi while interning at the Niskanen Center, working on abundance, and helped her run one of the first events. Before that he studied at GW and was a fellow for New York Assemblymember Alex Bores. Housing and state capacity are the two he keeps coming back to.</p>
+          <p>Tobias runs the day to day: building the calendar, booking speakers, and talking one on one with everyone who joins. He met Abi while interning at the Niskanen Center and helped her run one of the first events. He was previously a fellow on Alex Bores' congressional campaign.</p>
         </div>
         <div class="member reveal reveal-3">
-          <figure class="member-photo" style="--pos: 52%; --zoom: 1.14;">
+          <figure class="member-photo" style="--pos: 52%; --zoom: 1;">
             <img src="images/allister-chang.jpg" alt="Allister Chang">
           </figure>
           <h3>Allister Chang</h3>
