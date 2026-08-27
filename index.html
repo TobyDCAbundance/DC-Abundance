@@ -18,7 +18,8 @@
   · The signup link lives in ONE place: the SIGNUP_URL constant in
     the script at the bottom.
   · Team bios on the About page are PLACEHOLDERS and marked as such
-    on the page. Search "Placeholder bio" to replace them.
+    Team photos are cropped in CSS, not in the files: each .member-photo
+    carries its own --pos and --zoom so heads can be matched in size.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -454,11 +455,27 @@ h2 {
    TEAM
    ================================================================ */
 .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; margin-top: 14px; }
+/* Portraits are cropped in CSS rather than in the image files, so the
+   originals stay untouched and the framing can be adjusted by changing two
+   numbers. Each .member-photo sets --pos (object-position) and --zoom. */
 .member-photo {
   aspect-ratio: 4 / 5; background: var(--paper-alt);
   border: 1px solid var(--line); margin-bottom: 22px;
+  overflow: hidden; position: relative;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
   transition: background .45s ease, border-color .45s ease;
+}
+.member-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: var(--pos, 50%) 50%;
+  /* --zoom must never go below 1: cover already fits the frame exactly, so
+     scaling down would leave bare edges. Sizes are matched by zooming the
+     smaller heads up to the largest, never by shrinking. Origin sits at the
+     head rather than the centre, so zooming crops the shoulders, not the face. */
+  transform: scale(var(--zoom, 1));
+  transform-origin: center 34%;
 }
 .member-photo .initials { font-family: var(--font-display); font-size: 46px; color: var(--muted); line-height: 1; }
 .member-photo .ph { font-size: 12.5px; color: var(--muted); letter-spacing: .04em; }
@@ -767,7 +784,7 @@ footer .flag-mark { margin-bottom: 22px; }
       <div class="flag-mark reveal" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
       <p class="eyebrow reveal">About us</p>
       <h1 class="reveal reveal-2">We organize the abundance community in Washington</h1>
-      <p class="reveal reveal-3">A member-run community, not a think tank and not a lobby.</p>
+      <p class="reveal reveal-3">Not a think tank and not a lobby. The room where these people meet.</p>
       <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
     </div>
   </section>
@@ -782,7 +799,7 @@ footer .flag-mark { margin-bottom: 22px; }
         <div class="prose">
           <p>We host events with one specific purpose: getting people who are interested in abundance actually engaging with abundance ideas, across the full spectrum of abundance policy. That means housing one month and energy the next, healthcare or childcare after that. The point is not to specialise, it is to keep the frame moving across the areas where it has purchase.</p>
           <p>DC is full of people working on these questions in different lanes, and it has remarkably few rooms where those people meet each other. We make those rooms.</p>
-          <p>We are a community first, so we are genuinely open to collaboration. If you have an idea for an event, a speaker you want to hear from, or someone you would like an introduction to, tell us. A good share of what we have run started as a suggestion from someone we met at a happy hour.</p>
+          <p>We are genuinely open to collaboration. If you have an idea for an event, a speaker you want to hear from, or someone you would like an introduction to, tell us. A good share of what we have run started as a suggestion from someone we met at a happy hour.</p>
         </div>
         <a class="arrow-link js-signup" href="#">Join and send us your ideas <span class="arrow">&rarr;</span></a>
       </div>
@@ -848,27 +865,35 @@ footer .flag-mark { margin-bottom: 22px; }
     <div class="wrap">
       <span class="section-label reveal">Our team</span>
       <h2 class="reveal">The people organizing this</h2>
+      <!-- Photo framing. --pos shifts the crop left/right to centre the face;
+           --zoom enlarges the image so every head reads the same size.
+           Measured from the source photos: heads occupy roughly 57% of frame
+           height (Tobias), 53% (Abi) and 50% (Allister), so the latter two are
+           zoomed up to match. Keep --zoom at 1 or above. -->
       <div class="team">
         <div class="member reveal">
-          <div class="member-photo"><span class="initials">AO</span><span class="ph">Photo to come</span></div>
-          <span class="tag">Placeholder bio</span>
+          <figure class="member-photo" style="--pos: 49%; --zoom: 1.08;">
+            <img src="images/abi-olvera.jpg" alt="Abi Olvera">
+          </figure>
           <h3>Abi Olvera</h3>
-          <p class="role">Co-organizer</p>
-          <p>Abi has not written a real bio yet, so here is a holding pattern. Abi is believed to have ended at least one dinner party early by explaining interconnection queues in full. Has strong feelings about at least four federal agencies. Actual credentials, which are genuinely impressive, will replace this paragraph shortly.</p>
+          <p class="role">Co-founder &amp; Executive Director</p>
+          <p>Abi started DC Abundance in 2025 and leads it, handling strategy and fundraising. She spent a decade as a U.S. diplomat before moving into AI research, and writes about the small institutional frictions that make housing, clinics and daycare scarce.</p>
         </div>
         <div class="member reveal reveal-2">
-          <div class="member-photo"><span class="initials">TA</span><span class="ph">Photo to come</span></div>
-          <span class="tag">Placeholder bio</span>
+          <figure class="member-photo" style="--pos: 54%; --zoom: 1;">
+            <img src="images/tobias-amstutz.jpeg" alt="Tobias Amstutz">
+          </figure>
           <h3>Tobias Amstutz</h3>
-          <p class="role">Co-organizer</p>
-          <p>This bio is a placeholder written by a language model that has never met Tobias. Known to have opinions about permitting. Allegedly founded this whole thing, which suggests either conviction or a scheduling error. Will presumably write something more accurate here once the website stops being redesigned.</p>
+          <p class="role">Co-founder &amp; Programs Director</p>
+          <p>Tobias runs the day to day: building the calendar, booking speakers, and talking one on one with everyone who joins. He met Abi while interning at the Niskanen Center, working on abundance, and helped her run one of the first events. Before that he studied at GW and was a fellow for New York Assemblymember Alex Bores. Housing and state capacity are the two he keeps coming back to.</p>
         </div>
         <div class="member reveal reveal-3">
-          <div class="member-photo"><span class="initials">AC</span><span class="ph">Photo to come</span></div>
-          <span class="tag">Placeholder bio</span>
-          <h3>Allister Cheng</h3>
-          <p class="role">Co-organizer</p>
-          <p>Placeholder text, pending a real bio. Allister is rumored to be the reason events start on time. Can reportedly explain occupational licensing to a stranger at a bar and keep them interested, which is the single most useful skill in this organization. Real bio to follow.</p>
+          <figure class="member-photo" style="--pos: 52%; --zoom: 1.14;">
+            <img src="images/allister-chang.jpg" alt="Allister Chang">
+          </figure>
+          <h3>Allister Chang</h3>
+          <p class="role">Co-founder &amp; Strategic Advisor</p>
+          <p>Allister represents Ward 2 on the DC State Board of Education, where he was the first Asian American elected, and previously ran Libraries Without Borders. He argues that a city wanting affordability, childcare and transit has to make it materially easier to build — roughly the whole point of this group.</p>
         </div>
       </div>
     </div>
