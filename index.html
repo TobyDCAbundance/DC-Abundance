@@ -458,24 +458,24 @@ h2 {
 /* Portraits are cropped in CSS rather than in the image files, so the
    originals stay untouched and the framing can be adjusted by changing two
    numbers. Each .member-photo sets --pos (object-position) and --zoom. */
+/* Square, not 4:5 — the source portraits are square and landscape, and a tall
+   frame cut nearly half the width off the landscape one. */
 .member-photo {
-  aspect-ratio: 4 / 5; background: var(--paper-alt);
+  aspect-ratio: 1 / 1; background: var(--paper-alt);
   border: 1px solid var(--line); margin-bottom: 22px;
   overflow: hidden; position: relative;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
   transition: background .45s ease, border-color .45s ease;
 }
+/* No transform here on purpose. A CSS transform pushes the image onto its own
+   compositing layer, where the browser resamples with a cheaper filter — on a
+   photo being scaled down a long way that reads as grain or noise. Plain
+   object-fit lets the normal high-quality image scaler do the work. */
 .member-photo img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: var(--pos, 50%) 50%;
-  /* --zoom must never go below 1: cover already fits the frame exactly, so
-     scaling down would leave bare edges. Sizes are matched by zooming the
-     smaller heads up to the largest, never by shrinking. Origin sits at the
-     head rather than the centre, so zooming crops the shoulders, not the face. */
-  transform: scale(var(--zoom, 1));
-  transform-origin: center 34%;
+  object-position: var(--pos, 50% 50%);
 }
 .member-photo .initials { font-family: var(--font-display); font-size: 46px; color: var(--muted); line-height: 1; }
 .member-photo .ph { font-size: 12.5px; color: var(--muted); letter-spacing: .04em; }
@@ -864,15 +864,14 @@ footer .flag-mark { margin-bottom: 22px; }
   <section class="section section-alt">
     <div class="wrap">
       <h2 class="reveal">Our team</h2>
-      <!-- Photo framing. --pos shifts the crop left/right to centre the face.
-           --zoom is left at 1 on purpose: Abi's and Allister's photos are small
-           to begin with, and enlarging them to match a tighter portrait made
-           them visibly soft. Matching head sizes is better done by supplying a
-           wider original than by zooming a low-resolution one. Never set --zoom
-           below 1 — cover already fills the frame, so it would leave bare edges. -->
+      <!-- --pos is object-position: horizontal then vertical. Only the axis
+           being cropped has any effect, which depends on the photo's shape:
+           a landscape photo crops left/right, a tall one crops top/bottom.
+           Head sizes are matched by supplying better-framed originals, not by
+           zooming, which softens small images and adds noise. -->
       <div class="team">
         <div class="member reveal">
-          <figure class="member-photo" style="--pos: 49%; --zoom: 1;">
+          <figure class="member-photo" style="--pos: 50% 50%;">
             <img src="images/abi-olvera.jpg" alt="Abi Olvera">
           </figure>
           <h3>Abi Olvera</h3>
@@ -880,7 +879,7 @@ footer .flag-mark { margin-bottom: 22px; }
           <p>Abi started DC Abundance in 2025 and leads it, handling strategy and fundraising. She spent a decade as a U.S. diplomat before moving into AI research, and writes about the small institutional frictions that make housing, clinics and daycare scarce.</p>
         </div>
         <div class="member reveal reveal-2">
-          <figure class="member-photo" style="--pos: 54%; --zoom: 1;">
+          <figure class="member-photo" style="--pos: 50% 26%;">
             <img src="images/tobias-amstutz.jpeg" alt="Tobias Amstutz">
           </figure>
           <h3>Tobias Amstutz</h3>
@@ -888,8 +887,8 @@ footer .flag-mark { margin-bottom: 22px; }
           <p>Tobias runs the day to day: building the calendar, booking speakers, and talking one on one with everyone who joins. He met Abi while interning at the Niskanen Center and helped her run one of the first events. He was previously a fellow on Alex Bores' congressional campaign.</p>
         </div>
         <div class="member reveal reveal-3">
-          <figure class="member-photo" style="--pos: 52%; --zoom: 1;">
-            <img src="images/allister-chang.jpg" alt="Allister Chang">
+          <figure class="member-photo" style="--pos: 52% 50%;">
+            <img src="images/allister-chang.webp" alt="Allister Chang">
           </figure>
           <h3>Allister Chang</h3>
           <p class="role">Co-founder &amp; Strategic Advisor</p>
