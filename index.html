@@ -441,6 +441,8 @@ h2 {
 .band p em { color: var(--on-deep); font-style: normal; }
 
 /* past events */
+/* Not currently used — the past-events list was removed from the About page.
+   Styles kept so it can be restored. */
 .event-list { margin-top: 10px; }
 .event-list li {
   display: grid; grid-template-columns: 330px 1fr; gap: 46px; align-items: baseline;
@@ -572,6 +574,18 @@ h2 {
 #sec-need, #sec-how { scroll-margin-top: calc(var(--headerH) + 24px); }
 .topic { scroll-margin-top: calc(var(--headerH) + 24px); }
 
+/* Sits above the two questions. Set in the display face at a size between the
+   section headings and body copy, so it reads as a lead-in to the pair below
+   rather than as a stray sentence. */
+.fw-intro {
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: clamp(22px, 2.4vw, 30px); line-height: 1.25; letter-spacing: -.01em;
+  color: var(--ink); max-width: 20em; margin-bottom: 40px;
+}
+.fw-intro::after {
+  content: ""; display: block; width: 64px; height: 3px;
+  background: var(--accent); margin-top: 22px;
+}
 .fw-jump { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 .fw-btn {
   display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 8px;
@@ -659,6 +673,8 @@ footer .flag-mark { margin-bottom: 22px; }
   .kinds h3 { font-size: 24px; }
   .topic { padding: 28px 0; }
   .fw-jump { grid-template-columns: 1fr; gap: 8px; }
+  .fw-intro { font-size: 21px; margin-bottom: 28px; }
+  .fw-intro::after { margin-top: 16px; }
   .topic h3 { font-size: 25px; }
   .topic p.topic-claim { font-size: 18px; }
   .lede { font-size: 19px; }
@@ -696,7 +712,7 @@ footer .flag-mark { margin-bottom: 22px; }
   <nav class="nav">
     <a href="#/" data-link data-nav="home">Home</a>
     <a href="#/about" data-link data-nav="about">About us</a>
-    <a href="#/resources" data-link data-nav="resources">Resources</a>
+    <a href="#/resources" data-link data-nav="resources">About abundance</a>
   </nav>
   <a class="btn header-cta js-signup" href="#">Sign up</a>
 
@@ -709,7 +725,7 @@ footer .flag-mark { margin-bottom: 22px; }
   <nav class="menu-panel" id="menuPanel" aria-label="Quick menu">
     <a href="#/" data-link data-menu="home">Home</a>
     <a href="#/about" data-link data-menu="about">About us</a>
-    <a href="#/resources" data-link data-menu="resources">Resources</a>
+    <a href="#/resources" data-link data-menu="resources">About abundance</a>
     <a class="menu-join js-signup" href="#">Join DC Abundance</a>
   </nav>
 </header>
@@ -792,79 +808,82 @@ footer .flag-mark { margin-bottom: 22px; }
     <div class="wrap">
       <div class="flag-mark reveal" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
       <p class="eyebrow reveal">About us</p>
-      <h1 class="reveal reveal-2">We organize the abundance community in Washington</h1>
-      <p class="reveal reveal-3">Not a think tank and not a lobby. The room where these people meet.</p>
+      <h1 class="reveal reveal-2">The connective tissue of the abundance community in Washington DC</h1>
+      <p class="reveal reveal-3">We host events around abundance with a focus on federal policy.</p>
       <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
     </div>
   </section>
 
   <section class="section">
-    <div class="wrap two-col">
-      <div class="reveal">
-        <div class="rule draw"></div>
-        <h2>What we do</h2>
-      </div>
-      <div class="reveal reveal-2">
-        <div class="prose">
-          <p>We host events with one specific purpose: getting people who are interested in abundance actually engaging with abundance ideas, across the full spectrum of abundance policy. That means housing one month and energy the next, healthcare or childcare after that. The point is not to specialise, it is to keep the frame moving across the areas where it has purchase.</p>
-          <p>DC is full of people working on these questions in different lanes, and it has remarkably few rooms where those people meet each other. We make those rooms.</p>
-          <p>We are genuinely open to collaboration. If you have an idea for an event, a speaker you want to hear from, or someone you would like an introduction to, tell us. A good share of what we have run started as a suggestion from someone we met at a happy hour.</p>
-        </div>
-        <a class="arrow-link js-signup" href="#">Join and send us your ideas <span class="arrow">&rarr;</span></a>
+    <div class="wrap">
+      <h2 class="reveal">What we do</h2>
+      <div class="topics">
+        <article class="topic reveal">
+          <h3>Break down silos</h3>
+          <p>There are a lot of people working on these issues in DC, but most are siloed in their own policy bubbles. One of the most useful parts of the abundance frame is that it points out how obstacles recur across policy domains that otherwise would not have much in common. This opens the door for lessons for change in one domain, which means if a solution works for one policy problem, it often could be effective for another even if the two look unrelated on the surface. For instance, someone working on energy policy can learn from those working on housing. Those working on housing can learn from people working on state capacity. Abundance will have more impact if we work together rather than stick to our own silos.</p>
+        </article>
+
+        <article class="topic reveal">
+          <h3>Turn interest into action</h3>
+          <p>The policy issues where the abundance frame can have the most impact, such as housing, energy, healthcare, and government effectiveness, are some of the most important problems facing the country. The number of people working on them from an abundance perspective is small enough where one person can truly have a serious impact. At the same time, a lot of people are exposed to abundance ideas through blog posts, podcasts, or books, and buy into them, but are unable to find ways to contribute. We want to bridge that gap and be an entry point into deeper engagement with abundance.</p>
+          <p>That engagement could mean a job working on abundance policy domains. We know the ecosystem of people and organizations that are doing this work and can make connections between people looking to contribute to the space and the groups that are actually doing the work. We help organizations find great talent that is already bought into abundance while also making it easier for people who are early in their careers or looking to make a change to break into the space.</p>
+          <p>Engagement is not exclusively for people looking to shift careers, there is a great deal to do that does not involve changing jobs. We offer opportunities for members to run book clubs, organize events based on things they're interested in, and start small projects with other members, and learn skills like how to write for Substack audiences. These are valuable contributions that can help inform people deciding whether working in this space might suit them.</p>
+          <p>No matter the way people choose to engage, a group of people who understand these ideas well, have worked on them in some way, and know each other well is worth having in preparation for a moment that might call for it.</p>
+        </article>
+
+        <article class="topic reveal">
+          <h3>Education</h3>
+          <p>Abundance is not a settled policy program. There are still many open questions. Some of the policy domains have decades of research behind them; others have significantly less. Even when many people agree on the diagnosis of a policy problem, they often disagree on the policy fix that follows. Hashing out those disagreements matters more to us than winning over converts.</p>
+          <p>Our programming is designed to be informative but is not intended as a persuasion campaign. We have plenty of room for people who are not sold on the abundance thesis. Many of the best conversations have happened because someone had arrived skeptical and engaged in good faith debate with the group. Even if someone shows up unconvinced and leaves with a sharper version of their objection, they have gotten something real out of the event and so have the people who were pushed to defend their arguments.</p>
+        </article>
+
+        <article class="topic reveal">
+          <h3>Build a community</h3>
+          <p>Interest in policy might be what draws people in, but that alone cannot sustain a group. Communities stay together because people enjoy being a part of them. That is why a big part of our work is to create a real social scene built around these ideas.</p>
+          <p>DC has no shortage of professional networking, and while that's part of what we do, it is not the entirety. We are also an environment where people can make friends, find new roommates, and get advice from confidants. We think that kind of connection is what gets people to stick around instead of dropping off after a couple events. It is also, at a practical level, where many of the most valuable introductions come from as it is easier for people to vouch for their friends than people they have met in passing at networking events.</p>
+        </article>
       </div>
     </div>
   </section>
 
   <section class="section section-alt">
-    <div class="wrap">
-      <span class="section-label reveal">How we convene</span>
-      <h2 class="reveal">Three kinds of event</h2>
-      <ul class="kinds">
-        <li class="reveal">
-          <span class="kind-num">01</span>
-          <div>
-            <h3>Educational events</h3>
-            <p>Our bread and butter so far. We bring in experts from abundance think tanks, policy organizations and academia to talk about their projects, their ideas, and the organizations they are building. These are the nights you leave knowing something specific you did not know before.</p>
-          </div>
-        </li>
-        <li class="reveal reveal-2">
-          <span class="kind-num">02</span>
-          <div>
-            <h3>Engagement-building events</h3>
-            <p>Still an experiment. The goal is to get members thinking about and doing abundance work themselves rather than only listening to it. The format that has worked best is Lightning Talks: five-minute talks from our own community on anything abundance-adjacent. You do not have to be an expert, you just need a good idea — and it is the kind of thing that can go on a resume.</p>
-          </div>
-        </li>
-        <li class="reveal reveal-3">
-          <span class="kind-num">03</span>
-          <div>
-            <h3>Social events</h3>
-            <p>The happy hour is the format we keep coming back to, and we expect to run one monthly. We also want to do looser things: abundance third spaces, rooftop parties, house parties. Less academic, same people, and usually where the useful introductions actually happen.</p>
-          </div>
-        </li>
-      </ul>
+    <div class="wrap two-col">
+      <div class="reveal">
+        <div class="rule draw"></div>
+        <h2>How we do it</h2>
+      </div>
+      <div class="reveal reveal-2">
+        <div class="prose">
+          <p>Washington is an in-person city. Big things get done when people are face-to-face. This has long been, and will continue to be, the way that this city works and groups looking to have an impact here need to lean into it. That is why we believe one of the most useful things we can do is get the right people in the same space.</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap">
-      <span class="section-label reveal">Past events</span>
-      <h2 class="reveal">Some of what we have hosted</h2>
-      <ul class="event-list">
+      <h2 class="reveal">Types of events</h2>
+      <ul class="kinds">
         <li class="reveal">
-          <div class="ev-who">Derek Thompson<span>co-author, <em>Abundance</em></span></div>
-          <p class="ev-topic">A conversation and Q&amp;A around the one-year anniversary of the book.</p>
+          <span class="kind-num">01</span>
+          <div>
+            <h3>Educational</h3>
+            <p>Educational events are geared around specific abundance policy areas. Some focus on the most pertinent issues and debates in abundance right now. Others will deliberately focus on parts of abundance that are neglected by usual conversations. They are always built around amazing people from across the abundance ecosystem sharing their personal experience and expertise.</p>
+          </div>
         </li>
-        <li class="reveal">
-          <div class="ev-who">Derek Kaufman &amp; Baillee Brown<span>Inclusive Abundance</span></div>
-          <p class="ev-topic">Making change at the federal level.</p>
+        <li class="reveal reveal-2">
+          <span class="kind-num">02</span>
+          <div>
+            <h3>Engagement building</h3>
+            <p>Engagement building events are opportunities for members of our community to get more involved and learn some skills related to communicating and learning around abundance. These events include volunteer run book clubs, writing groups, and educational events as well as lightning talks, which challenge members to give a 5 minute talk to the group on a topic of their choosing. We also host workshops and skill building events like ones that teach you how to write for Substack.</p>
+          </div>
         </li>
-        <li class="reveal">
-          <div class="ev-who">Jennifer Pahlka<span>author, <em>Recoding America</em></span></div>
-          <p class="ev-topic">The Recoding America Fund, newly announced.</p>
-        </li>
-        <li class="reveal">
-          <div class="ev-who">Dr. Alicia Plemmons<span>economist</span></div>
-          <p class="ev-topic">Occupational licensing.</p>
+        <li class="reveal reveal-3">
+          <span class="kind-num">03</span>
+          <div>
+            <h3>Social</h3>
+            <p>Social events are less academic and more just an excuse for the community to get together. These events include happy hours, parties, and other events without a clear policy focus. They are intended to bring people together in a less formal way and create a real social scene around abundance.</p>
+          </div>
         </li>
       </ul>
     </div>
@@ -922,7 +941,7 @@ footer .flag-mark { margin-bottom: 22px; }
     <p class="photo-credit">The Supreme Court building under construction, 1932. Architect of the Capitol.</p>
     <div class="wrap">
       <div class="flag-mark reveal" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
-      <p class="eyebrow reveal">Resources</p>
+      <p class="eyebrow reveal">About abundance</p>
       <h1 class="reveal reveal-2">What Abundance Means to Us</h1>
       <p class="reveal reveal-3">We view abundance as a frame through which a whole swath of policy problems can be viewed.</p>
       <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
@@ -931,7 +950,7 @@ footer .flag-mark { margin-bottom: 22px; }
 
   <section class="section" id="framework-nav">
     <div class="wrap">
-      <p class="lede reveal">The basic formula starts by asking two questions:</p>
+      <p class="fw-intro reveal">The basic formula starts by asking two questions</p>
       <div class="fw-jump reveal reveal-2">
         <button class="fw-btn" data-scroll="sec-need"><span class="fw-n">Part one</span><span class="fw-q">What are the things we need most to solve our biggest problems?</span><span class="arrow">&rarr;</span></button>
         <button class="fw-btn" data-scroll="sec-how"><span class="fw-n">Part two</span><span class="fw-q">How do we get more of those things?</span><span class="arrow">&rarr;</span></button>
@@ -1046,7 +1065,7 @@ footer .flag-mark { margin-bottom: 22px; }
   <nav class="foot-nav">
     <a href="#/" data-link>Home</a>
     <a href="#/about" data-link>About us</a>
-    <a href="#/resources" data-link>Resources</a>
+    <a href="#/resources" data-link>About abundance</a>
     <a class="js-signup" href="#">Sign up</a>
   </nav>
   <p>DC Abundance · Washington, D.C. · <a href="mailto:hello@dcabundance.org">hello@dcabundance.org</a></p>
@@ -1100,7 +1119,7 @@ function arm(root) {
    Three pages, one document. The hash keeps back/forward working.
    ------------------------------------------------------------ */
 var PAGES = ["home", "about", "resources"];
-var TITLES = { home: "DC Abundance", about: "About us · DC Abundance", resources: "Resources · DC Abundance" };
+var TITLES = { home: "DC Abundance", about: "About us · DC Abundance", resources: "About abundance · DC Abundance" };
 
 function routeFromHash() {
   var h = (location.hash || "").replace(/^#\/?/, "").split("?")[0];
