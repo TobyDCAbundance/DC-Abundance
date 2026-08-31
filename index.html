@@ -578,38 +578,45 @@ h2 {
 .card-more .arrow { display: inline-block; transition: transform .3s var(--ease); }
 .card-more:hover .arrow { transform: translateX(5px); }
 
-/* the panel */
-.sheet { position: fixed; inset: 0; z-index: 100; }
-.sheet[hidden] { display: none; }
-.sheet-scrim { position: absolute; inset: 0; background: rgba(12,16,22,.55); opacity: 0; transition: opacity .3s ease; }
-.sheet.open .sheet-scrim { opacity: 1; }
-.sheet-panel {
-  position: absolute; left: 50%; bottom: 0; width: min(760px, 100%);
-  max-height: 88vh; background: var(--paper);
-  border-top: 5px solid var(--accent);
+/* The stage holds both states. Its height is set from script while open, so
+   it can animate between the grid's height and the text's. */
+.cards-stage { position: relative; transition: height .42s var(--ease); }
+.cards { transition: opacity .26s ease, transform .34s var(--ease); }
+.cards-stage.open .cards { opacity: 0; transform: scale(.985); pointer-events: none; }
+
+.expand {
+  position: absolute; inset: 0; background: var(--paper);
+  border: 1px solid var(--line); border-top: 5px solid var(--accent);
   display: flex; flex-direction: column;
-  transform: translate(-50%, 24px); opacity: 0;
-  transition: transform .38s var(--ease), opacity .28s ease;
+  opacity: 0; visibility: hidden; transform: scale(.985);
+  transition: opacity .28s ease, transform .34s var(--ease), visibility 0s .3s;
 }
-.sheet.open .sheet-panel { transform: translate(-50%, 0); opacity: 1; }
-.sheet-head {
-  display: flex; align-items: flex-start; gap: 20px;
-  padding: 34px 40px 20px; border-bottom: 1px solid var(--line);
+.cards-stage.open .expand {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .3s ease .06s, transform .36s var(--ease) .06s, visibility 0s;
 }
-.sheet-head h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 30px; line-height: 1.15; flex: 1; }
-.sheet-close {
-  background: none; border: 1px solid var(--line); flex: none;
-  width: 40px; height: 40px; display: grid; place-items: center; color: var(--ink);
+.expand-close {
+  position: absolute; top: 18px; right: 18px; z-index: 2;
+  background: var(--paper); border: 1px solid var(--line);
+  width: 42px; height: 42px; display: grid; place-items: center; color: var(--ink);
+  transition: border-color .25s ease, color .25s ease;
 }
-.sheet-close svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-.sheet-close:hover { border-color: var(--accent); color: var(--accent); }
-.sheet-scroll { overflow-y: auto; padding: 26px 40px 40px; -webkit-overflow-scrolling: touch; }
-.sheet-body p { font-size: 17.5px; line-height: 1.65; color: var(--body); margin-bottom: 1.15em; }
-.sheet-body p:last-child { margin-bottom: 0; }
-body.sheet-open { overflow: hidden; }
+.expand-close svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.expand-close:hover { border-color: var(--accent); color: var(--accent); }
+.expand-scroll { overflow-y: auto; padding: 40px 46px 42px; -webkit-overflow-scrolling: touch; }
+.expand-icon {
+  width: 40px; height: 40px; color: var(--accent); margin-bottom: 18px;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.expand-body h3 {
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: 30px; line-height: 1.15; margin-bottom: 20px; max-width: 22em;
+}
+.expand-body p { font-size: 17.5px; line-height: 1.65; color: var(--body); margin-bottom: 1.15em; max-width: 46em; }
+.expand-body p:last-child { margin-bottom: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .sheet-scrim, .sheet-panel { transition: none; }
+  .cards-stage, .cards, .expand { transition: none; }
 }
 
 /* "Read more" disclosure. Native <details>, so it works without JavaScript
@@ -747,10 +754,10 @@ footer .flag-mark { margin-bottom: 22px; }
   .card { padding: 28px 24px 24px; }
   .card-icon { width: 38px; height: 38px; margin-bottom: 18px; }
   .card h3 { font-size: 22px; }
-  .sheet-panel { max-height: 92vh; }
-  .sheet-head { padding: 24px 22px 16px; }
-  .sheet-head h3 { font-size: 24px; }
-  .sheet-scroll { padding: 20px 22px 32px; }
+  .expand-scroll { padding: 26px 22px 30px; }
+  .expand-body h3 { font-size: 24px; }
+  .expand-icon { width: 32px; height: 32px; margin-bottom: 14px; }
+  .expand-close { top: 12px; right: 12px; width: 36px; height: 36px; }
   .fw-intro { font-size: 21px; margin-bottom: 28px; }
   .fw-intro::after { margin-top: 16px; }
   .topic h3 { font-size: 25px; }
@@ -895,34 +902,78 @@ footer .flag-mark { margin-bottom: 22px; }
   <section class="section">
     <div class="wrap">
       <h2 class="reveal">What we do</h2>
-      <div class="cards">
-        <article class="card reveal">
-          <svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true"><circle cx="17" cy="31" r="11"/><path d="M25.5 22.5 L40 8"/><path d="M30 8 H40 V18"/></svg>
-          <h3>Turn interest into action</h3>
-          <p>DC Abundance turns people who already believe in abundance into people who are actually doing something about it.</p>
-          <button class="card-more" data-open="action">Read more <span class="arrow">&rarr;</span></button>
-        </article>
+      <!-- The grid and its expanded state share one box. Opening a card fades
+           the grid out and the full text in, and the stage animates its own
+           height between the two. -->
+      <div class="cards-stage" id="cardsStage">
+        <div class="cards">
+          <article class="card reveal">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5H19V11"/><path d="M19 5L5 19"/></svg>
+            <h3>Turn interest into action</h3>
+            <p>DC Abundance turns people who already believe in abundance into people who are actually doing something about it.</p>
+            <button class="card-more" data-open="action">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="card reveal reveal-2">
-          <svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 40 V13"/><path d="M24 40 V13"/><path d="M38 40 V13"/><path d="M4 25 H44"/><path d="M38 19 L44 25 L38 31"/></svg>
-          <h3>Break down silos</h3>
-          <p>Abundance problems and solutions repeat across policy areas, so DC Abundance works to connect people who would otherwise stay isolated in their own issue silos.</p>
-          <button class="card-more" data-open="silos">Read more <span class="arrow">&rarr;</span></button>
-        </article>
+          <article class="card reveal reveal-2">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21h1"/><path d="m17 17-2.18-2.18"/><path d="M5 21a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2"/><path d="M9 21h1"/><path d="M9.56 14.44 17 7"/><path d="M9.56 9.56 12 12"/><circle cx="8.5" cy="15.5" r="1.5"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+            <h3>Break down silos</h3>
+            <p>Abundance problems and solutions repeat across policy areas, so DC Abundance works to connect people who would otherwise stay isolated in their own issue silos.</p>
+            <button class="card-more" data-open="silos">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="card reveal reveal-3">
-          <svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 17 H23"/><path d="M18 11 L24 17 L18 23"/><path d="M43 31 H25"/><path d="M30 25 L24 31 L30 37"/></svg>
-          <h3>Debate, Not Doctrine</h3>
-          <p>DC Abundance treats abundance as a set of open debates rather than a fixed platform, so its programming is built to sharpen arguments.</p>
-          <button class="card-more" data-open="debate">Read more <span class="arrow">&rarr;</span></button>
-        </article>
+          <article class="card reveal reveal-3">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"/></svg>
+            <h3>Debate, Not Doctrine</h3>
+            <p>DC Abundance treats abundance as a set of open debates rather than a fixed platform, so its programming is built to sharpen arguments.</p>
+            <button class="card-more" data-open="debate">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="card reveal reveal-4">
-          <svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="11" r="5.5"/><circle cx="10" cy="35" r="5.5"/><circle cx="38" cy="35" r="5.5"/><path d="M20 15.5 L14 30"/><path d="M28 15.5 L34 30"/><path d="M15.5 35 H32.5"/></svg>
-          <h3>Build a community</h3>
-          <p>Lasting engagement comes from friendship and trust, not just shared policy interest, so DC Abundance invests in a real social scene alongside its professional programming.</p>
-          <button class="card-more" data-open="community">Read more <span class="arrow">&rarr;</span></button>
-        </article>
+          <article class="card reveal reveal-4">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+            <h3>Build a community</h3>
+            <p>Lasting engagement comes from friendship and trust, not just shared policy interest, so DC Abundance invests in a real social scene alongside its professional programming.</p>
+            <button class="card-more" data-open="community">Read more <span class="arrow">&rarr;</span></button>
+          </article>
+        </div>
+
+        <div class="expand" id="cardExpand">
+          <button class="expand-close" id="expandClose" aria-label="Close and return to all four">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 L19 19"/><path d="M19 5 L5 19"/></svg>
+          </button>
+          <div class="expand-scroll">
+
+            <div class="expand-body" data-body="action" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5H19V11"/><path d="M19 5L5 19"/></svg>
+              <h3>Turn interest into action</h3>
+              <p>The policy issues where the abundance frame can have the most impact, such as housing, energy, healthcare, and government effectiveness, are some of the most important problems facing the country. The number of people working on them from an abundance perspective is small enough where one person can truly have a serious impact. At the same time, a lot of people are exposed to abundance ideas through blog posts, podcasts, or books, and buy into them, but are unable to find ways to contribute. We want to bridge that gap and be an entry point into deeper engagement with abundance.</p>
+              <p>That engagement could mean a job working on abundance policy domains. We know the ecosystem of people and organizations that are doing this work and can make connections between people looking to contribute to the space and the groups that are actually doing the work. We help organizations find great talent that is already bought into abundance while also making it easier for people who are early in their careers or looking to make a change to break into the space.</p>
+              <p>Engagement is not exclusively for people looking to shift careers, there is a great deal to do that does not involve changing jobs. We offer opportunities for members to run book clubs, organize events based on things they're interested in, and start small projects with other members, and learn skills like how to write for Substack audiences. These are valuable contributions that can help inform people deciding whether working in this space might suit them.</p>
+              <p>No matter the way people choose to engage, a group of people who understand these ideas well, have worked on them in some way, and know each other well is worth having in preparation for a moment that might call for it.</p>
+            </div>
+
+            <div class="expand-body" data-body="silos" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21h1"/><path d="m17 17-2.18-2.18"/><path d="M5 21a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2"/><path d="M9 21h1"/><path d="M9.56 14.44 17 7"/><path d="M9.56 9.56 12 12"/><circle cx="8.5" cy="15.5" r="1.5"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+              <h3>Break down silos</h3>
+              <p>There are a lot of people working on these issues in DC, but most are siloed in their own policy bubbles. One of the most useful parts of the abundance frame is that it points out how obstacles recur across policy domains that otherwise would not have much in common, which means if a solution works for one policy problem, it has the potential to be effective for another even if they look unrelated on the surface.</p>
+              <p>For instance, someone working on energy policy can learn from those working on housing. Those working on housing can learn from people working on state capacity. Abundance will have more impact if we work together rather than stick to our own silos.</p>
+            </div>
+
+            <div class="expand-body" data-body="debate" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"/></svg>
+              <h3>Debate, Not Doctrine</h3>
+              <p>Abundance is not a settled policy program. There are still many open questions. Some of the policy domains have decades of research behind them; others have significantly less. Even when many people agree on the diagnosis of a policy problem, they often disagree on the policy fix that follows. Hashing out those disagreements matters more to us than winning over converts.</p>
+              <p>Our programming is designed to be informative but is not intended as a persuasion campaign. We have plenty of room for people who are not sold on the abundance thesis. Many of the best conversations have happened because someone had arrived skeptical and engaged in good faith debate with the group. Even if someone shows up unconvinced and leaves with a sharper version of their objection, they have gotten something real out of the event and so have the people who were pushed to defend their arguments.</p>
+            </div>
+
+            <div class="expand-body" data-body="community" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+              <h3>Build a community</h3>
+              <p>Interest in policy might be what draws people in, but that alone cannot sustain a group. Communities stay together because people enjoy being a part of them. That is why a big part of our work is to create a real social scene built around these ideas.</p>
+              <p>DC has no shortage of professional networking, and while that's part of what we do, it is not the entirety. We are also an environment where people can make friends, find new roommates, and get advice from confidants. We think that kind of connection is what gets people to stick around instead of dropping off after a couple events. It is also, at a practical level, where many of the most valuable introductions come from as it is easier for people to vouch for their friends than people they have met in passing at networking events.</p>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1152,46 +1203,6 @@ footer .flag-mark { margin-bottom: 22px; }
   <p>DC Abundance · Washington, D.C. · <a href="mailto:hello@dcabundance.org">hello@dcabundance.org</a></p>
   <p class="credit-line">Photographs from the Library of Congress, public domain. Prototype site.</p>
 </footer>
-
-<!-- Full-text panel for the "What we do" cards. Lives outside <main> on
-     purpose: the page-transition animation puts a transform on .page, and a
-     transformed ancestor breaks position:fixed for everything inside it. -->
-<div class="sheet" id="sheet" hidden>
-  <div class="sheet-scrim" data-close></div>
-  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-    <div class="sheet-head">
-      <h3 id="sheetTitle"></h3>
-      <button class="sheet-close" data-close aria-label="Close">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 L19 19"/><path d="M19 5 L5 19"/></svg>
-      </button>
-    </div>
-    <div class="sheet-scroll">
-
-      <div class="sheet-body" data-body="action" hidden>
-        <p>The policy issues where the abundance frame can have the most impact, such as housing, energy, healthcare, and government effectiveness, are some of the most important problems facing the country. The number of people working on them from an abundance perspective is small enough where one person can truly have a serious impact. At the same time, a lot of people are exposed to abundance ideas through blog posts, podcasts, or books, and buy into them, but are unable to find ways to contribute. We want to bridge that gap and be an entry point into deeper engagement with abundance.</p>
-        <p>That engagement could mean a job working on abundance policy domains. We know the ecosystem of people and organizations that are doing this work and can make connections between people looking to contribute to the space and the groups that are actually doing the work. We help organizations find great talent that is already bought into abundance while also making it easier for people who are early in their careers or looking to make a change to break into the space.</p>
-        <p>Engagement is not exclusively for people looking to shift careers, there is a great deal to do that does not involve changing jobs. We offer opportunities for members to run book clubs, organize events based on things they're interested in, and start small projects with other members, and learn skills like how to write for Substack audiences. These are valuable contributions that can help inform people deciding whether working in this space might suit them.</p>
-        <p>No matter the way people choose to engage, a group of people who understand these ideas well, have worked on them in some way, and know each other well is worth having in preparation for a moment that might call for it.</p>
-      </div>
-
-      <div class="sheet-body" data-body="silos" hidden>
-        <p>There are a lot of people working on these issues in DC, but most are siloed in their own policy bubbles. One of the most useful parts of the abundance frame is that it points out how obstacles recur across policy domains that otherwise would not have much in common, which means if a solution works for one policy problem, it has the potential to be effective for another even if they look unrelated on the surface.</p>
-        <p>For instance, someone working on energy policy can learn from those working on housing. Those working on housing can learn from people working on state capacity. Abundance will have more impact if we work together rather than stick to our own silos.</p>
-      </div>
-
-      <div class="sheet-body" data-body="debate" hidden>
-        <p>Abundance is not a settled policy program. There are still many open questions. Some of the policy domains have decades of research behind them; others have significantly less. Even when many people agree on the diagnosis of a policy problem, they often disagree on the policy fix that follows. Hashing out those disagreements matters more to us than winning over converts.</p>
-        <p>Our programming is designed to be informative but is not intended as a persuasion campaign. We have plenty of room for people who are not sold on the abundance thesis. Many of the best conversations have happened because someone had arrived skeptical and engaged in good faith debate with the group. Even if someone shows up unconvinced and leaves with a sharper version of their objection, they have gotten something real out of the event and so have the people who were pushed to defend their arguments.</p>
-      </div>
-
-      <div class="sheet-body" data-body="community" hidden>
-        <p>Interest in policy might be what draws people in, but that alone cannot sustain a group. Communities stay together because people enjoy being a part of them. That is why a big part of our work is to create a real social scene built around these ideas.</p>
-        <p>DC has no shortage of professional networking, and while that's part of what we do, it is not the entirety. We are also an environment where people can make friends, find new roommates, and get advice from confidants. We think that kind of connection is what gets people to stick around instead of dropping off after a couple events. It is also, at a practical level, where many of the most valuable introductions come from as it is easier for people to vouch for their friends than people they have met in passing at networking events.</p>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 <script>
 /* ------------------------------------------------------------
@@ -1560,58 +1571,65 @@ function refreshChrome() {
    so there is no innerHTML anywhere in this file.
    ------------------------------------------------------------ */
 (function () {
-  var sheet = document.getElementById("sheet");
-  if (!sheet) return;
-  var panel = sheet.querySelector(".sheet-panel");
-  var title = document.getElementById("sheetTitle");
-  var bodies = [].slice.call(sheet.querySelectorAll(".sheet-body"));
-  var closeBtn = sheet.querySelector(".sheet-close");
-  var lastFocus = null;
+  var stage = document.getElementById("cardsStage");
+  if (!stage) return;
+  var grid = stage.querySelector(".cards");
+  var expand = document.getElementById("cardExpand");
+  var closeBtn = document.getElementById("expandClose");
+  var bodies = [].slice.call(expand.querySelectorAll(".expand-body"));
+  var open = false, lastFocus = null;
 
-  function openSheet(key, card) {
-    bodies.forEach(function (b) { b.hidden = b.getAttribute("data-body") !== key; });
-    title.textContent = card.querySelector("h3").textContent;   /* textContent, never innerHTML */
-    lastFocus = document.activeElement;
-    sheet.hidden = false;
-    document.body.classList.add("sheet-open");
-    /* next frame, so the opening transition has a starting state to move from */
-    requestAnimationFrame(function () { sheet.classList.add("open"); });
-    closeBtn.focus();
+  /* the open height is the text's own height, capped so a long entry still
+     leaves the page navigable */
+  function targetHeight() {
+    var scroller = expand.querySelector(".expand-scroll");
+    var content = scroller.scrollHeight + 2;
+    return Math.min(content, Math.round(window.innerHeight * 0.78));
   }
 
-  function closeSheet() {
-    if (sheet.hidden) return;
-    sheet.classList.remove("open");
-    document.body.classList.remove("sheet-open");
-    var done = function () { sheet.hidden = true; };
-    if (reduced) done();
-    else setTimeout(done, 300);
-    if (lastFocus) lastFocus.focus();
+  function openCard(key, btn) {
+    bodies.forEach(function (b) { b.hidden = b.getAttribute("data-body") !== key; });
+    lastFocus = btn;
+    stage.style.height = grid.offsetHeight + "px";   /* lock the closed height first */
+    void stage.offsetHeight;                          /* so the change below animates */
+    open = true;
+    stage.classList.add("open");
+    stage.style.height = targetHeight() + "px";
+    closeBtn.focus({ preventScroll: true });
+  }
+
+  function closeCard() {
+    if (!open) return;
+    open = false;
+    stage.classList.remove("open");
+    stage.style.height = grid.offsetHeight + "px";
+    var done = function () {
+      if (!open) stage.style.height = "";            /* hand height back to the grid */
+    };
+    if (reduced) done(); else setTimeout(done, 440);
+    if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
 
   document.querySelectorAll(".card-more").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      openSheet(btn.getAttribute("data-open"), btn.closest(".card"));
-    });
+    btn.addEventListener("click", function () { openCard(btn.getAttribute("data-open"), btn); });
   });
-  sheet.querySelectorAll("[data-close]").forEach(function (el) {
-    el.addEventListener("click", closeSheet);
-  });
+  closeBtn.addEventListener("click", closeCard);
 
   document.addEventListener("keydown", function (ev) {
-    if (sheet.hidden) return;
-    if (ev.key === "Escape") { closeSheet(); return; }
-    if (ev.key !== "Tab") return;
-    /* keep focus inside the panel while it is open */
-    var focusables = panel.querySelectorAll("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
-    if (!focusables.length) return;
-    var first = focusables[0], last = focusables[focusables.length - 1];
-    if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
-    else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+    if (open && ev.key === "Escape") closeCard();
   });
 
-  /* leaving the page with the panel open would strand the scroll lock */
-  window.addEventListener("hashchange", closeSheet);
+  /* scrolling the section out of view closes it */
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      if (open && entries[0].intersectionRatio < 0.25) closeCard();
+    }, { threshold: [0, 0.25, 0.5, 1] }).observe(stage);
+  }
+
+  window.addEventListener("resize", function () {
+    if (open) stage.style.height = targetHeight() + "px";
+  });
+  window.addEventListener("hashchange", closeCard);
 })();
 
 /* ------------------------------------------------------------
