@@ -548,6 +548,14 @@ h2 {
   font-size: 20px; line-height: 1.35; color: var(--accent);
   font-weight: 600; margin-bottom: 18px; max-width: 34em;
 }
+/* The always-visible summary above a "Read more" toggle. Ink rather than
+   accent: these run a full sentence or two, and red at that length shouts. */
+.topic p.topic-summary {
+  font-size: 19px; line-height: 1.5; color: var(--ink);
+  font-weight: 600; margin-bottom: 0; max-width: 42em;
+}
+/* "Read more" disclosure. Native <details>, so it works without JavaScript
+   and is reachable by keyboard and screen reader. */
 .deeper { margin-top: 18px; }
 .deeper summary {
   cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px;
@@ -560,6 +568,10 @@ h2 {
   transition: transform .25s var(--ease);
 }
 .deeper[open] summary::after { transform: rotate(-135deg) translate(-1px,-1px); }
+.deeper p {
+  font-size: 17.5px; line-height: 1.65; color: var(--body);
+  margin-top: 16px; max-width: 46em;
+}
 .deeper ul { margin-top: 14px; }
 .deeper li {
   font-size: 16px; color: var(--body); padding: 7px 0 7px 18px; position: relative;
@@ -819,28 +831,40 @@ footer .flag-mark { margin-bottom: 22px; }
       <h2 class="reveal">What we do</h2>
       <div class="topics">
         <article class="topic reveal">
-          <h3>Break down silos</h3>
-          <p>There are a lot of people working on these issues in DC, but most are siloed in their own policy bubbles. One of the most useful parts of the abundance frame is that it points out how obstacles recur across policy domains that otherwise would not have much in common. This opens the door for lessons for change in one domain, which means if a solution works for one policy problem, it often could be effective for another even if the two look unrelated on the surface. For instance, someone working on energy policy can learn from those working on housing. Those working on housing can learn from people working on state capacity. Abundance will have more impact if we work together rather than stick to our own silos.</p>
+          <h3>Turn interest into action</h3>
+          <p class="topic-summary">DC Abundance turns people who already believe in abundance into people who are actually doing something about it.</p>
+          <details class="deeper"><summary>Read more</summary>
+            <p>The policy issues where the abundance frame can have the most impact, such as housing, energy, healthcare, and government effectiveness, are some of the most important problems facing the country. The number of people working on them from an abundance perspective is small enough where one person can truly have a serious impact. At the same time, a lot of people are exposed to abundance ideas through blog posts, podcasts, or books, and buy into them, but are unable to find ways to contribute. We want to bridge that gap and be an entry point into deeper engagement with abundance.</p>
+            <p>That engagement could mean a job working on abundance policy domains. We know the ecosystem of people and organizations that are doing this work and can make connections between people looking to contribute to the space and the groups that are actually doing the work. We help organizations find great talent that is already bought into abundance while also making it easier for people who are early in their careers or looking to make a change to break into the space.</p>
+            <p>Engagement is not exclusively for people looking to shift careers, there is a great deal to do that does not involve changing jobs. We offer opportunities for members to run book clubs, organize events based on things they're interested in, and start small projects with other members, and learn skills like how to write for Substack audiences. These are valuable contributions that can help inform people deciding whether working in this space might suit them.</p>
+            <p>No matter the way people choose to engage, a group of people who understand these ideas well, have worked on them in some way, and know each other well is worth having in preparation for a moment that might call for it.</p>
+          </details>
         </article>
 
         <article class="topic reveal">
-          <h3>Turn interest into action</h3>
-          <p>The policy issues where the abundance frame can have the most impact, such as housing, energy, healthcare, and government effectiveness, are some of the most important problems facing the country. The number of people working on them from an abundance perspective is small enough where one person can truly have a serious impact. At the same time, a lot of people are exposed to abundance ideas through blog posts, podcasts, or books, and buy into them, but are unable to find ways to contribute. We want to bridge that gap and be an entry point into deeper engagement with abundance.</p>
-          <p>That engagement could mean a job working on abundance policy domains. We know the ecosystem of people and organizations that are doing this work and can make connections between people looking to contribute to the space and the groups that are actually doing the work. We help organizations find great talent that is already bought into abundance while also making it easier for people who are early in their careers or looking to make a change to break into the space.</p>
-          <p>Engagement is not exclusively for people looking to shift careers, there is a great deal to do that does not involve changing jobs. We offer opportunities for members to run book clubs, organize events based on things they're interested in, and start small projects with other members, and learn skills like how to write for Substack audiences. These are valuable contributions that can help inform people deciding whether working in this space might suit them.</p>
-          <p>No matter the way people choose to engage, a group of people who understand these ideas well, have worked on them in some way, and know each other well is worth having in preparation for a moment that might call for it.</p>
+          <h3>Break down silos</h3>
+          <p class="topic-summary">Abundance problems and solutions repeat across policy areas, so DC Abundance works to connect people who would otherwise stay isolated in their own issue silos.</p>
+          <details class="deeper"><summary>Read more</summary>
+            <p>There are a lot of people working on these issues in DC, but most are siloed in their own policy bubbles. One of the most useful parts of the abundance frame is that it points out how obstacles recur across policy domains that otherwise would not have much in common, which means if a solution works for one policy problem, it has the potential to be effective for another even if they look unrelated on the surface. For instance, someone working on energy policy can learn from those working on housing. Those working on housing can learn from people working on state capacity. Abundance will have more impact if we work together rather than stick to our own silos.</p>
+          </details>
         </article>
 
         <article class="topic reveal">
           <h3>Education</h3>
-          <p>Abundance is not a settled policy program. There are still many open questions. Some of the policy domains have decades of research behind them; others have significantly less. Even when many people agree on the diagnosis of a policy problem, they often disagree on the policy fix that follows. Hashing out those disagreements matters more to us than winning over converts.</p>
-          <p>Our programming is designed to be informative but is not intended as a persuasion campaign. We have plenty of room for people who are not sold on the abundance thesis. Many of the best conversations have happened because someone had arrived skeptical and engaged in good faith debate with the group. Even if someone shows up unconvinced and leaves with a sharper version of their objection, they have gotten something real out of the event and so have the people who were pushed to defend their arguments.</p>
+          <p class="topic-summary">DC Abundance treats abundance as a set of open debates rather than a fixed platform, so its programming is built to sharpen arguments.</p>
+          <details class="deeper"><summary>Read more</summary>
+            <p>Abundance is not a settled policy program. There are still many open questions. Some of the policy domains have decades of research behind them; others have significantly less. Even when many people agree on the diagnosis of a policy problem, they often disagree on the policy fix that follows. Hashing out those disagreements matters more to us than winning over converts.</p>
+            <p>Our programming is designed to be informative but is not intended as a persuasion campaign. We have plenty of room for people who are not sold on the abundance thesis. Many of the best conversations have happened because someone had arrived skeptical and engaged in good faith debate with the group. Even if someone shows up unconvinced and leaves with a sharper version of their objection, they have gotten something real out of the event and so have the people who were pushed to defend their arguments.</p>
+          </details>
         </article>
 
         <article class="topic reveal">
           <h3>Build a community</h3>
-          <p>Interest in policy might be what draws people in, but that alone cannot sustain a group. Communities stay together because people enjoy being a part of them. That is why a big part of our work is to create a real social scene built around these ideas.</p>
-          <p>DC has no shortage of professional networking, and while that's part of what we do, it is not the entirety. We are also an environment where people can make friends, find new roommates, and get advice from confidants. We think that kind of connection is what gets people to stick around instead of dropping off after a couple events. It is also, at a practical level, where many of the most valuable introductions come from as it is easier for people to vouch for their friends than people they have met in passing at networking events.</p>
+          <p class="topic-summary">Lasting engagement comes from friendship and trust, not just shared policy interest, so DC Abundance invests in a real social scene alongside its professional programming.</p>
+          <details class="deeper"><summary>Read more</summary>
+            <p>Interest in policy might be what draws people in, but that alone cannot sustain a group. Communities stay together because people enjoy being a part of them. That is why a big part of our work is to create a real social scene built around these ideas.</p>
+            <p>DC has no shortage of professional networking, and while that's part of what we do, it is not the entirety. We are also an environment where people can make friends, find new roommates, and get advice from confidants. We think that kind of connection is what gets people to stick around instead of dropping off after a couple events. It is also, at a practical level, where many of the most valuable introductions come from as it is easier for people to vouch for their friends than people they have met in passing at networking events.</p>
+          </details>
         </article>
       </div>
     </div>
