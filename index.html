@@ -627,8 +627,14 @@ h2 {
 .expand-body p { font-size: 17.5px; line-height: 1.65; color: var(--body); margin-bottom: 1.15em; max-width: 46em; }
 .expand-body p:last-child { margin-bottom: 0; }
 
+/* while the window is being dragged, nothing should be mid-transition */
+.cards-stage.resizing,
+.cards-stage.resizing .cards,
+.cards-stage.resizing .expand,
+.cards-stage.resizing .expand-scroll { transition: none !important; }
+
 @media (prefers-reduced-motion: reduce) {
-  .cards-stage, .cards, .expand { transition: none; }
+  .cards-stage, .cards, .expand, .expand-scroll { transition: none; }
 }
 
 /* "Read more" disclosure. Native <details>, so it works without JavaScript
@@ -1590,6 +1596,7 @@ function refreshChrome() {
   var closeBtn = document.getElementById("expandClose");
   var bodies = [].slice.call(expand.querySelectorAll(".expand-body"));
   var open = false, lastFocus = null;
+  var closeTimer = null, resizeTimer = null, guardUntil = 0;
 
   /* the open height is the text's own height, capped so a long entry still
      leaves the page navigable */
@@ -1597,6 +1604,22 @@ function refreshChrome() {
     var scroller = expand.querySelector(".expand-scroll");
     var content = scroller.scrollHeight + 2;
     return Math.min(content, Math.round(window.innerHeight * 0.78));
+  }
+
+  /* Stacked on a narrow screen the grid is very tall, so collapsing it to the
+     text height pulls the page up and can leave the stage off screen — which
+     the scroll-away observer would read as "scrolled past" and close again.
+     Bring the stage under the header first if it would not otherwise fit. */
+  function ensureInView(th) {
+    var bar = document.getElementById("siteHeader");
+    var top = (bar ? bar.offsetHeight : 0) + 20;
+    var s = stage.getBoundingClientRect();
+    if (s.top < top || s.top + th > window.innerHeight) {
+      window.scrollTo({
+        top: Math.max(0, window.pageYOffset + s.top - top),
+        behavior: reduced ? "auto" : "smooth"
+      });
+    }
   }
 
   /* anchor the growth to the card that was clicked */
@@ -1609,26 +1632,33 @@ function refreshChrome() {
   }
 
   function openCard(key, btn) {
+    clearTimeout(closeTimer);
     bodies.forEach(function (b) { b.hidden = b.getAttribute("data-body") !== key; });
     lastFocus = btn;
     setOrigin(btn.closest(".card"));
     stage.style.height = grid.offsetHeight + "px";   /* lock the closed height first */
     void stage.offsetHeight;                          /* so the change below animates */
     open = true;
+    var th = targetHeight();
     stage.classList.add("open");
-    stage.style.height = targetHeight() + "px";
+    stage.style.height = th + "px";
+    /* ignore the scroll-away observer while the box resizes and any
+       smooth scroll settles, or it fires on our own movement */
+    guardUntil = Date.now() + 900;
+    ensureInView(th);
     closeBtn.focus({ preventScroll: true });
   }
 
   function closeCard() {
     if (!open) return;
     open = false;
+    clearTimeout(closeTimer);
     stage.classList.remove("open");
     stage.style.height = grid.offsetHeight + "px";
     var done = function () {
       if (!open) stage.style.height = "";            /* hand height back to the grid */
     };
-    if (reduced) done(); else setTimeout(done, 440);
+    if (reduced) done(); else closeTimer = setTimeout(done, 460);
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
 
@@ -1644,12 +1674,30 @@ function refreshChrome() {
   /* scrolling the section out of view closes it */
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (entries) {
-      if (open && entries[0].intersectionRatio < 0.25) closeCard();
+      if (!open || Date.now() < guardUntil) return;
+      if (entries[0].intersectionRatio < 0.25) closeCard();
     }, { threshold: [0, 0.25, 0.5, 1] }).observe(stage);
   }
 
+  /* The stage carries an explicit pixel height while open, which goes stale
+     the moment the layout reflows — and the grid changes height a lot when
+     it drops from two columns to one. So freeze transitions during a resize,
+     then either recompute the open height or hand height back to the grid. */
   window.addEventListener("resize", function () {
-    if (open) stage.style.height = targetHeight() + "px";
+    stage.classList.add("resizing");
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (open) {
+        /* height only. The origin is deliberately left alone: while open the
+           stage is collapsed and the cards sit outside it, so a fresh
+           measurement would resolve to a point well off the box. */
+        stage.style.height = targetHeight() + "px";
+      } else {
+        clearTimeout(closeTimer);
+        stage.style.height = "";
+      }
+      stage.classList.remove("resizing");
+    }, 140);
   });
   window.addEventListener("hashchange", closeCard);
 })();
