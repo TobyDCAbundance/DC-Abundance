@@ -539,6 +539,9 @@ h2 {
   font-size: 14.5px; color: var(--muted); border-left: 3px solid var(--accent);
   padding: 4px 0 4px 16px; margin-bottom: 30px; max-width: 44em;
 }
+/* .topics / .topic are no longer used in the markup — every section that had
+   them is now a card grid. Kept in case a long-form stacked layout is wanted
+   again; safe to delete otherwise. */
 .topics { margin-top: 14px; }
 .topic { padding: 44px 0; border-top: 1px solid var(--line); max-width: 52em; }
 .topic:last-child { border-bottom: 1px solid var(--line); }
@@ -679,7 +682,6 @@ h2 {
    FRAMEWORK NAVIGATOR  (resources)
    ================================================================ */
 #sec-need, #sec-how { scroll-margin-top: calc(var(--headerH) + 24px); }
-.topic { scroll-margin-top: calc(var(--headerH) + 24px); }
 
 /* Sits above the two questions. Set in the display face at a size between the
    section headings and body copy, so it reads as a lead-in to the pair below
@@ -1241,24 +1243,51 @@ footer .flag-mark { margin-bottom: 22px; }
       <span class="section-label reveal">Part two</span>
       <h2 class="reveal">Why we don't have more of these things</h2>
 
-      <div class="topics">
-        <article class="topic reveal" id="t-state">
-          <h3>State capacity</h3>
-          <p class="topic-claim">Government has lost the capacity to do what we ask of it</p>
-          <p>We argue constantly about what government should do and not enough about whether it can do what we've tasked it to do.</p>
-          <p>Government projects run late and over budget. The people running it mean well but are working inside systems built for a different era. An agency that needs engineers must spend months in a hiring process or hire a consulting firm with its own bottom line. Public servants get rewarded for following the process even when it produces a bad outcome, and punished for deviating even when it produces a good one. The government views software as something to be bought rather than built iteratively, which has wasted hundreds of millions of dollars. Much of this stems from the lack of engagement between the people who write policy and the people who implement it.</p>
-          <p>Most of these rules were put in place to stop fraud and favoritism. Now they prevent the government from fixing bridges or making healthcare sign-up websites.</p>
-          <p>This isn't an argument for more government or less of it. It's that we'd have more of what we need if government could do the things we need it to do.</p>
-        </article>
+      <div class="cards-stage">
+        <div class="cards">
+          <article class="card reveal">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 18v-7"/><path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M3 22h18"/><path d="M6 18v-7"/></svg>
+            <h3>State capacity</h3>
+            <p>Government has lost the capacity to do what we ask of it</p>
+            <button class="card-more" data-open="state">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="topic reveal" id="t-scarcity">
-          <h3>Artificial scarcity</h3>
-          <p class="topic-claim">Some scarcity is written into the law</p>
-          <p>Some things are scarce because they're hard to make. Others are scarce because you need permission to make them, and the people already in the business help decide who gets it.</p>
-          <p>In about 30 states, opening a clinic means proving that the area needs one. The hospitals already there can lobby to argue it doesn't. It's not only businesses: in Napa, where there are ten babies for every daycare spot, neighbors sued to stop a daycare from expanding into a church building.</p>
-          <p>These rules usually started with a real purpose. What they sometimes do now is protect whoever got there first. The people who benefit fight hard to keep those rules.</p>
-          <p>The people who pay higher prices for medical care, roof repair, or haircuts rarely know the rule exists. They just see their lives get more expensive until they must leave the neighborhood they grew up in or switch to a doctor far from their home.</p>
-        </article>
+          <article class="card reveal reveal-2">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+            <h3>Artificial scarcity</h3>
+            <p>Some scarcity is written into the law</p>
+            <button class="card-more" data-open="scarcity">Read more <span class="arrow">&rarr;</span></button>
+          </article>
+        </div>
+
+        <div class="expand">
+          <button class="expand-close" aria-label="Close and return to both">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 L19 19"/><path d="M19 5 L5 19"/></svg>
+          </button>
+          <div class="expand-scroll">
+
+            <div class="expand-body" data-body="state" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 18v-7"/><path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M3 22h18"/><path d="M6 18v-7"/></svg>
+              <h3>State capacity</h3>
+              <p class="expand-claim">Government has lost the capacity to do what we ask of it</p>
+              <p>We argue constantly about what government should do and not enough about whether it can do what we've tasked it to do.</p>
+              <p>Government projects run late and over budget. The people running it mean well but are working inside systems built for a different era. An agency that needs engineers must spend months in a hiring process or hire a consulting firm with its own bottom line. Public servants get rewarded for following the process even when it produces a bad outcome, and punished for deviating even when it produces a good one. The government views software as something to be bought rather than built iteratively, which has wasted hundreds of millions of dollars. Much of this stems from the lack of engagement between the people who write policy and the people who implement it.</p>
+              <p>Most of these rules were put in place to stop fraud and favoritism. Now they prevent the government from fixing bridges or making healthcare sign-up websites.</p>
+              <p>This isn't an argument for more government or less of it. It's that we'd have more of what we need if government could do the things we need it to do.</p>
+            </div>
+
+            <div class="expand-body" data-body="scarcity" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+              <h3>Artificial scarcity</h3>
+              <p class="expand-claim">Some scarcity is written into the law</p>
+              <p>Some things are scarce because they're hard to make. Others are scarce because you need permission to make them, and the people already in the business help decide who gets it.</p>
+              <p>In about 30 states, opening a clinic means proving that the area needs one. The hospitals already there can lobby to argue it doesn't. It's not only businesses: in Napa, where there are ten babies for every daycare spot, neighbors sued to stop a daycare from expanding into a church building.</p>
+              <p>These rules usually started with a real purpose. What they sometimes do now is protect whoever got there first. The people who benefit fight hard to keep those rules.</p>
+              <p>The people who pay higher prices for medical care, roof repair, or haircuts rarely know the rule exists. They just see their lives get more expensive until they must leave the neighborhood they grew up in or switch to a doctor far from their home.</p>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </section>
