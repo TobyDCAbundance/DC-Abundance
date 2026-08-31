@@ -562,6 +562,13 @@ h2 {
    WHAT WE DO — cards + full-text panel
    ================================================================ */
 .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 22px; }
+/* six-up variant: three across, two rows, all visible at once */
+.cards.cards-3 { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.cards-3 .card { padding: 30px 26px 26px; }
+.cards-3 .card h3 { font-size: 23px; }
+.cards-3 .card p { font-size: 16px; }
+.cards-3 .card-icon { width: 40px; height: 40px; margin-bottom: 20px; }
+@media (max-width: 1080px) { .cards.cards-3 { grid-template-columns: 1fr 1fr; } }
 .card {
   display: flex; flex-direction: column;
   border: 1px solid var(--line); padding: 36px 34px 30px;
@@ -626,6 +633,11 @@ h2 {
 }
 .expand-body p { font-size: 17.5px; line-height: 1.65; color: var(--body); margin-bottom: 1.15em; max-width: 46em; }
 .expand-body p:last-child { margin-bottom: 0; }
+/* the card's one-line argument, repeated at the top of the opened text */
+.expand-body p.expand-claim {
+  font-size: 20px; line-height: 1.35; color: var(--accent);
+  font-weight: 600; margin-bottom: 22px; max-width: 34em;
+}
 
 /* while the window is being dragged, nothing should be mid-transition */
 .cards-stage.resizing,
@@ -768,7 +780,7 @@ footer .flag-mark { margin-bottom: 22px; }
   .kinds h3 { font-size: 24px; }
   .topic { padding: 28px 0; }
   .fw-jump { grid-template-columns: 1fr; gap: 8px; }
-  .cards { grid-template-columns: 1fr; gap: 16px; }
+  .cards, .cards.cards-3 { grid-template-columns: 1fr; gap: 16px; }
   .card { padding: 28px 24px 24px; }
   .card-icon { width: 38px; height: 38px; margin-bottom: 18px; }
   .card h3 { font-size: 22px; }
@@ -923,7 +935,7 @@ footer .flag-mark { margin-bottom: 22px; }
       <!-- The grid and its expanded state share one box. Opening a card fades
            the grid out and the full text in, and the stage animates its own
            height between the two. -->
-      <div class="cards-stage" id="cardsStage">
+      <div class="cards-stage">
         <div class="cards">
           <article class="card reveal">
             <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5H19V11"/><path d="M19 5L5 19"/></svg>
@@ -954,8 +966,8 @@ footer .flag-mark { margin-bottom: 22px; }
           </article>
         </div>
 
-        <div class="expand" id="cardExpand">
-          <button class="expand-close" id="expandClose" aria-label="Close and return to all four">
+        <div class="expand">
+          <button class="expand-close" aria-label="Close and return to all four">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 L19 19"/><path d="M19 5 L5 19"/></svg>
           </button>
           <div class="expand-scroll">
@@ -1113,54 +1125,113 @@ footer .flag-mark { margin-bottom: 22px; }
       <span class="section-label reveal">Part one</span>
       <h2 class="reveal">The things we need more of</h2>
 
-      <div class="topics">
-        <article class="topic reveal" id="t-housing">
-          <h3>Housing</h3>
-          <p class="topic-claim">Housing is expensive because it's illegal to build more of it</p>
-          <p>Housing costs have climbed for decades, and the worst of it is in the places with the most jobs. We haven't built enough to keep up with demand. That raises the cost of living, and it makes it harder for people to move somewhere with better work.</p>
-          <p>Two things drive the shortage. In most of the country, zoning rules make it illegal to build the kind of housing people actually need. And in the places where building is legal, opponents use lawsuits and discretionary review to stall projects until they're too expensive to finish.</p>
-          <p>Housing is the most developed piece of the abundance agenda, mostly thanks to a decade of YIMBY organizing in cities across the country.</p>
-        </article>
+      <div class="cards-stage">
+        <div class="cards cards-3">
+          <article class="card reveal">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <h3>Housing</h3>
+            <p>Housing is expensive because it's illegal to build more of it</p>
+            <button class="card-more" data-open="housing">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="topic reveal" id="t-transportation">
-          <h3>Transportation</h3>
-          <p class="topic-claim">Transportation costs so much to build that American cities can't afford what's standard elsewhere</p>
-          <p>Transportation and housing are the same problem from a different angle. Good transit widens the ring of land people can live on and still reach job-rich places.</p>
-          <p>Our system lags behind peer countries mainly because building here costs up to three times more. Cost decides what gets built, which is a big part of why we have so few new metro lines and no high-speed rail. The usual culprits: weaponized legal review, overreliance on consultants hired to do work the government no longer has the in-house talent to do, and procurement rules that reward the lowest bid over reliable delivery.</p>
-        </article>
+          <article class="card reveal reveal-2">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h.01"/><path d="M16 15h.01"/></svg>
+            <h3>Transportation</h3>
+            <p>Transportation costs so much to build that American cities can't afford what's standard elsewhere</p>
+            <button class="card-more" data-open="transportation">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="topic reveal" id="t-energy">
-          <h3>Energy</h3>
-          <p class="topic-claim">Cheap, abundant energy is already possible. Rules block the infrastructure.</p>
-          <p>The price of energy shows up in nearly everything people pay for. It sets what it costs to cool a house and it's baked into the price of groceries. Cost and reliability also decide where job-creating industries decide to locate.</p>
-          <p>Demand for power is only going up. Solar and wind now cost less than fossil fuels in most of the country, without the same environmental damage.</p>
-          <p>The bottleneck is physical infrastructure. Building it at the scale we need means clearing overlapping permitting rules, legal reviews, and local approvals, each of which adds delay. No energy source escapes this, but transmission has it worst, because lines cross jurisdictions and need a yes from each.</p>
-        </article>
+          <article class="card reveal reveal-3">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg>
+            <h3>Energy</h3>
+            <p>Cheap, abundant energy is already possible. Rules block the infrastructure.</p>
+            <button class="card-more" data-open="energy">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="topic reveal" id="t-science">
-          <h3>Science</h3>
-          <p class="topic-claim">We're spending more on science and getting less back</p>
-          <p>Technological progress has driven rising living standards since the industrial revolution. Lately we're getting fewer big breakthroughs per dollar spent.</p>
-          <p>Part of that is how science gets funded in the US. Grantmakers reward projects likely to produce a result, even a small one, over ambitious projects that might fail but change everything, like mRNA technology. Applications also take longer than they used to, so scientists spend a growing share of their careers writing them instead of doing the work.</p>
-          <p>Discovery is only half of it. A breakthrough only helps anyone once someone finds a place to build it, manufactures it at scale, connects it to the grid, and gets all of that approved. Every one of those steps has a gatekeeper who can hold up the benefits for years.</p>
-        </article>
+          <article class="card reveal">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/></svg>
+            <h3>Science</h3>
+            <p>We're spending more on science and getting less back</p>
+            <button class="card-more" data-open="science">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="topic reveal" id="t-health">
-          <h3>Health</h3>
-          <p class="topic-claim">Healthcare is expensive because we decided to produce less of it</p>
-          <p>Americans pay more for healthcare than any comparable country and get worse outcomes. Most of the debate is about subsidizing the price of care. The abundance argument is that you can also bring the price down by increasing the volume of care and medicine.</p>
-          <p>Supply is constricted, often on purpose. Medicare-funded residency slots have been capped near 1996 levels, which limits how many new doctors we get. Certificate of Need laws let existing hospitals block competitors from entering their market. Scope of practice rules stop nurse practitioners and pharmacists from doing work they're trained to do. A small group of providers set prices.</p>
-          <p>Reformers point to Operation Warp Speed as proof that approval timelines can be cut without cutting corners, and argue that should be the standard rather than an emergency measure.</p>
-        </article>
+          <article class="card reveal reveal-2">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M14 9h-4"/><path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16"/></svg>
+            <h3>Health</h3>
+            <p>Healthcare is expensive because we decided to produce less of it</p>
+            <button class="card-more" data-open="health">Read more <span class="arrow">&rarr;</span></button>
+          </article>
 
-        <article class="topic reveal" id="t-childcare">
-          <h3>Childcare</h3>
-          <p class="topic-claim">Childcare is expensive partly because opening a daycare is harder than it needs to be</p>
-          <p>For families across the country, childcare now costs as much as rent or more. Caring for children is labor intensive, so cost-cutting is difficult. Most families will need help paying for it.</p>
-          <p>New Mexico shows why subsidies aren't the whole answer. It became the first state to offer free childcare to every family. However, the state is short more than 15,000 seats for kids under six.</p>
-          <p>When there aren't enough spots, the ones that exist go to the parents who have a car and can drive across town, take an afternoon off to tour a center, and figure out which waitlists to get on. Everyone else keeps their kid home or relies on informal care.</p>
-          <p>There aren't enough spots because opening a daycare is harder than it needs to be. Zoning bans formal daycare centers from most residential neighborhoods. Fire codes and staffing rules contradict each other. Each rule had a reason. Together they make it slow and expensive to open the slots to use a subsidy on.</p>
-        </article>
+          <article class="card reveal reveal-3">
+            <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M15 12h.01"/><path d="M19.38 6.813A9 9 0 0 1 20.8 10.2a2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/><path d="M9 12h.01"/></svg>
+            <h3>Childcare</h3>
+            <p>Childcare is expensive partly because opening a daycare is harder than it needs to be</p>
+            <button class="card-more" data-open="childcare">Read more <span class="arrow">&rarr;</span></button>
+          </article>
+        </div>
+
+        <div class="expand">
+          <button class="expand-close" aria-label="Close and return to all six">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 L19 19"/><path d="M19 5 L5 19"/></svg>
+          </button>
+          <div class="expand-scroll">
+
+            <div class="expand-body" data-body="housing" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              <h3>Housing</h3>
+              <p class="expand-claim">Housing is expensive because it's illegal to build more of it</p>
+              <p>Housing costs have climbed for decades, and the worst of it is in the places with the most jobs. We haven't built enough to keep up with demand. That raises the cost of living, and it makes it harder for people to move somewhere with better work.</p>
+              <p>Two things drive the shortage. In most of the country, zoning rules make it illegal to build the kind of housing people actually need. And in the places where building is legal, opponents use lawsuits and discretionary review to stall projects until they're too expensive to finish.</p>
+              <p>Housing is the most developed piece of the abundance agenda, mostly thanks to a decade of YIMBY organizing in cities across the country.</p>
+            </div>
+
+            <div class="expand-body" data-body="transportation" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h.01"/><path d="M16 15h.01"/></svg>
+              <h3>Transportation</h3>
+              <p class="expand-claim">Transportation costs so much to build that American cities can't afford what's standard elsewhere</p>
+              <p>Transportation and housing are the same problem from a different angle. Good transit widens the ring of land people can live on and still reach job-rich places.</p>
+              <p>Our system lags behind peer countries mainly because building here costs up to three times more. Cost decides what gets built, which is a big part of why we have so few new metro lines and no high-speed rail. The usual culprits: weaponized legal review, overreliance on consultants hired to do work the government no longer has the in-house talent to do, and procurement rules that reward the lowest bid over reliable delivery.</p>
+            </div>
+
+            <div class="expand-body" data-body="energy" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg>
+              <h3>Energy</h3>
+              <p class="expand-claim">Cheap, abundant energy is already possible. Rules block the infrastructure.</p>
+              <p>The price of energy shows up in nearly everything people pay for. It sets what it costs to cool a house and it's baked into the price of groceries. Cost and reliability also decide where job-creating industries decide to locate.</p>
+              <p>Demand for power is only going up. Solar and wind now cost less than fossil fuels in most of the country, without the same environmental damage.</p>
+              <p>The bottleneck is physical infrastructure. Building it at the scale we need means clearing overlapping permitting rules, legal reviews, and local approvals, each of which adds delay. No energy source escapes this, but transmission has it worst, because lines cross jurisdictions and need a yes from each.</p>
+            </div>
+
+            <div class="expand-body" data-body="science" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/></svg>
+              <h3>Science</h3>
+              <p class="expand-claim">We're spending more on science and getting less back</p>
+              <p>Technological progress has driven rising living standards since the industrial revolution. Lately we're getting fewer big breakthroughs per dollar spent.</p>
+              <p>Part of that is how science gets funded in the US. Grantmakers reward projects likely to produce a result, even a small one, over ambitious projects that might fail but change everything, like mRNA technology. Applications also take longer than they used to, so scientists spend a growing share of their careers writing them instead of doing the work.</p>
+              <p>Discovery is only half of it. A breakthrough only helps anyone once someone finds a place to build it, manufactures it at scale, connects it to the grid, and gets all of that approved. Every one of those steps has a gatekeeper who can hold up the benefits for years.</p>
+            </div>
+
+            <div class="expand-body" data-body="health" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M14 9h-4"/><path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16"/></svg>
+              <h3>Health</h3>
+              <p class="expand-claim">Healthcare is expensive because we decided to produce less of it</p>
+              <p>Americans pay more for healthcare than any comparable country and get worse outcomes. Most of the debate is about subsidizing the price of care. The abundance argument is that you can also bring the price down by increasing the volume of care and medicine.</p>
+              <p>Supply is constricted, often on purpose. Medicare-funded residency slots have been capped near 1996 levels, which limits how many new doctors we get. Certificate of Need laws let existing hospitals block competitors from entering their market. Scope of practice rules stop nurse practitioners and pharmacists from doing work they're trained to do. A small group of providers set prices.</p>
+              <p>Reformers point to Operation Warp Speed as proof that approval timelines can be cut without cutting corners, and argue that should be the standard rather than an emergency measure.</p>
+            </div>
+
+            <div class="expand-body" data-body="childcare" hidden>
+              <svg class="expand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M15 12h.01"/><path d="M19.38 6.813A9 9 0 0 1 20.8 10.2a2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/><path d="M9 12h.01"/></svg>
+              <h3>Childcare</h3>
+              <p class="expand-claim">Childcare is expensive partly because opening a daycare is harder than it needs to be</p>
+              <p>For families across the country, childcare now costs as much as rent or more. Caring for children is labor intensive, so cost-cutting is difficult. Most families will need help paying for it.</p>
+              <p>New Mexico shows why subsidies aren't the whole answer. It became the first state to offer free childcare to every family. However, the state is short more than 15,000 seats for kids under six.</p>
+              <p>When there aren't enough spots, the ones that exist go to the parents who have a car and can drive across town, take an afternoon off to tour a center, and figure out which waitlists to get on. Everyone else keeps their kid home or relies on informal care.</p>
+              <p>There aren't enough spots because opening a daycare is harder than it needs to be. Zoning bans formal daycare centers from most residential neighborhoods. Fire codes and staffing rules contradict each other. Each rule had a reason. Together they make it slow and expensive to open the slots to use a subsidy on.</p>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1588,12 +1659,11 @@ function refreshChrome() {
    a card just reveals the matching block. Nothing is built from strings,
    so there is no innerHTML anywhere in this file.
    ------------------------------------------------------------ */
-(function () {
-  var stage = document.getElementById("cardsStage");
-  if (!stage) return;
+document.querySelectorAll(".cards-stage").forEach(function (stage) {
   var grid = stage.querySelector(".cards");
-  var expand = document.getElementById("cardExpand");
-  var closeBtn = document.getElementById("expandClose");
+  var expand = stage.querySelector(".expand");
+  var closeBtn = stage.querySelector(".expand-close");
+  if (!grid || !expand || !closeBtn) return;
   var bodies = [].slice.call(expand.querySelectorAll(".expand-body"));
   var open = false, lastFocus = null;
   var closeTimer = null, resizeTimer = null, guardUntil = 0;
@@ -1662,7 +1732,8 @@ function refreshChrome() {
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
 
-  document.querySelectorAll(".card-more").forEach(function (btn) {
+  /* scoped to this stage, so two grids on the same page stay independent */
+  grid.querySelectorAll(".card-more").forEach(function (btn) {
     btn.addEventListener("click", function () { openCard(btn.getAttribute("data-open"), btn); });
   });
   closeBtn.addEventListener("click", closeCard);
@@ -1700,7 +1771,7 @@ function refreshChrome() {
     }, 140);
   });
   window.addEventListener("hashchange", closeCard);
-})();
+});
 
 /* ------------------------------------------------------------
    FRAMEWORK NAVIGATOR
