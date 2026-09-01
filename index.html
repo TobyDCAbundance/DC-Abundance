@@ -1672,20 +1672,51 @@ function onScroll() {
     ticking = false;
   });
 }
+/* Wipe a flyer back to its resting state. Hiding it is not enough: an
+   interrupted flight leaves stale inline geometry behind, and the next time
+   the element is shown it would flash in the wrong place. */
+function resetFlyer(el) {
+  if (!el) return;
+  el.classList.remove("on");
+  el.style.cssText = "";
+  /* children too: the bars and stars of the flag mark, and the two
+     cross-fading labels inside the button, all carry inline styles */
+  el.querySelectorAll("[style]").forEach(function (child) { child.style.cssText = ""; });
+}
+function unhide(selector) {
+  document.querySelectorAll(selector).forEach(function (el) { el.style.visibility = ""; });
+}
+
 function refreshChrome() {
   collectParallax(); measureFly(); measureHead();
-  /* off home there is nothing in flight, so the header keeps its own marks */
-  if (!flyOn) slot.style.visibility = "";
-  if (!flyOn && !flagOn) header.style.backgroundColor = "";
-  if (!nameOn && nameSlot) nameSlot.style.visibility = "";
-  if (!flagOn) {
-    flyFlag.classList.remove("on");
-    document.querySelectorAll(".flag-mark").forEach(function (m) { m.style.visibility = ""; });
+
+  /* Anything not currently in flight gets fully reset, not merely hidden.
+     A flight interrupted part way through — most easily by resizing across
+     the mobile breakpoint, which switches the flight off outright — used to
+     strand a fixed-position flyer on screen with the hero element it was
+     standing in for still invisible underneath it. That state then survived
+     navigating to another page. Each pair is restored independently. */
+  if (!flyOn) {
+    resetFlyer(flyer);
+    unhide(".hero-logo-anchor .static-logo");
+    slot.style.visibility = "";
+  }
+  if (!nameOn) {
+    resetFlyer(flyName);
+    unhide(".hero h1.wordmark");
+    if (nameSlot) nameSlot.style.visibility = "";
   }
   if (!ctaOn) {
-    flyCta.classList.remove("on");
-    if (ctaSlot) { ctaSlot.style.visibility = ""; }
+    resetFlyer(flyCta);
+    unhide(".hero .hero-cta-row .btn-big");
+    if (ctaSlot) ctaSlot.style.visibility = "";
   }
+  if (!flagOn) {
+    resetFlyer(flyFlag);
+    unhide(".flag-mark");
+  }
+  if (!flyOn && !flagOn) header.style.backgroundColor = "";
+
   onScroll();
 }
 
