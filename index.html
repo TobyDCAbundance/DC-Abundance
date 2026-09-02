@@ -723,6 +723,14 @@ h2 {
 
 
 /* ================================================================
+   EMBEDDED SIGNUP FORM  (home)
+   ================================================================ */
+.signup-lede { font-size: 19px; color: var(--body); margin-bottom: 30px; max-width: 40em; }
+.form-embed { max-width: 780px; }
+.form-fallback { font-size: 14px; color: var(--muted); margin-top: 14px; }
+.form-fallback a { color: var(--accent); font-weight: 600; }
+
+/* ================================================================
    JOIN + FOOTER  (shared by every page)
    ================================================================ */
 .join { background: var(--deep); color: var(--on-deep); padding: 118px 0; text-align: center; transition: background .45s ease; }
@@ -923,6 +931,20 @@ footer .flag-mark { margin-bottom: 22px; }
           <p>We view abundance as a frame, not a platform. It asks why it is so difficult to get more of the things people need most and often finds surprisingly similar answers across housing, energy, healthcare, and a bunch of other issue areas. It does not belong to one political faction or movement and there are still many questions about how it can be best applied.</p>
         </div>
         <a class="arrow-link" href="#/resources" data-link>Read the framework <span class="arrow">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="signup">
+    <div class="wrap">
+      <h2 class="reveal">Join DC Abundance</h2>
+      <p class="signup-lede reveal">Sign up once and we will send you invites to future events!</p>
+      <!-- No .reveal on the embed itself: that class starts elements
+           transformed, and a transformed ancestor can throw off how the
+           embedded iframe measures and sizes itself. -->
+      <div class="form-embed">
+        <div style="width:100%;height:500px;" data-fillout-id="4SV3NcvYDtus" data-fillout-embed-type="standard" data-fillout-inherit-parameters data-fillout-dynamic-resize></div>
+        <p class="form-fallback">Form not loading? <a class="js-signup" href="#">Open it in a new tab</a>.</p>
       </div>
     </div>
   </section>
@@ -1338,6 +1360,10 @@ footer .flag-mark { margin-bottom: 22px; }
   <p>DC Abundance · Washington, D.C. · <a href="mailto:hello@dcabundance.org">hello@dcabundance.org</a></p>
   <p class="credit-line">Photographs from the Library of Congress, public domain.</p>
 </footer>
+
+<!-- Fillout's embed script. This is the only third-party script on the site;
+     it renders the signup form in the section above. -->
+<script src="https://server.fillout.com/embed/v1/"></script>
 
 <script>
 /* ------------------------------------------------------------
