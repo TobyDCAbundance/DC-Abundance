@@ -255,8 +255,8 @@ html.flying-cta .site-header .header-cta { visibility: hidden; }
   .menu-btn span { transition: none; }
 }
 @media (max-width: 940px) {
-  .menu-btn { margin-left: 12px; width: 30px; height: 24px; gap: 5px; }
-  .menu-panel { right: 20px; min-width: 210px; }
+  .menu-btn { width: 30px; height: 24px; gap: 5px; }
+  .menu-panel { right: 18px; min-width: 214px; }
 }
 
 /* ================================================================
@@ -775,10 +775,19 @@ footer .flag-mark { margin-bottom: 22px; }
   .team { grid-template-columns: 1fr; gap: 52px; max-width: 460px; }
 }
 @media (max-width: 940px) {
-  .nav { gap: 18px; }
-  .nav a { font-size: 14px; }
-  .site-header { gap: 14px; padding-left: 20px; padding-right: 20px; }
-  .header-cta { display: none; }
+  /* On phones the links move into the menu so the signup button always has
+     room. Header is then: logo, signup, menu. */
+  .nav { display: none; }
+  .site-header { gap: 12px; padding-left: 18px; padding-right: 18px; }
+  .header-cta {
+    display: inline-block; margin-left: auto;
+    font-size: 15px; padding: 12px 18px;
+  }
+  /* there is no nav to reveal here, so signup stays put over the photograph
+     instead of waiting for the bar to solidify */
+  html:not(.flying-cta) .site-header.floating .header-cta { opacity: 1; pointer-events: auto; }
+  /* and the menu is always reachable, not only while floating */
+  .menu-btn { opacity: 1; pointer-events: auto; margin-left: 2px; }
   .brand-name { display: none; }
   .ca-logo { width: 58px; height: 58px; }
   :root { --headerH: 94px; }
@@ -845,9 +854,10 @@ footer .flag-mark { margin-bottom: 22px; }
   </nav>
   <a class="btn header-cta js-signup" href="#">Sign up</a>
 
-  <!-- Shown only while the bar is still transparent over the photograph,
-       so there is a way into the site without scrolling to the end of
-       the hero. It stands down once the real nav resolves. -->
+  <!-- On desktop this appears only while the bar is transparent over the
+       photograph, giving a way into the site without scrolling the hero, and
+       stands down once the real nav resolves. On phones the nav is hidden
+       entirely, so this is the only way through and stays visible. -->
   <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menuPanel" aria-label="Open menu">
     <span></span><span></span><span></span>
   </button>
