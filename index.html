@@ -725,15 +725,17 @@ h2 {
 /* ================================================================
    EMBEDDED SIGNUP FORM  (home)
    ================================================================ */
+/* Heading, intro and form share one width and one centre line, so their left
+   and right edges line up rather than merely sitting near each other. */
 #signup { text-align: center; }
-#signup h2 { margin-left: auto; margin-right: auto; }
-.signup-lede { font-size: 19px; color: var(--body); margin: 0 auto 34px; max-width: 40em; }
-/* Narrow enough to sit inside the form's own content width. The grey either
-   side is the iframe's background, which lives across a document boundary and
-   cannot be styled from here — keeping the frame close to the form's width
-   hides it. Widen or narrow this number to match the form. */
-.form-embed { max-width: 700px; margin: 0 auto; }
-.form-fallback { font-size: 14px; color: var(--muted); margin-top: 14px; }
+#signup h2,
+.signup-lede,
+.form-embed,
+.form-fallback { max-width: 700px; margin-left: auto; margin-right: auto; }
+#signup h2 { margin-bottom: 18px; }
+.signup-lede { font-size: 19px; color: var(--body); margin-bottom: 32px; }
+.form-embed { border: 1px solid var(--accent); padding: 8px; }
+.form-fallback { font-size: 14px; color: var(--muted); margin-top: 16px; }
 .form-fallback a { color: var(--accent); font-weight: 600; }
 
 /* ================================================================
@@ -950,8 +952,8 @@ footer .flag-mark { margin-bottom: 22px; }
            embedded iframe measures and sizes itself. -->
       <div class="form-embed">
         <div style="width:100%;height:500px;" data-fillout-id="4SV3NcvYDtus" data-fillout-embed-type="standard" data-fillout-inherit-parameters data-fillout-dynamic-resize></div>
-        <p class="form-fallback">Form not loading? <a class="js-signup" href="#">Open it in a new tab</a>.</p>
       </div>
+      <p class="form-fallback">Form not loading? <a class="js-signup" href="#">Open it in a new tab</a>.</p>
     </div>
   </section>
 
