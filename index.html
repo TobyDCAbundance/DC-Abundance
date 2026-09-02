@@ -725,8 +725,14 @@ h2 {
 /* ================================================================
    EMBEDDED SIGNUP FORM  (home)
    ================================================================ */
-.signup-lede { font-size: 19px; color: var(--body); margin-bottom: 30px; max-width: 40em; }
-.form-embed { max-width: 780px; }
+#signup { text-align: center; }
+#signup h2 { margin-left: auto; margin-right: auto; }
+.signup-lede { font-size: 19px; color: var(--body); margin: 0 auto 34px; max-width: 40em; }
+/* Narrow enough to sit inside the form's own content width. The grey either
+   side is the iframe's background, which lives across a document boundary and
+   cannot be styled from here — keeping the frame close to the form's width
+   hides it. Widen or narrow this number to match the form. */
+.form-embed { max-width: 700px; margin: 0 auto; }
 .form-fallback { font-size: 14px; color: var(--muted); margin-top: 14px; }
 .form-fallback a { color: var(--accent); font-weight: 600; }
 
