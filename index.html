@@ -15,8 +15,9 @@
   · Colour is the DC flag: a white field with red used for action and
     for the three-stars-and-two-bars marks. All values live in the
     :root block at the top of the stylesheet.
-  · The signup link lives in ONE place: the SIGNUP_URL constant in
-    the script at the bottom.
+  · Outside form links live in ONE place: the SIGNUP_URL and
+    FEEDBACK_URL constants in the script at the bottom. Anything
+    carrying .js-signup or .js-feedback is wired up from there.
   · Team bios on the About page are PLACEHOLDERS and marked as such
     Team photos are cropped in CSS, not in the files: each .member-photo
     carries its own --pos and --zoom so heads can be matched in size.
@@ -538,6 +539,7 @@ h2 {
 .kind-num { font-family: var(--font-display); font-size: 22px; color: var(--accent); }
 .kinds h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 28px; margin-bottom: 10px; }
 .kinds p { font-size: 17.5px; color: var(--body); max-width: 46em; }
+.kinds p a { color: var(--accent); font-weight: 600; }
 
 /* ================================================================
    TOPICS  (resources)
@@ -754,10 +756,23 @@ h2 {
 .doc-close { font-size: 17.5px; line-height: 1.65; color: var(--body); margin-top: 30px; max-width: 46em; }
 .doc-close a { color: var(--accent); font-weight: 600; }
 .doc-sign { font-size: 17.5px; color: var(--muted); margin-top: 26px; }
-/* pointer to the code of conduct, at the foot of the About page */
-.conduct-cta { text-align: center; }
-.conduct-cta h2 { margin: 0 auto 16px; max-width: 18em; }
-.conduct-cta p { font-size: 18.5px; color: var(--body); max-width: 38em; margin: 0 auto 32px; }
+/* Quiet pointers to the code of conduct and the feedback form, at the
+   foot of the About page. Deliberately low-key: a thin rule and two
+   plain links, not a banner. */
+.quiet-links {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 16px 48px;
+  padding-top: 30px; border-top: 1px solid var(--line);
+}
+.quiet-link {
+  display: inline-flex; align-items: baseline; gap: 9px;
+  font-size: 18px; font-weight: 600; color: var(--ink);
+}
+.quiet-link .arrow { color: var(--accent); display: inline-block; }
+.anim .quiet-link .arrow { transition: transform .25s ease; }
+.quiet-link:hover { color: var(--accent-lift); }
+.quiet-link:hover .arrow { transform: translateX(4px); }
+.section-quiet { padding: 0 0 96px; }
 @media (max-width: 940px) {
   .doc-head { padding: calc(var(--headerH) + 32px) 0 6px; }
   .doc-logo { width: 92px; height: 92px; margin-bottom: 16px; }
@@ -1184,11 +1199,12 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap conduct-cta reveal">
-      <h2>Everyone who joins us agrees to one thing</h2>
-      <p>Our events and our WhatsApp community run on a shared set of norms about how we disagree with each other.</p>
-      <a class="btn btn-big" href="#/conduct" data-link>Read our code of conduct <span class="arrow">&rarr;</span></a>
+  <section class="section section-quiet">
+    <div class="wrap">
+      <div class="quiet-links reveal">
+        <a class="quiet-link" href="#/conduct" data-link>Read our code of conduct <span class="arrow">&rarr;</span></a>
+        <a class="quiet-link js-feedback" href="#">Send us anonymous feedback <span class="arrow">&rarr;</span></a>
+      </div>
     </div>
   </section>
 
@@ -1440,7 +1456,7 @@ footer .flag-mark { margin-bottom: 22px; }
           <span class="kind-num">04</span>
           <div>
             <h3>Quotes don't leave the room</h3>
-            <p>Unless otherwise specified, DC Abundance operates under the Chatham House Rule. You must get explicit permission before quoting someone directly.</p>
+            <p>Unless otherwise specified, DC Abundance operates under the <a href="https://www.chathamhouse.org/about-us/chatham-house-rule" target="_blank" rel="noopener noreferrer">Chatham House Rule</a>. You must get explicit permission before quoting someone directly.</p>
           </div>
         </li>
       </ul>
@@ -1463,7 +1479,7 @@ footer .flag-mark { margin-bottom: 22px; }
         <li>If unacceptable behavior continues, the person will be removed from the space in question. Egregious violations will not be given a warning before removal action is taken.</li>
       </ul>
 
-      <p class="doc-close reveal">Violations will be assessed at the sole discretion of DC Abundance organizers. If you have an issue please do not hesitate to reach out at <a href="mailto:hello@dcabundance.org">hello@dcabundance.org</a> or fill out our anonymous feedback form.</p>
+      <p class="doc-close reveal">Violations will be assessed at the sole discretion of DC Abundance organizers. If you have an issue please do not hesitate to reach out at <a href="mailto:hello@dcabundance.org">hello@dcabundance.org</a> or fill out our <a class="js-feedback" href="#">anonymous feedback form</a>.</p>
       <p class="doc-close reveal">Thank you for being a part of the DC Abundance community!</p>
       <p class="doc-sign reveal">— DC Abundance Team</p>
     </div>
@@ -1505,11 +1521,15 @@ footer .flag-mark { margin-bottom: 22px; }
 
 <script>
 /* ------------------------------------------------------------
-   SIGNUP LINK: change it here and it changes everywhere.
+   OUTSIDE LINKS: change them here and they change everywhere.
    ------------------------------------------------------------ */
 var SIGNUP_URL = "https://forms.fillout.com/t/4SV3NcvYDtus";
+var FEEDBACK_URL = "https://forms.fillout.com/t/7MCkU7ecshus";
 document.querySelectorAll(".js-signup").forEach(function (a) {
   a.href = SIGNUP_URL; a.target = "_blank"; a.rel = "noopener";
+});
+document.querySelectorAll(".js-feedback").forEach(function (a) {
+  a.href = FEEDBACK_URL; a.target = "_blank"; a.rel = "noopener";
 });
 
 /* guarded: a missing matchMedia must not take the router down with it */
