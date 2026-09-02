@@ -723,6 +723,50 @@ h2 {
 
 
 /* ================================================================
+   CODE OF CONDUCT PAGE
+   Headed by the logo rather than a photograph, so it reads as a document.
+   With no .page-head on this page the bar never floats, which is what we
+   want here: solid and navigable from the first pixel.
+   ================================================================ */
+.doc-head { padding: calc(var(--headerH) + 60px) 0 10px; text-align: center; }
+.doc-logo { display: block; width: 128px; height: 128px; margin: 0 auto 22px; color: var(--ink); }
+.doc-head .flag-mark { margin-bottom: 22px; }
+.doc-head h1 {
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: clamp(38px, 5vw, 60px); line-height: 1.06; letter-spacing: -.015em;
+  margin-bottom: 24px;
+}
+.doc-lede { font-size: 19px; line-height: 1.6; color: var(--body); max-width: 44em; margin: 0 auto; }
+.doc-wrap { max-width: 860px; }
+.doc-note { font-size: 17.5px; color: var(--body); margin-bottom: 16px; }
+.doc-h2-gap { margin-top: 64px; }
+.bullets { margin-top: 4px; }
+.bullets li {
+  position: relative; padding: 12px 0 12px 26px;
+  font-size: 17.5px; line-height: 1.6; color: var(--body);
+  border-top: 1px solid var(--line);
+}
+.bullets li:last-child { border-bottom: 1px solid var(--line); }
+.bullets li::before {
+  content: ""; position: absolute; left: 0; top: 22px;
+  width: 12px; height: 2px; background: var(--accent);
+}
+.doc-close { font-size: 17.5px; line-height: 1.65; color: var(--body); margin-top: 30px; max-width: 46em; }
+.doc-close a { color: var(--accent); font-weight: 600; }
+.doc-sign { font-size: 17.5px; color: var(--muted); margin-top: 26px; }
+/* pointer to the code of conduct, at the foot of the About page */
+.conduct-cta { text-align: center; }
+.conduct-cta h2 { margin: 0 auto 16px; max-width: 18em; }
+.conduct-cta p { font-size: 18.5px; color: var(--body); max-width: 38em; margin: 0 auto 32px; }
+@media (max-width: 940px) {
+  .doc-head { padding: calc(var(--headerH) + 32px) 0 6px; }
+  .doc-logo { width: 92px; height: 92px; margin-bottom: 16px; }
+  .doc-head h1 { font-size: clamp(30px, 8vw, 40px); }
+  .doc-lede { font-size: 17.5px; }
+  .doc-h2-gap { margin-top: 46px; }
+}
+
+/* ================================================================
    EMBEDDED SIGNUP FORM  (home)
    ================================================================ */
 /* Heading, intro and form share one width and one centre line, so their left
@@ -1140,6 +1184,14 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
+  <section class="section">
+    <div class="wrap conduct-cta reveal">
+      <h2>Everyone who joins us agrees to one thing</h2>
+      <p>Our events and our WhatsApp community run on a shared set of norms about how we disagree with each other.</p>
+      <a class="btn btn-big" href="#/conduct" data-link>Read our code of conduct <span class="arrow">&rarr;</span></a>
+    </div>
+  </section>
+
 </div>
 
 <!-- ============================================================
@@ -1342,6 +1394,83 @@ footer .flag-mark { margin-bottom: 22px; }
 
 </div>
 
+<!-- ============================================================
+     PAGE — CODE OF CONDUCT
+     Reachable at /#/conduct. Linked from the About page, the footer,
+     and the signup form. Headed by the logo rather than a photograph:
+     this is a document, not a pitch.
+     ============================================================ -->
+<div class="page" data-page="conduct">
+
+  <section class="doc-head">
+    <div class="wrap">
+      <svg class="doc-logo" aria-hidden="true"><use href="#ca-logo"/></svg>
+      <div class="flag-mark" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
+      <h1 class="reveal">Code of Conduct</h1>
+      <p class="doc-lede reveal reveal-2">DC Abundance hosts a space for people in DC to talk about housing, energy, government reform, and other abundance related issues. We draw a diverse group of attendees from all over DC, who all have different opinions on policy. In order to make sure conversations stay productive, we are laying out some rules and norms that will be expected of members whether they attend events or participate in our WhatsApp community.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap doc-wrap">
+      <h2 class="reveal">Our principles</h2>
+      <ul class="kinds">
+        <li class="reveal">
+          <span class="kind-num">01</span>
+          <div>
+            <h3>Come in with an open mind</h3>
+            <p>You will not and do not have to agree with everything that people say at our events. That is alright as long as you are open to discussion and potentially changing your mind if presented with the right argument.</p>
+          </div>
+        </li>
+        <li class="reveal reveal-2">
+          <span class="kind-num">02</span>
+          <div>
+            <h3>Disagreement is fine. Disrespect is not.</h3>
+            <p>Disagreements are inevitable, but that is not an excuse to demean or talk down to others. Make sure to try to understand their argument well enough to restate it before pushing back.</p>
+          </div>
+        </li>
+        <li class="reveal reveal-3">
+          <span class="kind-num">03</span>
+          <div>
+            <h3>Be considerate</h3>
+            <p>Try to give people the benefit of the doubt. Some people may be encountering arguments for the first time and it is important that you give them time to formulate their opinions even if they don't end up agreeing with you. This is especially true for sensitive topics that brush up on people's real lived experience.</p>
+          </div>
+        </li>
+        <li class="reveal reveal-4">
+          <span class="kind-num">04</span>
+          <div>
+            <h3>Quotes don't leave the room</h3>
+            <p>Unless otherwise specified, DC Abundance operates under the Chatham House Rule. You must get explicit permission before quoting someone directly.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap doc-wrap">
+      <h2 class="reveal">Examples of violations</h2>
+      <p class="doc-note reveal">These include, but are not limited to:</p>
+      <ul class="bullets reveal">
+        <li>Personal insults, name-calling, or contempt directed at someone</li>
+        <li>Harassment or discriminatory remarks</li>
+        <li>Repeatedly shutting someone down or refusing to let them get their point across</li>
+      </ul>
+
+      <h2 class="reveal doc-h2-gap">If something goes wrong</h2>
+      <ul class="bullets reveal">
+        <li>A facilitator (at events) or a moderator (in the WhatsApp group) will tell the person to adjust their behavior in the moment.</li>
+        <li>If unacceptable behavior continues, the person will be removed from the space in question. Egregious violations will not be given a warning before removal action is taken.</li>
+      </ul>
+
+      <p class="doc-close reveal">Violations will be assessed at the sole discretion of DC Abundance organizers. If you have an issue please do not hesitate to reach out at <a href="mailto:hello@dcabundance.org">hello@dcabundance.org</a> or fill out our anonymous feedback form.</p>
+      <p class="doc-close reveal">Thank you for being a part of the DC Abundance community!</p>
+      <p class="doc-sign reveal">— DC Abundance Team</p>
+    </div>
+  </section>
+
+</div>
+
 </main>
 
 
@@ -1363,6 +1492,7 @@ footer .flag-mark { margin-bottom: 22px; }
     <a href="#/" data-link>Home</a>
     <a href="#/about" data-link>About us</a>
     <a href="#/resources" data-link>Abundance</a>
+    <a href="#/conduct" data-link>Code of conduct</a>
     <a class="js-signup" href="#">Sign up</a>
   </nav>
   <p>DC Abundance · Washington, D.C. · <a href="mailto:hello@dcabundance.org">hello@dcabundance.org</a></p>
@@ -1419,8 +1549,13 @@ function arm(root) {
    ROUTER
    Three pages, one document. The hash keeps back/forward working.
    ------------------------------------------------------------ */
-var PAGES = ["home", "about", "resources"];
-var TITLES = { home: "DC Abundance", about: "About us · DC Abundance", resources: "Abundance · DC Abundance" };
+var PAGES = ["home", "about", "resources", "conduct"];
+var TITLES = {
+  home: "DC Abundance",
+  about: "About us · DC Abundance",
+  resources: "Abundance · DC Abundance",
+  conduct: "Code of Conduct · DC Abundance"
+};
 
 function routeFromHash() {
   var h = (location.hash || "").replace(/^#\/?/, "").split("?")[0];
