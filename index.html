@@ -475,9 +475,12 @@ h2 {
    numbers. Each .member-photo sets --pos (object-position) and --zoom. */
 /* Square, not 4:5 — the source portraits are square and landscape, and a tall
    frame cut nearly half the width off the landscape one. */
+/* Capped rather than full column width: at ~337px the portraits dominated the
+   column and pushed the bios below the fold. The square is kept. */
 .member-photo {
-  aspect-ratio: 1 / 1; background: var(--paper-alt);
-  border: 1px solid var(--line); margin-bottom: 22px;
+  aspect-ratio: 1 / 1; width: 100%; max-width: 200px;
+  background: var(--paper-alt);
+  border: 1px solid var(--line); margin-bottom: 20px;
   overflow: hidden; position: relative;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
   transition: background .45s ease, border-color .45s ease;
@@ -495,6 +498,13 @@ h2 {
 .member-photo .initials { font-family: var(--font-display); font-size: 46px; color: var(--muted); line-height: 1; }
 .member-photo .ph { font-size: 12.5px; color: var(--muted); letter-spacing: .04em; }
 .member h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 27px; line-height: 1.15; }
+/* Name and LinkedIn mark on one line. align-items is center rather than
+   baseline so the square badge sits against the cap height of the name. */
+.member-name { display: flex; align-items: center; gap: 11px; }
+.li-link { display: inline-flex; flex: none; color: var(--muted); }
+.li-link svg { width: 19px; height: 19px; display: block; fill: currentColor; }
+.anim .li-link { transition: color .2s ease; }
+.li-link:hover, .li-link:focus-visible { color: var(--accent); }
 .member .role { font-size: 19px; font-weight: 600; color: var(--body); margin: 8px 0 2px; }
 .member .role-sub { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
 .member p { font-size: 16.5px; color: var(--body); line-height: 1.6; }
@@ -1167,12 +1177,22 @@ footer .flag-mark { margin-bottom: 22px; }
            a landscape photo crops left/right, a tall one crops top/bottom.
            Head sizes are matched by supplying better-framed originals, not by
            zooming, which softens small images and adds noise. -->
+      <!-- LinkedIn mark, defined once and referenced three times below. -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="li-mark" viewBox="0 0 24 24">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+        </symbol>
+      </svg>
+
       <div class="team">
         <div class="member reveal">
           <figure class="member-photo" style="--pos: 50% 50%;">
             <img src="images/abi-olvera.jpg" alt="Abi Olvera">
           </figure>
-          <h3>Abi Olvera</h3>
+          <div class="member-name">
+            <h3>Abi Olvera</h3>
+            <a class="li-link" href="https://www.linkedin.com/in/abiolvera/" target="_blank" rel="noopener noreferrer" aria-label="Abi Olvera on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          </div>
           <p class="role">Executive Director</p>
           <p class="role-sub">Co-founder</p>
           <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes about the institutional frictions that make housing, clinics, and daycare scarce.</p>
@@ -1181,7 +1201,10 @@ footer .flag-mark { margin-bottom: 22px; }
           <figure class="member-photo" style="--pos: 50% 26%;">
             <img src="images/tobias-amstutz.jpg" alt="Tobias Amstutz">
           </figure>
-          <h3>Tobias Amstutz</h3>
+          <div class="member-name">
+            <h3>Tobias Amstutz</h3>
+            <a class="li-link" href="https://www.linkedin.com/in/tobias-toby-amstutz-62a606230" target="_blank" rel="noopener noreferrer" aria-label="Tobias Amstutz on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          </div>
           <p class="role">Programs Director</p>
           <p class="role-sub">Co-founder</p>
           <p>Tobias runs the day to day programming and organizes the events. He previously interned at the Niskanen Center, where he worked on abundance policy. He was also a fellow on Alex Bores' congressional campaign.</p>
@@ -1190,7 +1213,10 @@ footer .flag-mark { margin-bottom: 22px; }
           <figure class="member-photo" style="--pos: 52% 50%;">
             <img src="images/allister-chang.webp" alt="Allister Chang">
           </figure>
-          <h3>Allister Chang</h3>
+          <div class="member-name">
+            <h3>Allister Chang</h3>
+            <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          </div>
           <p class="role">Strategic Advisor</p>
           <p class="role-sub">Co-founder</p>
           <p>Allister helped DC Abundance get established as an organization and advises us on DC government. He represents Ward 2 on the DC State Board of Education, where he was the first Asian American elected. He previously ran Libraries Without Borders, and has been a fellow at Halcyon and a visiting researcher at the Global Public Policy Institute.</p>
