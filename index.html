@@ -8,10 +8,13 @@
 <!--
   DC ABUNDANCE — PROTOTYPE
 
-  · Three pages in one file: Home, About us, Resources. The header
-    nav routes between them with the URL hash (#/, #/about,
-    #/resources), so back and forward work and any page can be
-    linked to directly. Header, join block and footer are shared.
+  · All pages live in this one file: Home (#/), About us (#/about),
+    Abundance (#/abundance), Resources (#/resources), Code of conduct
+    (#/conduct) and a hidden test calendar (#/events). The header nav
+    routes between them with the URL hash, so back and forward work
+    and any page can be linked to directly. Header, join block and
+    footer are shared.
+    Note: until October 2026 the Abundance page lived at #/resources.
   · Colour is the DC flag: a white field with red used for action and
     for the three-stars-and-two-bars marks. All values live in the
     :root block at the top of the stylesheet.
@@ -202,6 +205,21 @@ html.flying-cta .site-header .header-cta { visibility: hidden; }
   transition: background .3s ease;
 }
 .header-cta:hover { background: var(--accent-deep); }
+.nav a, .header-cta, .brand-name { white-space: nowrap; }
+/* Narrow desktop. With four nav links the full-size bar needs about
+   1,100px; below that, links and the button wrapped onto two lines.
+   Here everything tightens a notch so the bar stays on one line down to
+   the 940px phone layout. The logo keeps its size, so --headerH holds,
+   and the flight reads the wordmark and button sizes live, so it still
+   lands exactly. */
+@media (min-width: 941px) and (max-width: 1120px) {
+  .site-header { gap: 22px; padding-left: 28px; padding-right: 28px; }
+  .nav { gap: 20px; }
+  .nav a { font-size: 15px; }
+  .brand-name { font-size: 26px; }
+  .header-cta { font-size: 17px; padding: 17px 26px; }
+  .menu-btn { margin-left: 4px; }
+}
 .btn .arrow { display: inline-block; transition: transform .3s var(--ease); }
 .btn:hover .arrow { transform: translateX(5px); }
 
@@ -819,6 +837,170 @@ html[data-route="conduct"] .join { display: none; }
 }
 
 /* ================================================================
+   RESOURCES  (#/resources)
+   The practical page: how to join, meet us, host, and what we expect.
+   Built from the site's existing pieces (photo head, card grid,
+   two-column sections) with one difference: these cards end in a real
+   button rather than a "Read more" that expands, because each one
+   leads somewhere. Join buttons are filled; every other action is an
+   outline, so the one thing we most want people to do stands out.
+   ================================================================ */
+.res-cards .card { padding: 32px 28px 28px; }
+.res-cards .card-icon { width: 40px; height: 40px; margin-bottom: 20px; }
+.res-cards .card h3 { font-size: 23px; }
+.res-cards .card p { flex: none; font-size: 16.5px; margin-bottom: 12px; }
+/* the text block takes the slack, so buttons line up along the bottom */
+.res-body { flex: 1; margin-bottom: 22px; }
+.res-body p:last-child { margin-bottom: 0; }
+.res-body a, .res-note a { color: var(--accent); font-weight: 600; }
+
+.btn-fill, .btn-line {
+  align-self: flex-start;
+  font-size: 16px; font-weight: 600; line-height: 1.3;
+  padding: 12px 19px; border: 2px solid var(--accent);
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+}
+.btn-fill { background: var(--accent); color: #fff; }
+.btn-fill:hover { background: var(--accent-lift); border-color: var(--accent-lift); }
+.btn-line { background: transparent; color: var(--accent); }
+.btn-line:hover { background: var(--accent); color: #fff; }
+
+/* WhatsApp norms: the numbered-row language of the About page, smaller */
+.norms-label { font-size: 18px; font-weight: 700; color: var(--ink); margin: 32px 0 4px; }
+.norms li {
+  display: grid; grid-template-columns: 44px 1fr;
+  padding: 20px 0; border-top: 1px solid var(--line);
+}
+.norms li:last-child { border-bottom: 1px solid var(--line); }
+.norm-num { font-family: var(--font-display); font-size: 18px; color: var(--accent); padding-top: 2px; }
+.norms h3 {
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: 21px; line-height: 1.2; margin-bottom: 6px;
+}
+.norms p { font-size: 17px; line-height: 1.6; color: var(--body); }
+.res-note { font-size: 17.5px; line-height: 1.6; color: var(--body); margin-top: 26px; }
+.res-action { margin-top: 24px; }
+.res-lede { margin-bottom: 6px; }
+
+/* the page already ends on a Join button, so the shared join block
+   underneath would just say the same thing twice */
+html[data-route="resources"] .join { display: none; }
+
+/* Three cards stay three across down to tablet width; the site default
+   would drop them to two, leaving the third alone on its own row. */
+@media (min-width: 941px) and (max-width: 1080px) {
+  .cards.cards-3.res-cards { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .res-cards .card { padding: 26px 20px 22px; }
+}
+@media (max-width: 940px) {
+  .res-cards .card { padding: 26px 22px 24px; }
+  .norms li { grid-template-columns: 36px 1fr; }
+  .norms h3 { font-size: 19px; }
+}
+
+/* ================================================================
+   EVENTS  (test page at #/events, not linked from the nav yet)
+   A rolling 30-day calendar. Each event shows its name, guest, time
+   and a deliberately general location (DC, Maryland or Virginia).
+   The exact address and the RSVP link only go out in the invite, so
+   nothing here links to an event. The grid is built in the script
+   from the EVENTS array; the markup only holds empty containers.
+   ================================================================ */
+.ev-head { padding: calc(var(--headerH) + 46px) 0 0; }
+.ev-test {
+  display: inline-block; font-size: 14px; color: var(--muted);
+  border: 1px dashed #c9d0db; padding: 5px 11px; margin-bottom: 18px;
+}
+.ev-head h1 {
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: clamp(36px, 4.4vw, 54px); line-height: 1.06; letter-spacing: -.015em;
+  margin-bottom: 12px;
+}
+.ev-head .ev-lede { font-size: 19px; line-height: 1.55; color: var(--body); max-width: 38em; }
+
+/* how to attend: one plain instruction and one button, above the grid */
+.ev-attend {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 18px 32px;
+  margin-top: 28px; padding: 22px 26px;
+  border: 1px solid var(--line); border-left: 4px solid var(--accent);
+}
+.ev-attend p { font-size: 17px; line-height: 1.55; color: var(--body); max-width: 40em; }
+.ev-attend strong { color: var(--ink); }
+.btn-mid {
+  background: var(--accent); color: #fff; font-weight: 600; font-size: 16.5px;
+  padding: 14px 24px; white-space: nowrap; transition: background .3s ease;
+}
+.btn-mid:hover { background: var(--accent-lift); }
+
+/* the grid */
+.cal-wrap { padding: 44px 0 104px; }
+.cal-bar {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 6px 20px; margin-bottom: 16px;
+}
+.cal-range { font-family: var(--font-display); font-size: 22px; letter-spacing: -.01em; color: var(--ink); }
+.cal-key { font-size: 15px; color: var(--muted); }
+.cal-dows, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.cal-dows { border-bottom: 2px solid var(--ink); }
+.cal-dows span { font-size: 14px; font-weight: 600; color: var(--muted); padding: 0 10px 8px; }
+.cal-grid { border-left: 1px solid var(--line); }
+.cal-day {
+  min-width: 0; min-height: 132px; padding: 10px 10px 14px;
+  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.cal-date { font-size: 14.5px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+.cal-dow { display: none; }
+/* the month name only appears where it changes: the first day shown and the 1st */
+.cal-mon { display: none; color: var(--muted); font-weight: 500; }
+.cal-day.show-mon .cal-mon { display: inline; }
+.cal-today { box-shadow: inset 0 3px 0 var(--accent); }
+.cal-today .cal-date { color: var(--accent); }
+.cal-today-tag { font-weight: 500; }
+.cal-today-tag::before { content: "\00b7\00a0"; }
+/* days before today and after the 30th fill out the weeks but stay quiet */
+.cal-off { background: var(--paper-alt); }
+.cal-off .cal-date { color: #b4bbc7; font-weight: 500; }
+.cal-evs { display: flex; flex-direction: column; gap: 10px; }
+.cal-ev { border-left: 3px solid var(--accent); padding: 1px 0 1px 9px; }
+.cal-ev-meta { font-size: 13px; color: var(--muted); line-height: 1.35; }
+.cal-ev-name { font-size: 14.5px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-top: 2px; }
+.cal-ev-guest { font-size: 13.5px; color: var(--body); line-height: 1.35; margin-top: 2px; }
+.cal-empty { font-size: 17px; color: var(--body); margin-top: 22px; }
+.cal-foot { font-size: 16px; color: var(--muted); margin-top: 22px; }
+.cal-foot a { color: var(--accent); font-weight: 600; }
+
+/* Tablets: seven columns still fit, just tighter. */
+@media (max-width: 940px) {
+  .ev-head { padding-top: calc(var(--headerH) + 30px); }
+  .ev-head .ev-lede { font-size: 17.5px; }
+  .ev-attend { padding: 18px 20px; }
+  .ev-attend .btn-mid { width: 100%; text-align: center; }
+  .cal-day { padding: 8px 7px 12px; min-height: 116px; }
+  .cal-dows span { padding: 0 7px 8px; }
+}
+/* Phones: seven columns would be 45px each, so the grid becomes an agenda,
+   one row per day that has something on, with the date on the left. */
+@media (max-width: 700px) {
+  .cal-dows { display: none; }
+  .cal-grid { display: block; border-left: 0; border-top: 2px solid var(--ink); }
+  .cal-day {
+    display: grid; grid-template-columns: 64px 1fr; gap: 0 14px;
+    min-height: 0; padding: 16px 0; border-right: 0;
+  }
+  .cal-day:not(.has-ev), .cal-off { display: none; }
+  .cal-today { box-shadow: none; }
+  .cal-dow { display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
+  .cal-mon { display: inline; }
+  .cal-today-tag { display: block; font-size: 13px; }
+  .cal-today-tag::before { content: none; }
+  .cal-ev-meta { font-size: 14px; }
+  .cal-ev-name { font-size: 16px; }
+  .cal-ev-guest { font-size: 15px; }
+}
+
+/* ================================================================
    EMBEDDED SIGNUP FORM  (home)
    ================================================================ */
 /* Heading, intro and form share one width and one centre line, so their left
@@ -962,7 +1144,8 @@ footer .flag-mark { margin-bottom: 22px; }
   <nav class="nav">
     <a href="#/" data-link data-nav="home">Home</a>
     <a href="#/about" data-link data-nav="about">About us</a>
-    <a href="#/resources" data-link data-nav="resources">Abundance</a>
+    <a href="#/abundance" data-link data-nav="abundance">Abundance</a>
+    <a href="#/resources" data-link data-nav="resources">Resources</a>
   </nav>
   <a class="btn header-cta js-signup" href="#">Sign up</a>
 
@@ -976,7 +1159,8 @@ footer .flag-mark { margin-bottom: 22px; }
   <nav class="menu-panel" id="menuPanel" aria-label="Quick menu">
     <a href="#/" data-link data-menu="home">Home</a>
     <a href="#/about" data-link data-menu="about">About us</a>
-    <a href="#/resources" data-link data-menu="resources">Abundance</a>
+    <a href="#/abundance" data-link data-menu="abundance">Abundance</a>
+    <a href="#/resources" data-link data-menu="resources">Resources</a>
     <a class="menu-join js-signup" href="#">Join DC Abundance</a>
   </nav>
 </header>
@@ -1034,7 +1218,7 @@ footer .flag-mark { margin-bottom: 22px; }
         <div class="prose">
           <p>We view abundance as a frame, not a platform. It asks why it is so difficult to get more of the things people need most and often finds surprisingly similar answers across housing, energy, healthcare, and a bunch of other issue areas. It does not belong to one political faction or movement and there are still many questions about how it can be best applied.</p>
         </div>
-        <a class="arrow-link" href="#/resources" data-link>Read the framework <span class="arrow">&rarr;</span></a>
+        <a class="arrow-link" href="#/abundance" data-link>Read the framework <span class="arrow">&rarr;</span></a>
       </div>
     </div>
   </section>
@@ -1266,7 +1450,7 @@ footer .flag-mark { margin-bottom: 22px; }
 <!-- ============================================================
      PAGE — RESOURCES
      ============================================================ -->
-<div class="page" data-page="resources">
+<div class="page" data-page="abundance">
 
   <section class="page-head photo-sec">
     <div class="photo-bg" data-parallax aria-hidden="true">
@@ -1464,6 +1648,153 @@ footer .flag-mark { margin-bottom: 22px; }
 </div>
 
 <!-- ============================================================
+     PAGE — RESOURCES
+     How to join, meet us, host, and what we expect. Every outside
+     link on this page is written out here in the markup, except the
+     Join buttons, which pick up SIGNUP_URL like everywhere else.
+     ============================================================ -->
+<div class="page" data-page="resources">
+
+  <section class="page-head photo-sec">
+    <div class="photo-bg" data-parallax aria-hidden="true">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/LINCOLN_MEMORIAL_UNDER_CONSTRUCTION_LCCN2016869120.jpg?width=2400" alt="">
+    </div>
+    <div class="photo-scrim" aria-hidden="true"></div>
+    <p class="photo-credit">The Lincoln Memorial under construction. Library of Congress.</p>
+    <div class="wrap">
+      <div class="flag-mark reveal" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
+      <h1 class="reveal reveal-2">Start here</h1>
+      <p class="reveal reveal-3">DC Abundance brings together people in Washington who want the country to build more of what it needs, from housing and transit to clean energy, health care, childcare and science. Whether you're new to these ideas or work on them every day, here's how to get started.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="cards cards-3 res-cards">
+        <article class="card reveal">
+          <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
+          <h3>Join DC Abundance</h3>
+          <div class="res-body">
+            <p>Joining is free and takes about two minutes. Members get our monthly email with upcoming events, full event details including locations and RSVP links, and an invite to our WhatsApp community.</p>
+          </div>
+          <a class="btn btn-fill js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a>
+        </article>
+
+        <article class="card reveal reveal-2">
+          <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 14v2.2l1.6 1"/><path d="M16 2v3"/><path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338"/><path d="M3 9h5.859"/><path d="M8 2v3"/><circle cx="16" cy="16" r="6"/></svg>
+          <h3>Meet with us</h3>
+          <div class="res-body">
+            <p>Book a 15 or 30 minute call with Tobias, our Programs Director. We'd like to hear how you got interested in abundance, what you're working on, and how we can help. If you have an idea for an event, bring it.</p>
+          </div>
+          <a class="btn btn-line" href="https://cal.com/tobias-amstutz-eha22m/dc-abundance-1-on-1-sign-up" target="_blank" rel="noopener">Book a time <span class="arrow">&rarr;</span></a>
+        </article>
+
+        <article class="card reveal reveal-3">
+          <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>
+          <h3>Code of conduct</h3>
+          <div class="res-body">
+            <p>We want every event and conversation to be one where people can disagree openly and still feel welcome. Our code of conduct applies at events and in the WhatsApp community.</p>
+            <p>To raise a concern, use our <a href="https://forms.fillout.com/t/bkAJTwKN8hus" target="_blank" rel="noopener">reporting form</a>.</p>
+          </div>
+          <a class="btn btn-line" href="#/conduct" data-link>Read the code of conduct <span class="arrow">&rarr;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap two-col">
+      <div class="reveal">
+        <div class="rule draw"></div>
+        <h2>WhatsApp community</h2>
+      </div>
+      <div class="reveal reveal-2">
+        <div class="prose">
+          <p>Our WhatsApp community is where members keep the conversation going between events. Volunteer moderators keep it on topic and free of spam.</p>
+        </div>
+        <p class="norms-label">A few norms</p>
+        <ul class="norms">
+          <li>
+            <span class="norm-num">01</span>
+            <div>
+              <h3>Keep chats relevant</h3>
+              <p>Share things the group will care about, like events, articles, jobs and questions connected to abundance. Please refrain from posting unrelated promotions, chain messages, or really anything you'd mute if someone else posted it.</p>
+            </div>
+          </li>
+          <li>
+            <span class="norm-num">02</span>
+            <div>
+              <h3>Take long debates somewhere else</h3>
+              <p>Disagreements are welcome, but if a back-and-forth runs past a few messages, move it to a DM or separate chat. The main chat should stay readable for everyone else.</p>
+            </div>
+          </li>
+        </ul>
+        <p class="res-note">To join, sign up through Join DC Abundance. The invite link to the WhatsApp community comes in your signup confirmation email.</p>
+        <div class="res-action"><a class="btn btn-fill js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="rule draw"></div>
+        <h2>Host with us</h2>
+        <p class="lede res-lede">Some of our favorite events have started from a member pitching us an idea. If you want to bring something to the community, here's how.</p>
+      </div>
+      <div class="cards cards-3 res-cards">
+        <article class="card reveal">
+          <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+          <h3>Pitch to host an event</h3>
+          <div class="res-body">
+            <p>Have an idea for an event? Tell us about it. You can pitch it for us to organize, offer to coordinate or host it yourself, or both. We can help with promotion, venues and planning.</p>
+            <p>Before you pitch, please read our <a href="https://docs.google.com/document/d/1nsWO0254AjvWzLLDGH1fenV4-_i-qJnLaXg7R4Cs120/edit?usp=sharing" target="_blank" rel="noopener">host guidelines</a>.</p>
+          </div>
+          <a class="btn btn-line" href="https://forms.fillout.com/t/1aGB4XSToZus" target="_blank" rel="noopener">Pitch an event <span class="arrow">&rarr;</span></a>
+        </article>
+
+        <article class="card reveal reveal-2">
+          <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v16"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"/></svg>
+          <h3>Host a reading group</h3>
+          <div class="res-body">
+            <p>Reading groups are small groups that meet for a few weeks to work through a book or a series of articles. Every group follows the same format, with a lead and a simple role for each participant, so no one has to carry the conversation alone. You don't need experience leading discussions, because we'll give you the structure.</p>
+            <p>Read our <a href="https://docs.google.com/document/d/1Kp_9Z2iX55I2239YbGIPN_09J3FZ8s_EOU0MVULw424/edit?usp=sharing" target="_blank" rel="noopener">reading group info sheet</a>.</p>
+          </div>
+          <a class="btn btn-line" href="https://forms.fillout.com/t/wP5zAN5wqnus" target="_blank" rel="noopener">Propose a reading group <span class="arrow">&rarr;</span></a>
+        </article>
+
+        <article class="card reveal reveal-3">
+          <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg>
+          <h3>Suggest a speaker or event</h3>
+          <div class="res-body">
+            <p>Know someone we should hear from? Tell us who they are and why they'd be good. If you can introduce us, even better.</p>
+          </div>
+          <a class="btn btn-line" href="https://forms.fillout.com/t/vGsgiGdzCXus" target="_blank" rel="noopener">Suggest a speaker <span class="arrow">&rarr;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap two-col">
+      <div class="reveal">
+        <div class="rule draw"></div>
+        <h2>About the writing club</h2>
+      </div>
+      <div class="reveal reveal-2">
+        <div class="prose">
+          <p>DC Abundance's monthly writing club is a dedicated block of time for people who want to make real progress on their writing. We reserve a space, you bring whatever you're working on, and everyone settles in to write alongside each other.</p>
+          <p>Projects don't need to be about abundance (though we'd ask that they not be working against it), so you'll find people drafting essays, policy memos, newsletters, fiction, and everything in between. The time is mostly heads-down and focused, but there's always room to step away and talk through an idea with someone who's thinking about something completely different.</p>
+          <p>Regulars have found that showing up each month makes it much easier to keep a project moving, and we'd love for you to join them.</p>
+        </div>
+        <div class="res-action"><a class="btn btn-fill js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================================
      PAGE — CODE OF CONDUCT
      Reachable at /#/conduct. Linked from the About page, the footer,
      and the signup form. Headed by the logo rather than a photograph:
@@ -1539,6 +1870,44 @@ footer .flag-mark { margin-bottom: 22px; }
 
 </div>
 
+<!-- ============================================================
+     PAGE — EVENTS (test)
+     Reachable at /#/events but deliberately not in the nav or footer
+     yet. The calendar is filled in by the script from the EVENTS
+     array; to change what shows, edit that array, not this markup.
+     ============================================================ -->
+<div class="page" data-page="events">
+
+  <section class="ev-head">
+    <div class="wrap">
+      <p class="ev-test">Test page: these are sample events, not real ones.</p>
+      <h1>Upcoming events</h1>
+      <p class="ev-lede">Everything we have planned for the next 30 days, across DC, Maryland and Virginia.</p>
+
+      <div class="ev-attend">
+        <p><strong>Want to come?</strong> Invites go out by email to people on our list, with the exact location and the RSVP link. Sign up once and you will get the invite for anything here.</p>
+        <a class="btn btn-mid js-signup" href="#">Sign up to get invites <span class="arrow">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cal-wrap">
+    <div class="wrap">
+      <div class="cal-bar">
+        <h2 class="cal-range" id="calRange">The next 30 days</h2>
+        <p class="cal-key">Exact locations are in the invite.</p>
+      </div>
+      <div class="cal-dows" aria-hidden="true">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+      <ul class="cal-grid" id="calGrid" aria-labelledby="calRange"></ul>
+      <p class="cal-empty" id="calEmpty" hidden>Nothing is on the calendar for the next 30 days yet. Sign up and you will hear about the next one first.</p>
+      <p class="cal-foot">See something you like? <a class="js-signup" href="#">Sign up here</a> and the invite will come to your inbox.</p>
+    </div>
+  </section>
+
+</div>
+
 </main>
 
 
@@ -1559,7 +1928,8 @@ footer .flag-mark { margin-bottom: 22px; }
   <nav class="foot-nav">
     <a href="#/" data-link>Home</a>
     <a href="#/about" data-link>About us</a>
-    <a href="#/resources" data-link>Abundance</a>
+    <a href="#/abundance" data-link>Abundance</a>
+    <a href="#/resources" data-link>Resources</a>
     <a href="#/conduct" data-link>Code of conduct</a>
     <a class="js-signup" href="#">Sign up</a>
   </nav>
@@ -1583,6 +1953,117 @@ document.querySelectorAll(".js-signup").forEach(function (a) {
 document.querySelectorAll(".js-feedback").forEach(function (a) {
   a.href = FEEDBACK_URL; a.target = "_blank"; a.rel = "noopener";
 });
+
+/* ------------------------------------------------------------
+   EVENTS CALENDAR  (test page, #/events)
+   Edit this list to change what shows. Each event needs:
+     date   "YYYY-MM-DD"
+     time   as you want it written, e.g. "6:30 PM"
+     name   the event's title
+     guest  optional; shown as "with ..." (leave "" for none)
+     where  "DC", "Maryland" or "Virginia" and nothing more specific
+   There is deliberately no field for an address or link: those go
+   out in the invite. Events outside the next 30 days are ignored,
+   so past ones can be left in until someone tidies up.
+   These are SAMPLE events for the test page.
+   ------------------------------------------------------------ */
+var EVENTS = [
+  { date: "2026-10-06", time: "6:30 PM",  name: "Abundance happy hour",                     guest: "",                                   where: "DC" },
+  { date: "2026-10-08", time: "7:00 PM",  name: "Why does a mile of subway cost so much?",  guest: "a transit cost researcher",          where: "DC" },
+  { date: "2026-10-14", time: "6:30 PM",  name: "Debate night: permitting reform",          guest: "two Hill staffers, one on each side", where: "DC" },
+  { date: "2026-10-14", time: "8:00 AM",  name: "Coffee for new members",                   guest: "",                                   where: "DC" },
+  { date: "2026-10-17", time: "10:00 AM", name: "Housing walking tour",                     guest: "a Montgomery County planner",        where: "Maryland" },
+  { date: "2026-10-21", time: "7:00 PM",  name: "Book club: Abundance, part one",           guest: "",                                   where: "DC" },
+  { date: "2026-10-27", time: "6:30 PM",  name: "Data centers and the grid",                guest: "an energy policy analyst",           where: "Virginia" },
+  { date: "2026-10-29", time: "7:00 PM",  name: "Where are all the daycares?",              guest: "a childcare provider",               where: "DC" },
+  { date: "2026-11-12", time: "6:30 PM",  name: "Outside the window, so not shown",         guest: "",                                   where: "DC" }
+];
+
+(function buildCalendar() {
+  var grid = document.getElementById("calGrid");
+  if (!grid) return;
+  var DAYS = 30;
+  var DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var DOW_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var MON_FULL = ["January", "February", "March", "April", "May", "June", "July",
+                  "August", "September", "October", "November", "December"];
+
+  function addDays(d, n) { var x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function key(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  /* textContent only, never innerHTML: if this list is ever fed from a form
+     or a spreadsheet, nothing typed into it can become markup on the page */
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  /* "6:30 PM" -> minutes after midnight, so a day's events list in order */
+  function minutes(t) {
+    var m = /(\d{1,2})(?::(\d{2}))?\s*([AP])M/i.exec(t || "");
+    if (!m) return 0;
+    var h = (+m[1]) % 12 + (m[3].toUpperCase() === "P" ? 12 : 0);
+    return h * 60 + (+(m[2] || 0));
+  }
+
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  var last  = addDays(today, DAYS - 1);
+  var start = addDays(today, -today.getDay());       /* back to Sunday */
+  var end   = addDays(last, 6 - last.getDay());      /* on to Saturday */
+
+  var byDay = {};
+  EVENTS.forEach(function (ev) { (byDay[ev.date] = byDay[ev.date] || []).push(ev); });
+  Object.keys(byDay).forEach(function (k) {
+    byDay[k].sort(function (a, b) { return minutes(a.time) - minutes(b.time); });
+  });
+
+  document.getElementById("calRange").textContent =
+    MON_FULL[today.getMonth()] + " " + today.getDate() + " to " +
+    MON_FULL[last.getMonth()] + " " + last.getDate();
+
+  var shown = 0;
+  for (var d = start; d <= end; d = addDays(d, 1)) {
+    var inRange = d >= today && d <= last;
+    var evs = inRange ? (byDay[key(d)] || []) : [];
+    var li = el("li", "cal-day");
+    if (!inRange) li.classList.add("cal-off");
+    if (evs.length) li.classList.add("has-ev");
+    if (d.getTime() === today.getTime()) li.classList.add("cal-today");
+    if (inRange && (d.getTime() === today.getTime() || d.getDate() === 1)) li.classList.add("show-mon");
+    /* screen readers hear only the days that have something on */
+    if (!evs.length) li.setAttribute("aria-hidden", "true");
+
+    var date = el("div", "cal-date");
+    date.appendChild(el("span", "sr-only", DOW_FULL[d.getDay()] + ", " + MON_FULL[d.getMonth()] + " " + d.getDate()));
+    var vis = el("span"); vis.setAttribute("aria-hidden", "true");
+    vis.appendChild(el("span", "cal-dow", DOW[d.getDay()]));
+    vis.appendChild(el("span", "cal-mon", MON[d.getMonth()] + " "));
+    vis.appendChild(document.createTextNode(String(d.getDate())));
+    if (li.classList.contains("cal-today")) {
+      vis.appendChild(document.createTextNode(" "));
+      vis.appendChild(el("span", "cal-today-tag", "Today"));
+    }
+    date.appendChild(vis);
+    li.appendChild(date);
+
+    if (evs.length) {
+      var list = el("div", "cal-evs");
+      evs.forEach(function (ev) {
+        var box = el("div", "cal-ev");
+        box.appendChild(el("div", "cal-ev-meta", ev.time + " · " + ev.where));
+        box.appendChild(el("div", "cal-ev-name", ev.name));
+        if (ev.guest) box.appendChild(el("div", "cal-ev-guest", "with " + ev.guest));
+        list.appendChild(box);
+        shown++;
+      });
+      li.appendChild(list);
+    }
+    grid.appendChild(li);
+  }
+  if (!shown) document.getElementById("calEmpty").hidden = false;
+})();
 
 /* guarded: a missing matchMedia must not take the router down with it */
 var reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -1621,12 +2102,14 @@ function arm(root) {
    ROUTER
    Three pages, one document. The hash keeps back/forward working.
    ------------------------------------------------------------ */
-var PAGES = ["home", "about", "resources", "conduct"];
+var PAGES = ["home", "about", "abundance", "resources", "conduct", "events"];
 var TITLES = {
   home: "DC Abundance",
   about: "About us · DC Abundance",
-  resources: "Abundance · DC Abundance",
-  conduct: "Code of Conduct · DC Abundance"
+  abundance: "Abundance · DC Abundance",
+  resources: "Resources · DC Abundance",
+  conduct: "Code of Conduct · DC Abundance",
+  events: "Events · DC Abundance"
 };
 
 function routeFromHash() {
@@ -1851,7 +2334,9 @@ function positionFly(y) {
       var cy = Math.max(cs.top, c.top + (cs.top - c.top) * e);
       flyCta.style.width  = (c.width  + (cs.width  - c.width ) * e).toFixed(1) + "px";
       flyCta.style.height = (c.height + (cs.height - c.height) * e).toFixed(1) + "px";
-      flyCta.style.fontSize = (20 + (19 - 20) * e).toFixed(1) + "px";
+      /* land on whatever size the header button actually is at this width */
+      var slotFont = parseFloat(getComputedStyle(ctaSlot).fontSize) || 19;
+      flyCta.style.fontSize = (20 + (slotFont - 20) * e).toFixed(1) + "px";
       flyCta.style.transform = "translate3d("
         + (c.left + (cs.left - c.left) * e).toFixed(1) + "px," + cy.toFixed(1) + "px,0)";
       flyCta.querySelector(".lbl-a").style.opacity = Math.max(0, 1 - e * 2.2).toFixed(3);
