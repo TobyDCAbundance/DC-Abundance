@@ -9,7 +9,8 @@
   DC ABUNDANCE — PROTOTYPE
 
   · All pages live in this one file: Home (#/), About us (#/about),
-    Abundance (#/abundance), Resources (#/resources), Code of conduct
+    Abundance (#/abundance), Get involved (#/get-involved, also
+    #/resources; internally the "resources" page), Code of conduct
     (#/conduct) and a hidden test calendar (#/events). The header nav
     routes between them with the URL hash, so back and forward work
     and any page can be linked to directly. Header, join block and
@@ -74,8 +75,9 @@
   --scrim-3:    .90;
   --scrim-band: .80;
   --photo:      grayscale(1) contrast(1.12);
-  /* team and advisor portraits stay in colour; hovering one lays this
-     much of the accent red over it (see PORTRAIT HOVER) */
+  /* team and advisor portraits stay in colour; hovering one turns it
+     black and white with this much of the accent red over it (see
+     PORTRAIT HOVER) */
   --tint:       .3;
   --edge-on-deep: rgba(22,32,46,.28);
 }
@@ -564,19 +566,25 @@ h2 {
   object-position: var(--pos, 50% 50%);
 }
 /* PORTRAIT HOVER, shared by the team and the advisory board. Photos show
-   in their natural colour; hovering a person, or tabbing to one of their
-   links, lays a light wash of the site red over the photo. Multiply keeps
-   the face's own light and shade showing through the tint. */
+   in their natural colour. Hovering a person, or tabbing to one of their
+   links, turns the photo black and white and lays the site red over it,
+   like the big photographs elsewhere on the site. Multiply keeps the
+   face's own light and shade showing through the tint. */
 .member-photo, .advisor-photo { isolation: isolate; }
+.member-photo img, .advisor-photo img { transition: filter .3s ease; }
 .member-photo::after, .advisor-photo::after {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background: var(--accent); mix-blend-mode: multiply;
   opacity: 0; transition: opacity .3s ease;
 }
 @media (hover: hover) {
+  .member:hover .member-photo img,
+  .advisor:hover .advisor-photo img { filter: grayscale(1) contrast(1.08); }
   .member:hover .member-photo::after,
   .advisor:hover .advisor-photo::after { opacity: var(--tint); }
 }
+.member:focus-within .member-photo img,
+.advisor:focus-within .advisor-photo img { filter: grayscale(1) contrast(1.08); }
 .member:focus-within .member-photo::after,
 .advisor:focus-within .advisor-photo::after { opacity: var(--tint); }
 .member-photo .initials { font-family: var(--font-display); font-size: 46px; color: var(--muted); line-height: 1; }
@@ -1332,7 +1340,7 @@ footer .flag-mark { margin-bottom: 22px; }
     <a href="#/" data-link data-nav="home">Home</a>
     <a href="#/about" data-link data-nav="about">About us</a>
     <a href="#/abundance" data-link data-nav="abundance">Abundance</a>
-    <a href="#/resources" data-link data-nav="resources">Resources</a>
+    <a href="#/get-involved" data-link data-nav="resources">Get involved</a>
   </nav>
   <a class="btn header-cta js-signup" href="#">Sign up</a>
 
@@ -1347,7 +1355,7 @@ footer .flag-mark { margin-bottom: 22px; }
     <a href="#/" data-link data-menu="home">Home</a>
     <a href="#/about" data-link data-menu="about">About us</a>
     <a href="#/abundance" data-link data-menu="abundance">Abundance</a>
-    <a href="#/resources" data-link data-menu="resources">Resources</a>
+    <a href="#/get-involved" data-link data-menu="resources">Get involved</a>
     <a class="menu-join js-signup" href="#">Join DC Abundance</a>
   </nav>
 </header>
@@ -1857,7 +1865,8 @@ footer .flag-mark { margin-bottom: 22px; }
 </div>
 
 <!-- ============================================================
-     PAGE — RESOURCES
+     PAGE — GET INVOLVED  (internal name "resources"; address
+     #/get-involved, with the old #/resources still working)
      How to join, meet us, host, and what we expect. Every outside
      link on this page is written out here in the markup, except the
      Join buttons, which pick up SIGNUP_URL like everywhere else.
@@ -1872,7 +1881,7 @@ footer .flag-mark { margin-bottom: 22px; }
     <p class="photo-credit">The Lincoln Memorial under construction. Library of Congress.</p>
     <div class="wrap">
       <div class="flag-mark reveal" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
-      <h1 class="reveal reveal-2">Start here</h1>
+      <h1 class="reveal reveal-2">Get involved</h1>
       <p class="reveal reveal-3">DC Abundance brings together people in Washington who want the country to build more of what it needs, from housing and transit to clean energy, health care, childcare and science. Whether you're new to these ideas or work on them every day, here's how to get started.</p>
       <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
     </div>
@@ -2126,7 +2135,7 @@ footer .flag-mark { margin-bottom: 22px; }
     <a href="#/" data-link>Home</a>
     <a href="#/about" data-link>About us</a>
     <a href="#/abundance" data-link>Abundance</a>
-    <a href="#/resources" data-link>Resources</a>
+    <a href="#/get-involved" data-link>Get involved</a>
     <a href="#/conduct" data-link>Code of conduct</a>
     <a class="js-signup" href="#">Sign up</a>
   </nav>
@@ -2388,13 +2397,18 @@ var TITLES = {
   home: "DC Abundance",
   about: "About us · DC Abundance",
   abundance: "Abundance · DC Abundance",
-  resources: "Resources · DC Abundance",
+  resources: "Get involved · DC Abundance",
   conduct: "Code of Conduct · DC Abundance",
   events: "Events · DC Abundance"
 };
+/* Public addresses that differ from the page's internal name. The
+   "resources" page was renamed "Get involved" in October 2026; its links
+   now point to #/get-involved, and the old #/resources still works. */
+var ALIASES = { "get-involved": "resources" };
 
 function routeFromHash() {
   var h = (location.hash || "").replace(/^#\/?/, "").split("?")[0];
+  h = ALIASES[h] || h;
   return PAGES.indexOf(h) >= 0 ? h : "home";
 }
 
