@@ -21,6 +21,9 @@
   · Outside form links live in ONE place: the SIGNUP_URL and
     FEEDBACK_URL constants in the script at the bottom. Anything
     carrying .js-signup or .js-feedback is wired up from there.
+  · The advisory board appears twice (About, and Home above the signup
+    form) but is written once: the ADVISORS list in the script at the
+    bottom fills every element marked data-advisors.
   · Team bios on the About page are PLACEHOLDERS and marked as such
     Team photos are cropped in CSS, not in the files: each .member-photo
     carries its own --pos and --zoom so heads can be matched in size.
@@ -529,6 +532,46 @@ h2 {
 .tag {
   display: inline-block; font-size: 11.5px; font-weight: 600; letter-spacing: .06em;
   color: var(--accent); border: 1px solid var(--accent); padding: 4px 9px; margin-bottom: 14px;
+}
+
+/* ================================================================
+   ADVISORY BOARD  (about + home)
+   Cards are built by script from the ADVISORS list. Photos are
+   pre-cropped squares in images/advisors/, so no per-person framing
+   is needed here; an optional `pos` in the list can still nudge one.
+   ================================================================ */
+.advisors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 32px; margin-top: 8px; }
+.advisor-photo {
+  aspect-ratio: 1 / 1; width: 100%; margin: 0 0 16px;
+  background: var(--paper-alt); border: 1px solid var(--line);
+  overflow: hidden; position: relative;
+  display: grid; place-items: center;
+}
+/* on the grey band the empty square reads better in white */
+.section-alt .advisor-photo { background: var(--paper); }
+.advisor-photo img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: var(--pos, 50% 50%);
+}
+/* shown only when a photo is missing or fails to load */
+.advisor-photo .initials { font-family: var(--font-display); font-size: 34px; color: var(--muted); line-height: 1; }
+.advisor h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 20px; line-height: 1.2; margin-bottom: 6px; }
+/* keeps a hyphenated surname in one piece on narrow screens */
+.advisor h3 .nobr { white-space: nowrap; }
+/* balance evens out two-line titles instead of leaving one word alone */
+.advisor h3, .advisor .adv-title, .advisor .adv-org { text-wrap: balance; }
+.advisor .adv-title { font-size: 15px; line-height: 1.45; color: var(--body); }
+.advisor .adv-org { font-size: 15px; line-height: 1.45; font-weight: 700; color: var(--ink); margin-top: 3px; }
+/* On home the board sits directly above the signup form and both are on
+   white, so a thin rule keeps them from running together. */
+.advisory-home + #signup { border-top: 1px solid var(--line); }
+@media (max-width: 1000px) {
+  .advisors { grid-template-columns: repeat(3, 1fr); gap: 36px 28px; }
+}
+@media (max-width: 600px) {
+  .advisors { grid-template-columns: repeat(2, 1fr); gap: 30px 18px; }
+  .advisor h3 { font-size: 18px; }
+  .advisor .adv-title, .advisor .adv-org { font-size: 14px; }
 }
 
 /* ================================================================
@@ -1223,6 +1266,15 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
+  <!-- ADVISORY BOARD. Filled from ADVISORS in the script; the About page
+       shows the same list. -->
+  <section class="section advisory-home">
+    <div class="wrap">
+      <h2 class="reveal">Our advisory board</h2>
+      <div class="advisors" data-advisors></div>
+    </div>
+  </section>
+
   <section class="section" id="signup">
     <div class="wrap">
       <h2 class="reveal">Join DC Abundance</h2>
@@ -1255,6 +1307,15 @@ footer .flag-mark { margin-bottom: 22px; }
       <h1 class="reveal reveal-2">The connective tissue of the abundance community in Washington DC</h1>
       <p class="reveal reveal-3">We host events around abundance with a focus on federal policy.</p>
       <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
+    </div>
+  </section>
+
+  <!-- ADVISORY BOARD. Filled from ADVISORS in the script; the home page
+       shows the same list. -->
+  <section class="section section-alt">
+    <div class="wrap">
+      <h2 class="reveal">Our advisory board</h2>
+      <div class="advisors" data-advisors></div>
     </div>
   </section>
 
@@ -2064,6 +2125,73 @@ var EVENTS = [
     grid.appendChild(li);
   }
   if (!shown) document.getElementById("calEmpty").hidden = false;
+})();
+
+/* ------------------------------------------------------------
+   ADVISORY BOARD
+   ONE list for both pages. Every element marked data-advisors
+   (About, and Home above the signup form) is filled from here,
+   so a change made here shows up in both places.
+     name   as it should appear
+     title  their role, written out
+     org    organisation; shown on its own line in bold
+     photo  square headshot in images/advisors/
+     pos    optional; nudges the crop, e.g. "50% 30%"
+   If a photo is missing, the card shows the person's initials
+   instead of a broken image.
+   ------------------------------------------------------------ */
+var ADVISORS = [
+  { name: "Jennifer Pahlka",   title: "Co-founder, Board Chair, and CEO",  org: "Recoding America",           photo: "images/advisors/jennifer-pahlka.jpg" },
+  { name: "Jason Crawford",    title: "Founder and President",             org: "Roots of Progress Institute", photo: "images/advisors/jason-crawford.jpg" },
+  { name: "Will Poff-Webster", title: "Director of Infrastructure Policy", org: "Institute for Progress",      photo: "images/advisors/will-poff-webster.jpg" },
+  { name: "Misha Chellam",     title: "Founder",                           org: "Abundance Network",           photo: "images/advisors/misha-chellam.jpg" },
+  { name: "Matthew Meyers",    title: "Abundance Coordinator",             org: "Niskanen Center",             photo: "images/advisors/matthew-meyers.jpg" }
+];
+
+(function buildAdvisors() {
+  var grids = document.querySelectorAll("[data-advisors]");
+  if (!grids.length) return;
+  /* textContent only, as in the calendar, so nothing in the list can
+     ever turn into markup */
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function initials(name) {
+    var w = name.trim().split(/\s+/);
+    return (w[0].charAt(0) + (w.length > 1 ? w[w.length - 1].charAt(0) : "")).toUpperCase();
+  }
+  grids.forEach(function (grid) {
+    ADVISORS.forEach(function (a, i) {
+      var card = el("div", "advisor reveal" + (i ? " reveal-" + Math.min(i + 1, 4) : ""));
+      var fig = el("figure", "advisor-photo");
+      var ini = el("span", "initials", initials(a.name));
+      ini.setAttribute("aria-hidden", "true");
+      fig.appendChild(ini);
+      if (a.photo) {
+        var img = document.createElement("img");
+        img.alt = a.name;
+        img.loading = "lazy";
+        img.decoding = "async";
+        if (a.pos) fig.style.setProperty("--pos", a.pos);
+        img.addEventListener("error", function () { if (img.parentNode) img.parentNode.removeChild(img); });
+        img.src = a.photo;
+        fig.appendChild(img);
+      }
+      card.appendChild(fig);
+      var h3 = el("h3");
+      a.name.trim().split(/\s+/).forEach(function (word, k) {
+        if (k) h3.appendChild(document.createTextNode(" "));
+        h3.appendChild(word.indexOf("-") >= 0 ? el("span", "nobr", word) : document.createTextNode(word));
+      });
+      card.appendChild(h3);
+      card.appendChild(el("p", "adv-title", a.title));
+      card.appendChild(el("p", "adv-org", a.org));
+      grid.appendChild(card);
+    });
+  });
 })();
 
 /* guarded: a missing matchMedia must not take the router down with it */
