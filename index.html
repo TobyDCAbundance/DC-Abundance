@@ -74,9 +74,9 @@
   --scrim-3:    .90;
   --scrim-band: .80;
   --photo:      grayscale(1) contrast(1.12);
-  /* team and advisor portraits: black and white, a lighter touch of
-     contrast than the big photographs so faces stay soft */
-  --portrait:   grayscale(1) contrast(1.06);
+  /* team and advisor portraits stay in colour; hovering one lays this
+     much of the accent red over it (see PORTRAIT HOVER) */
+  --tint:       .3;
   --edge-on-deep: rgba(22,32,46,.28);
 }
 
@@ -562,10 +562,23 @@ h2 {
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: var(--pos, 50% 50%);
-  /* same treatment as the advisory board, so all portraits match */
-  filter: var(--portrait); transition: filter .35s ease;
 }
-@media (hover: hover) { .member:hover .member-photo img { filter: none; } }
+/* PORTRAIT HOVER, shared by the team and the advisory board. Photos show
+   in their natural colour; hovering a person, or tabbing to one of their
+   links, lays a light wash of the site red over the photo. Multiply keeps
+   the face's own light and shade showing through the tint. */
+.member-photo, .advisor-photo { isolation: isolate; }
+.member-photo::after, .advisor-photo::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--accent); mix-blend-mode: multiply;
+  opacity: 0; transition: opacity .3s ease;
+}
+@media (hover: hover) {
+  .member:hover .member-photo::after,
+  .advisor:hover .advisor-photo::after { opacity: var(--tint); }
+}
+.member:focus-within .member-photo::after,
+.advisor:focus-within .advisor-photo::after { opacity: var(--tint); }
 .member-photo .initials { font-family: var(--font-display); font-size: 46px; color: var(--muted); line-height: 1; }
 .member-photo .ph { font-size: 12.5px; color: var(--muted); letter-spacing: .04em; }
 .member h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 27px; line-height: 1.15; }
@@ -579,6 +592,16 @@ h2 {
 .member .role { font-size: 19px; font-weight: 600; color: var(--body); margin: 8px 0 2px; }
 .member .role-sub { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
 .member p { font-size: 16.5px; color: var(--body); line-height: 1.6; }
+/* About: the advisory board and the team share one grey band under the
+   opening photo. Instead of a second section's full top padding, a thin
+   rule across the column separates them. */
+.people-adv + .people-team { padding-top: 0; }
+.people-adv + .people-team > .wrap::before {
+  content: ""; display: block; border-top: 1px solid var(--line); margin-bottom: 88px;
+}
+@media (max-width: 940px) {
+  .people-adv + .people-team > .wrap::before { margin-bottom: 60px; }
+}
 .tag {
   display: inline-block; font-size: 11.5px; font-weight: 600; letter-spacing: .06em;
   color: var(--accent); border: 1px solid var(--accent); padding: 4px 9px; margin-bottom: 14px;
@@ -606,15 +629,11 @@ h2 {
 }
 /* on the grey band the empty square reads better in white */
 .section-alt .advisor-photo { background: var(--paper); }
-/* One treatment for every portrait (see --portrait), so photos taken
-   against an orange wall, an office and a forest read as one set.
-   Colour comes back on hover where there is a mouse. */
+/* natural colour; the red hover tint is under PORTRAIT HOVER (team) */
 .advisor-photo img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: var(--pos, 50% 50%);
-  filter: var(--portrait); transition: filter .35s ease;
 }
-@media (hover: hover) { .advisor:hover .advisor-photo img { filter: none; } }
 /* shown only when a photo is missing or fails to load */
 .advisor-photo .initials { font-family: var(--font-display); font-size: 30px; color: var(--muted); line-height: 1; }
 .advisor h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 20px; line-height: 1.2; margin-bottom: 5px; }
@@ -1436,6 +1455,74 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
+  <!-- PEOPLE. The advisory board and the team share one grey band right
+       under the opening photo, advisors first, so they are the first
+       thing you see. A thin rule inside the band separates the two.
+       ADVISORY BOARD, full: filled from ADVISORS in the script; the home
+       page shows a compact strip of the same list. -->
+  <section class="section section-alt people-adv">
+    <div class="wrap">
+      <h2 class="reveal">Our advisory board</h2>
+      <div class="advisors" data-advisors></div>
+    </div>
+  </section>
+
+  <section class="section section-alt people-team">
+    <div class="wrap">
+      <h2 class="reveal">Our team</h2>
+      <!-- --pos is object-position: horizontal then vertical. Only the axis
+           being cropped has any effect, which depends on the photo's shape:
+           a landscape photo crops left/right, a tall one crops top/bottom.
+           Head sizes are matched by supplying better-framed originals, not by
+           zooming, which softens small images and adds noise. -->
+      <!-- LinkedIn mark, defined once and referenced three times below. -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="li-mark" viewBox="0 0 24 24">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+        </symbol>
+      </svg>
+
+      <div class="team">
+        <div class="member reveal">
+          <figure class="member-photo" style="--pos: 50% 50%;">
+            <img src="images/abi-olvera.jpg" alt="Abi Olvera">
+          </figure>
+          <div class="member-name">
+            <h3>Abi Olvera</h3>
+            <a class="li-link" href="https://www.linkedin.com/in/abiolvera/" target="_blank" rel="noopener noreferrer" aria-label="Abi Olvera on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          </div>
+          <p class="role">Executive Director</p>
+          <p class="role-sub">Co-founder</p>
+          <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes about the institutional frictions that make housing, clinics, and daycare scarce.</p>
+        </div>
+        <div class="member reveal reveal-2">
+          <figure class="member-photo" style="--pos: 50% 26%;">
+            <img src="images/tobias-amstutz.jpg" alt="Tobias Amstutz">
+          </figure>
+          <div class="member-name">
+            <h3>Tobias Amstutz</h3>
+            <a class="li-link" href="https://www.linkedin.com/in/tobias-toby-amstutz-62a606230" target="_blank" rel="noopener noreferrer" aria-label="Tobias Amstutz on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          </div>
+          <p class="role">Programs Director</p>
+          <p class="role-sub">Co-founder</p>
+          <p>Tobias runs the day to day programming and organizes the events. He previously interned at the Niskanen Center, where he worked on abundance policy. He was also a fellow on Alex Bores' congressional campaign.</p>
+        </div>
+        <div class="member reveal reveal-3">
+          <figure class="member-photo" style="--pos: 52% 50%;">
+            <img src="images/allister-chang.webp" alt="Allister Chang">
+          </figure>
+          <div class="member-name">
+            <h3>Allister Chang</h3>
+            <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          </div>
+          <p class="role">Strategic Advisor</p>
+          <p class="role-sub">Co-founder</p>
+          <p>Allister helped DC Abundance get established as an organization and advises us on DC government. He represents Ward 2 on the DC State Board of Education, where he was the first Asian American elected. He previously ran Libraries Without Borders, and has been a fellow at Halcyon and a visiting researcher at the Global Public Policy Institute.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="wrap">
       <h2 class="reveal">What we do</h2>
@@ -1555,92 +1642,6 @@ footer .flag-mark { margin-bottom: 22px; }
           </div>
         </li>
       </ul>
-    </div>
-  </section>
-
-  <!-- Writing club. Moved here from the Resources page in October 2026:
-       it is one of our engagement-building events, so it sits under the
-       list of event types. Text unchanged. -->
-  <section class="section section-alt">
-    <div class="wrap two-col">
-      <div class="reveal">
-        <div class="rule draw"></div>
-        <h2>About the writing club</h2>
-      </div>
-      <div class="reveal reveal-2">
-        <div class="prose">
-          <p>DC Abundance's monthly writing club is a dedicated block of time for people who want to make real progress on their writing. We reserve a space, you bring whatever you're working on, and everyone settles in to write alongside each other.</p>
-          <p>Projects don't need to be about abundance (though we'd ask that they not be working against it), so you'll find people drafting essays, policy memos, newsletters, fiction, and everything in between. The time is mostly heads-down and focused, but there's always room to step away and talk through an idea with someone who's thinking about something completely different.</p>
-          <p>Regulars have found that showing up each month makes it much easier to keep a project moving, and we'd love for you to join them.</p>
-        </div>
-        <div class="res-action"><a class="btn btn-fill js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <h2 class="reveal">Our team</h2>
-      <!-- --pos is object-position: horizontal then vertical. Only the axis
-           being cropped has any effect, which depends on the photo's shape:
-           a landscape photo crops left/right, a tall one crops top/bottom.
-           Head sizes are matched by supplying better-framed originals, not by
-           zooming, which softens small images and adds noise. -->
-      <!-- LinkedIn mark, defined once and referenced three times below. -->
-      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-        <symbol id="li-mark" viewBox="0 0 24 24">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
-        </symbol>
-      </svg>
-
-      <div class="team">
-        <div class="member reveal">
-          <figure class="member-photo" style="--pos: 50% 50%;">
-            <img src="images/abi-olvera.jpg" alt="Abi Olvera">
-          </figure>
-          <div class="member-name">
-            <h3>Abi Olvera</h3>
-            <a class="li-link" href="https://www.linkedin.com/in/abiolvera/" target="_blank" rel="noopener noreferrer" aria-label="Abi Olvera on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
-          </div>
-          <p class="role">Executive Director</p>
-          <p class="role-sub">Co-founder</p>
-          <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes about the institutional frictions that make housing, clinics, and daycare scarce.</p>
-        </div>
-        <div class="member reveal reveal-2">
-          <figure class="member-photo" style="--pos: 50% 26%;">
-            <img src="images/tobias-amstutz.jpg" alt="Tobias Amstutz">
-          </figure>
-          <div class="member-name">
-            <h3>Tobias Amstutz</h3>
-            <a class="li-link" href="https://www.linkedin.com/in/tobias-toby-amstutz-62a606230" target="_blank" rel="noopener noreferrer" aria-label="Tobias Amstutz on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
-          </div>
-          <p class="role">Programs Director</p>
-          <p class="role-sub">Co-founder</p>
-          <p>Tobias runs the day to day programming and organizes the events. He previously interned at the Niskanen Center, where he worked on abundance policy. He was also a fellow on Alex Bores' congressional campaign.</p>
-        </div>
-        <div class="member reveal reveal-3">
-          <figure class="member-photo" style="--pos: 52% 50%;">
-            <img src="images/allister-chang.webp" alt="Allister Chang">
-          </figure>
-          <div class="member-name">
-            <h3>Allister Chang</h3>
-            <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
-          </div>
-          <p class="role">Strategic Advisor</p>
-          <p class="role-sub">Co-founder</p>
-          <p>Allister helped DC Abundance get established as an organization and advises us on DC government. He represents Ward 2 on the DC State Board of Education, where he was the first Asian American elected. He previously ran Libraries Without Borders, and has been a fellow at Halcyon and a visiting researcher at the Global Public Policy Institute.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ADVISORY BOARD, full. Filled from ADVISORS in the script; the home
-       page shows a compact strip of the same list. Staff first, advisors
-       after, which is the usual order on policy-organisation sites. -->
-  <section class="section section-alt">
-    <div class="wrap">
-      <h2 class="reveal">Our advisory board</h2>
-      <div class="advisors" data-advisors></div>
     </div>
   </section>
 
@@ -1988,9 +1989,6 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <!-- The writing club section moved to the About page, under
-       "Types of events", in October 2026. -->
-
 </div>
 
 <!-- ============================================================
@@ -2281,12 +2279,12 @@ var EVENTS = [
    instead of a broken image.
    ------------------------------------------------------------ */
 var ADVISORS = [
-  { name: "Jennifer Pahlka",   title: "Co-founder, Board Chair, and CEO",  org: "Recoding America",            url: "https://www.recodingamerica.us/",                     photo: "images/advisors/jennifer-pahlka.jpg" },
+  { name: "Jennifer Pahlka",   title: "Co-founder, Board Chair, and CEO",  org: "Recoding America",            url: "https://recodingamerica.org/people/jennifer-pahlka", photo: "images/advisors/jennifer-pahlka.jpg" },
   { name: "Jason Crawford",    title: "Founder and President",             org: "Roots of Progress Institute", url: "https://rootsofprogress.org/member/jason-crawford/", photo: "images/advisors/jason-crawford.jpg" },
   { name: "Will Poff-Webster", title: "Director of Infrastructure Policy", org: "Institute for Progress",      url: "https://ifp.org/author/will-poff-webster/",          photo: "images/advisors/will-poff-webster.jpg" },
   { name: "Misha Chellam",     title: "Founder",                           org: "Abundance Network",           url: "https://www.abundancenetwork.com/team/",             photo: "images/advisors/misha-chellam.jpg" },
   { name: "Matthew Meyers",    title: "Abundance Coordinator",             org: "Niskanen Center",             url: "https://www.niskanencenter.org/author/mmeyers",      photo: "images/advisors/matthew-meyers.jpg" },
-  { name: "Derek Kaufman",     title: "Founder and CEO",                   org: "Inclusive Abundance",         url: "https://inclusiveabundance.org/",                    photo: "images/advisors/derek-kaufman.jpg" }
+  { name: "Derek Kaufman",     title: "Founder and CEO",                   org: "Inclusive Abundance",         url: "https://www.inclusiveabundance.org/about-ia/our-team", photo: "images/advisors/derek-kaufman.jpg" }
 ];
 
 (function buildAdvisors() {
