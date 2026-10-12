@@ -74,6 +74,9 @@
   --scrim-3:    .90;
   --scrim-band: .80;
   --photo:      grayscale(1) contrast(1.12);
+  /* team and advisor portraits: black and white, a lighter touch of
+     contrast than the big photographs so faces stay soft */
+  --portrait:   grayscale(1) contrast(1.06);
   --edge-on-deep: rgba(22,32,46,.28);
 }
 
@@ -163,7 +166,8 @@ html.anim .page.entering { animation: pageIn .5s var(--ease) both; }
        It resolves into a solid bar once you scroll past the image. --- */
 /* only used when no flight is running — during the flight the surface
    is driven per-frame from scroll progress instead */
-html:not(.flying) .site-header { transition: background .35s ease; }
+.site-header { transition: padding .3s var(--ease); }
+html:not(.flying) .site-header { transition: background .35s ease, padding .3s var(--ease); }
 .site-header.floating {
   background: transparent;
   border-bottom-color: transparent;
@@ -366,6 +370,49 @@ html:not(.flying) .site-header.floating .ca-logo { opacity: 0; }
 .hero .hero-cta-row .btn-big, .site-header .header-cta { transition: background .3s ease; }
 
 /* ================================================================
+   HEADER ON INNER PAGES
+   The "floating" bar that borrows the photograph's colours is a home
+   page effect, built around the logo flight. On every other page the
+   bar is a solid surface with logo, links and Sign up from the first
+   frame, so the main call to action is never hidden. Only the red rule
+   still waits for the page's stars and bars to rise into it.
+   Keyed on [data-route] being present, so nothing changes before the
+   script has run and set it.
+   ================================================================ */
+html[data-route]:not([data-route="home"]) .site-header.floating {
+  background: var(--paper); border-bottom-color: var(--line);
+}
+html[data-route]:not([data-route="home"]) .site-header.floating .ca-logo,
+html[data-route]:not([data-route="home"]) .site-header.floating .brand-name,
+html[data-route]:not([data-route="home"]) .site-header.floating .nav,
+html[data-route]:not([data-route="home"]) .site-header.floating .header-cta { opacity: 1; pointer-events: auto; }
+html[data-route]:not([data-route="home"]) .site-header.floating .nav a:not(.current):not(:hover) { color: var(--muted); }
+/* the links are showing, so the quick menu is not needed on desktop */
+html[data-route]:not([data-route="home"]) .site-header.floating .menu-btn { opacity: 0; pointer-events: none; }
+@media (max-width: 940px) {
+  html[data-route]:not([data-route="home"]) .site-header.floating .menu-btn { opacity: 1; pointer-events: auto; }
+}
+
+/* ================================================================
+   CONDENSED BAR  (desktop)
+   Full height at the top of a page, which is where the logo flight
+   lands. Once you are well past the photograph it tightens to about
+   80px, so it stops taking a fifth of a laptop screen. The class is
+   set in onScroll a little after the bar solidifies, so landing and
+   tightening read as two separate moves. Phones keep their own
+   94px bar.
+   ================================================================ */
+@media (min-width: 941px) {
+  .site-header .ca-logo { transition: opacity .4s var(--ease), width .3s var(--ease), height .3s var(--ease); }
+  .site-header .brand-name { transition: opacity .4s var(--ease), font-size .3s var(--ease); }
+  .site-header .header-cta { transition: background .3s ease, font-size .3s var(--ease), padding .3s var(--ease); }
+  .site-header.condensed { padding-top: 10px; padding-bottom: 10px; }
+  .site-header.condensed .ca-logo { width: 60px; height: 60px; }
+  .site-header.condensed .brand-name { font-size: 24px; }
+  .site-header.condensed .header-cta { font-size: 16px; padding: 13px 26px; }
+}
+
+/* ================================================================
    PHOTO-BACKED SECTIONS
    ================================================================ */
 .photo-sec { position: relative; overflow: hidden; }
@@ -515,7 +562,10 @@ h2 {
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: var(--pos, 50% 50%);
+  /* same treatment as the advisory board, so all portraits match */
+  filter: var(--portrait); transition: filter .35s ease;
 }
+@media (hover: hover) { .member:hover .member-photo img { filter: none; } }
 .member-photo .initials { font-family: var(--font-display); font-size: 46px; color: var(--muted); line-height: 1; }
 .member-photo .ph { font-size: 12.5px; color: var(--muted); letter-spacing: .04em; }
 .member h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 27px; line-height: 1.15; }
@@ -540,38 +590,72 @@ h2 {
    pre-cropped squares in images/advisors/, so no per-person framing
    is needed here; an optional `pos` in the list can still nudge one.
    ================================================================ */
-.advisors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 32px; margin-top: 8px; }
+/* Each advisor is a row: square photo on the left, text on the right.
+   Three across on desktop, two on tablet, a ruled list on phones. Rows
+   rather than tall cards so the board stays compact and copes with any
+   number of people (a 5-across grid broke as soon as a sixth joined).
+   Text order is name, organisation, then title: the organisation is
+   what a visitor checks, so it comes first and lines up across rows. */
+.advisors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 36px; margin-top: 8px; }
+.advisor { display: grid; grid-template-columns: 112px 1fr; gap: 20px; align-items: center; }
 .advisor-photo {
-  aspect-ratio: 1 / 1; width: 100%; margin: 0 0 16px;
+  aspect-ratio: 1 / 1; width: 100%; margin: 0;
   background: var(--paper-alt); border: 1px solid var(--line);
   overflow: hidden; position: relative;
   display: grid; place-items: center;
 }
 /* on the grey band the empty square reads better in white */
 .section-alt .advisor-photo { background: var(--paper); }
+/* One treatment for every portrait (see --portrait), so photos taken
+   against an orange wall, an office and a forest read as one set.
+   Colour comes back on hover where there is a mouse. */
 .advisor-photo img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: var(--pos, 50% 50%);
+  filter: var(--portrait); transition: filter .35s ease;
 }
+@media (hover: hover) { .advisor:hover .advisor-photo img { filter: none; } }
 /* shown only when a photo is missing or fails to load */
-.advisor-photo .initials { font-family: var(--font-display); font-size: 34px; color: var(--muted); line-height: 1; }
-.advisor h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 20px; line-height: 1.2; margin-bottom: 6px; }
+.advisor-photo .initials { font-family: var(--font-display); font-size: 30px; color: var(--muted); line-height: 1; }
+.advisor h3 { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 20px; line-height: 1.2; margin-bottom: 5px; }
+/* names link out to a page about each person, so affiliations can be checked */
+.advisor h3 a { color: inherit; text-decoration: none; }
+.advisor h3 a:hover, .advisor h3 a:focus-visible { color: var(--accent); }
 /* keeps a hyphenated surname in one piece on narrow screens */
 .advisor h3 .nobr { white-space: nowrap; }
 /* balance evens out two-line titles instead of leaving one word alone */
 .advisor h3, .advisor .adv-title, .advisor .adv-org { text-wrap: balance; }
-.advisor .adv-title { font-size: 15px; line-height: 1.45; color: var(--body); }
-.advisor .adv-org { font-size: 15px; line-height: 1.45; font-weight: 700; color: var(--ink); margin-top: 3px; }
+.advisor .adv-org { font-size: 15.5px; line-height: 1.35; font-weight: 700; color: var(--ink); }
+.advisor .adv-title { font-size: 14.5px; line-height: 1.45; color: var(--muted); margin-top: 3px; }
+
+/* HOME: the same list as a compact strip of small photos with name and
+   organisation only. Its job there is a quick credibility check right
+   before the signup form, not a full introduction. */
+.advisory-home { padding: 80px 0; }
+.advisory-home h2 { font-size: clamp(26px, 2.6vw, 32px); margin-bottom: 28px; }
+.advisors-strip { gap: 22px 36px; margin-top: 0; }
+.advisors-strip .advisor { grid-template-columns: 60px 1fr; gap: 16px; }
+.advisors-strip .advisor-photo .initials { font-size: 18px; }
+.advisors-strip .advisor h3 { font-size: 17px; margin-bottom: 2px; }
+.advisors-strip .advisor .adv-org { font-size: 14.5px; font-weight: 400; color: var(--muted); }
 /* On home the board sits directly above the signup form and both are on
    white, so a thin rule keeps them from running together. */
 .advisory-home + #signup { border-top: 1px solid var(--line); }
+
 @media (max-width: 1000px) {
-  .advisors { grid-template-columns: repeat(3, 1fr); gap: 36px 28px; }
+  .advisors { grid-template-columns: repeat(2, 1fr); gap: 32px 28px; }
+  .advisor { grid-template-columns: 96px 1fr; gap: 18px; }
+  .advisors-strip { gap: 20px 28px; }
+  .advisors-strip .advisor { grid-template-columns: 56px 1fr; }
 }
 @media (max-width: 600px) {
-  .advisors { grid-template-columns: repeat(2, 1fr); gap: 30px 18px; }
-  .advisor h3 { font-size: 18px; }
-  .advisor .adv-title, .advisor .adv-org { font-size: 14px; }
+  .advisors { grid-template-columns: 1fr; gap: 0; }
+  .advisor { grid-template-columns: 76px 1fr; gap: 18px; padding: 16px 0; border-top: 1px solid var(--line); }
+  .advisor:last-child { border-bottom: 1px solid var(--line); }
+  .advisor h3 { font-size: 19px; }
+  .advisory-home { padding: 64px 0; }
+  .advisors-strip .advisor { grid-template-columns: 48px 1fr; gap: 14px; padding: 12px 0; }
+  .advisors-strip .advisor h3 { font-size: 17px; }
 }
 
 /* ================================================================
@@ -764,6 +848,8 @@ h2 {
    FRAMEWORK NAVIGATOR  (resources)
    ================================================================ */
 #sec-need, #sec-how { scroll-margin-top: calc(var(--headerH) + 24px); }
+/* on desktop the bar is condensed (about 80px) by the time these are reached */
+@media (min-width: 941px) { #sec-need, #sec-how { scroll-margin-top: 104px; } }
 
 /* Sits above the two questions. Set in the display face at a size between the
    section headings and body copy, so it reads as a lead-in to the pair below
@@ -925,6 +1011,31 @@ html[data-route="conduct"] .join { display: none; }
 .res-action { margin-top: 24px; }
 .res-lede { margin-bottom: 6px; }
 
+/* The Lincoln Memorial scan has a grey frame at its left and right edges
+   that showed as vertical bands on wide screens; overscan it sideways. */
+.page[data-page="resources"] .photo-bg { inset: -8% -6%; }
+
+/* "Host with us" as a ruled list: icon, title and text, button at right.
+   .cards.res-rows outranks the .cards grid, so the rows stack. */
+.cards.res-rows { display: block; margin-top: 22px; }
+.res-cards.res-rows .card {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto;
+  column-gap: 28px; align-items: start;
+  padding: 30px 0; border: 0; border-top: 1px solid var(--line);
+}
+.res-cards.res-rows .card:last-child { border-bottom: 1px solid var(--line); }
+.res-cards.res-rows .card:hover { border-color: var(--line); }
+.res-rows .card-icon { grid-column: 1; grid-row: 1 / span 2; width: 34px; height: 34px; margin: 2px 0 0; }
+.res-rows .card h3 { grid-column: 2; margin-bottom: 8px; }
+.res-rows .res-body { grid-column: 2; margin: 0; max-width: 42em; }
+.res-rows .card .btn { grid-column: 3; grid-row: 1 / span 2; align-self: center; white-space: nowrap; }
+
+/* WhatsApp: one column, the two norms side by side */
+.whatsapp .prose { max-width: 40em; }
+.norms-2up { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+.norms-2up li, .norms-2up li:last-child { border-bottom: 1px solid var(--line); }
+.whatsapp .res-note { max-width: 40em; }
+
 /* the page already ends on a Join button, so the shared join block
    underneath would just say the same thing twice */
 html[data-route="resources"] .join { display: none; }
@@ -939,6 +1050,13 @@ html[data-route="resources"] .join { display: none; }
   .res-cards .card { padding: 26px 22px 24px; }
   .norms li { grid-template-columns: 36px 1fr; }
   .norms h3 { font-size: 19px; }
+  /* rows: the button drops under the text */
+  .res-cards.res-rows .card { grid-template-columns: 32px minmax(0, 1fr); column-gap: 18px; padding: 26px 0; }
+  .res-rows .card-icon { grid-row: 1; width: 30px; height: 30px; }
+  .res-rows .card .btn { grid-column: 2; grid-row: auto; justify-self: start; margin-top: 18px; white-space: normal; }
+  .norms-2up { grid-template-columns: 1fr; }
+  .norms-2up li { border-bottom: 0; }
+  .norms-2up li:last-child { border-bottom: 1px solid var(--line); }
 }
 
 /* ================================================================
@@ -1086,6 +1204,9 @@ footer a { color: var(--accent); font-weight: 500; }
 .flag-mark i { display: block; width: 54px; height: 5px; background: var(--accent); }
 .hero .flag-mark,
 .page-head .flag-mark { margin-bottom: 14px; }
+/* inner page heads are left-aligned, so the mark lines up with them
+   rather than sitting centred over left-aligned text */
+.page-head .flag-mark { justify-content: flex-start; }
 .goal .flag-mark { margin-bottom: 26px; }
 .band .flag-mark { margin-bottom: 30px; }
 footer .flag-mark { margin-bottom: 22px; }
@@ -1097,7 +1218,11 @@ footer .flag-mark { margin-bottom: 22px; }
   height: 5px; pointer-events: none; background: var(--accent);
   opacity: 0;
 }
-.site-header:not(.floating)::after { opacity: 1; }
+.site-header:not(.floating)::after { opacity: 1; visibility: visible; }
+/* visibility as well as opacity: with the bar now solid on inner pages,
+   Chrome sometimes left stale pieces of the rule on screen after it was
+   faded out at load. Hiding it outright forces a clean repaint. */
+.site-header.floating::after { visibility: hidden; }
 .join {
   border-top: 5px solid var(--accent); border-bottom: 5px solid var(--accent);
   box-shadow: inset 0 9px 0 -4px var(--accent), inset 0 -9px 0 -4px var(--accent);
@@ -1266,12 +1391,13 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <!-- ADVISORY BOARD. Filled from ADVISORS in the script; the About page
-       shows the same list. -->
+  <!-- ADVISORY BOARD, compact. Filled from ADVISORS in the script; the
+       strip variant shows name and organisation only. The full board,
+       with titles, is at the foot of the About page. -->
   <section class="section advisory-home">
     <div class="wrap">
       <h2 class="reveal">Our advisory board</h2>
-      <div class="advisors" data-advisors></div>
+      <div class="advisors advisors-strip" data-advisors></div>
     </div>
   </section>
 
@@ -1307,15 +1433,6 @@ footer .flag-mark { margin-bottom: 22px; }
       <h1 class="reveal reveal-2">The connective tissue of the abundance community in Washington DC</h1>
       <p class="reveal reveal-3">We host events around abundance with a focus on federal policy.</p>
       <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
-    </div>
-  </section>
-
-  <!-- ADVISORY BOARD. Filled from ADVISORS in the script; the home page
-       shows the same list. -->
-  <section class="section section-alt">
-    <div class="wrap">
-      <h2 class="reveal">Our advisory board</h2>
-      <div class="advisors" data-advisors></div>
     </div>
   </section>
 
@@ -1441,7 +1558,27 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
+  <!-- Writing club. Moved here from the Resources page in October 2026:
+       it is one of our engagement-building events, so it sits under the
+       list of event types. Text unchanged. -->
   <section class="section section-alt">
+    <div class="wrap two-col">
+      <div class="reveal">
+        <div class="rule draw"></div>
+        <h2>About the writing club</h2>
+      </div>
+      <div class="reveal reveal-2">
+        <div class="prose">
+          <p>DC Abundance's monthly writing club is a dedicated block of time for people who want to make real progress on their writing. We reserve a space, you bring whatever you're working on, and everyone settles in to write alongside each other.</p>
+          <p>Projects don't need to be about abundance (though we'd ask that they not be working against it), so you'll find people drafting essays, policy memos, newsletters, fiction, and everything in between. The time is mostly heads-down and focused, but there's always room to step away and talk through an idea with someone who's thinking about something completely different.</p>
+          <p>Regulars have found that showing up each month makes it much easier to keep a project moving, and we'd love for you to join them.</p>
+        </div>
+        <div class="res-action"><a class="btn btn-fill js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="wrap">
       <h2 class="reveal">Our team</h2>
       <!-- --pos is object-position: horizontal then vertical. Only the axis
@@ -1494,6 +1631,16 @@ footer .flag-mark { margin-bottom: 22px; }
           <p>Allister helped DC Abundance get established as an organization and advises us on DC government. He represents Ward 2 on the DC State Board of Education, where he was the first Asian American elected. He previously ran Libraries Without Borders, and has been a fellow at Halcyon and a visiting researcher at the Global Public Policy Institute.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ADVISORY BOARD, full. Filled from ADVISORS in the script; the home
+       page shows a compact strip of the same list. Staff first, advisors
+       after, which is the usual order on policy-organisation sites. -->
+  <section class="section section-alt">
+    <div class="wrap">
+      <h2 class="reveal">Our advisory board</h2>
+      <div class="advisors" data-advisors></div>
     </div>
   </section>
 
@@ -1726,6 +1873,7 @@ footer .flag-mark { margin-bottom: 22px; }
       <div class="flag-mark reveal" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><svg viewBox="0 0 24 24"><path d="M12 1.6l3.02 7.03 7.6.62-5.77 4.98 1.74 7.43L12 17.7l-6.59 3.96 1.74-7.43L1.38 9.25l7.6-.62z"/></svg><i></i></div>
       <h1 class="reveal reveal-2">Start here</h1>
       <p class="reveal reveal-3">DC Abundance brings together people in Washington who want the country to build more of what it needs, from housing and transit to clean energy, health care, childcare and science. Whether you're new to these ideas or work on them every day, here's how to get started.</p>
+      <div class="head-cta reveal reveal-4"><a class="btn btn-big js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
     </div>
   </section>
 
@@ -1770,7 +1918,9 @@ footer .flag-mark { margin-bottom: 22px; }
         <h2>Host with us</h2>
         <p class="lede res-lede">Some of our favorite events have started from a member pitching us an idea. If you want to bring something to the community, here's how.</p>
       </div>
-      <div class="cards cards-3 res-cards">
+      <!-- Three similar actions, so a ruled list rather than cards:
+           icon, then title and text, then the button on the right. -->
+      <div class="cards res-cards res-rows">
         <article class="card reveal">
           <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
           <h3>Pitch to host an event</h3>
@@ -1803,8 +1953,10 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap two-col">
+  <!-- One column, with the two norms side by side. As a two-column
+       section the heading sat alone over a tall empty left column. -->
+  <section class="section whatsapp">
+    <div class="wrap">
       <div class="reveal">
         <div class="rule draw"></div>
         <h2>WhatsApp community</h2>
@@ -1814,7 +1966,7 @@ footer .flag-mark { margin-bottom: 22px; }
           <p>Our WhatsApp community is where members keep the conversation going between events. Volunteer moderators keep it on topic and free of spam.</p>
         </div>
         <p class="norms-label">A few norms</p>
-        <ul class="norms">
+        <ul class="norms norms-2up">
           <li>
             <span class="norm-num">01</span>
             <div>
@@ -1836,23 +1988,8 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-
-  <section class="section section-alt">
-    <div class="wrap two-col">
-      <div class="reveal">
-        <div class="rule draw"></div>
-        <h2>About the writing club</h2>
-      </div>
-      <div class="reveal reveal-2">
-        <div class="prose">
-          <p>DC Abundance's monthly writing club is a dedicated block of time for people who want to make real progress on their writing. We reserve a space, you bring whatever you're working on, and everyone settles in to write alongside each other.</p>
-          <p>Projects don't need to be about abundance (though we'd ask that they not be working against it), so you'll find people drafting essays, policy memos, newsletters, fiction, and everything in between. The time is mostly heads-down and focused, but there's always room to step away and talk through an idea with someone who's thinking about something completely different.</p>
-          <p>Regulars have found that showing up each month makes it much easier to keep a project moving, and we'd love for you to join them.</p>
-        </div>
-        <div class="res-action"><a class="btn btn-fill js-signup" href="#">Join DC Abundance <span class="arrow">&rarr;</span></a></div>
-      </div>
-    </div>
-  </section>
+  <!-- The writing club section moved to the About page, under
+       "Types of events", in October 2026. -->
 
 </div>
 
@@ -2130,22 +2267,26 @@ var EVENTS = [
 /* ------------------------------------------------------------
    ADVISORY BOARD
    ONE list for both pages. Every element marked data-advisors
-   (About, and Home above the signup form) is filled from here,
-   so a change made here shows up in both places.
+   is filled from here: the full board at the foot of About, and
+   a compact strip (class advisors-strip: no titles, small photos)
+   above the signup form on Home. Change it here, it changes in both.
      name   as it should appear
      title  their role, written out
-     org    organisation; shown on its own line in bold
-     photo  square headshot in images/advisors/
+     org    organisation; shown in bold under the name
+     url    page about them; the name links there (optional)
+     photo  square headshot in images/advisors/. Crop new ones to
+            match: head filling about 60% of the square's height.
      pos    optional; nudges the crop, e.g. "50% 30%"
    If a photo is missing, the card shows the person's initials
    instead of a broken image.
    ------------------------------------------------------------ */
 var ADVISORS = [
-  { name: "Jennifer Pahlka",   title: "Co-founder, Board Chair, and CEO",  org: "Recoding America",           photo: "images/advisors/jennifer-pahlka.jpg" },
-  { name: "Jason Crawford",    title: "Founder and President",             org: "Roots of Progress Institute", photo: "images/advisors/jason-crawford.jpg" },
-  { name: "Will Poff-Webster", title: "Director of Infrastructure Policy", org: "Institute for Progress",      photo: "images/advisors/will-poff-webster.jpg" },
-  { name: "Misha Chellam",     title: "Founder",                           org: "Abundance Network",           photo: "images/advisors/misha-chellam.jpg" },
-  { name: "Matthew Meyers",    title: "Abundance Coordinator",             org: "Niskanen Center",             photo: "images/advisors/matthew-meyers.jpg" }
+  { name: "Jennifer Pahlka",   title: "Co-founder, Board Chair, and CEO",  org: "Recoding America",            url: "https://www.recodingamerica.us/",                     photo: "images/advisors/jennifer-pahlka.jpg" },
+  { name: "Jason Crawford",    title: "Founder and President",             org: "Roots of Progress Institute", url: "https://rootsofprogress.org/member/jason-crawford/", photo: "images/advisors/jason-crawford.jpg" },
+  { name: "Will Poff-Webster", title: "Director of Infrastructure Policy", org: "Institute for Progress",      url: "https://ifp.org/author/will-poff-webster/",          photo: "images/advisors/will-poff-webster.jpg" },
+  { name: "Misha Chellam",     title: "Founder",                           org: "Abundance Network",           url: "https://www.abundancenetwork.com/team/",             photo: "images/advisors/misha-chellam.jpg" },
+  { name: "Matthew Meyers",    title: "Abundance Coordinator",             org: "Niskanen Center",             url: "https://www.niskanencenter.org/author/mmeyers",      photo: "images/advisors/matthew-meyers.jpg" },
+  { name: "Derek Kaufman",     title: "Founder and CEO",                   org: "Inclusive Abundance",         url: "https://inclusiveabundance.org/",                    photo: "images/advisors/derek-kaufman.jpg" }
 ];
 
 (function buildAdvisors() {
@@ -2164,15 +2305,19 @@ var ADVISORS = [
     return (w[0].charAt(0) + (w.length > 1 ? w[w.length - 1].charAt(0) : "")).toUpperCase();
   }
   grids.forEach(function (grid) {
+    var strip = grid.classList.contains("advisors-strip");
     ADVISORS.forEach(function (a, i) {
-      var card = el("div", "advisor reveal" + (i ? " reveal-" + Math.min(i + 1, 4) : ""));
+      /* staggered by column, so each row of three arrives left to right */
+      var card = el("div", "advisor reveal" + (i % 3 ? " reveal-" + (i % 3 + 1) : ""));
       var fig = el("figure", "advisor-photo");
       var ini = el("span", "initials", initials(a.name));
       ini.setAttribute("aria-hidden", "true");
       fig.appendChild(ini);
       if (a.photo) {
         var img = document.createElement("img");
-        img.alt = a.name;
+        /* the name sits right beside the photo, so the image itself is
+           not announced a second time */
+        img.alt = "";
         img.loading = "lazy";
         img.decoding = "async";
         if (a.pos) fig.style.setProperty("--pos", a.pos);
@@ -2181,14 +2326,23 @@ var ADVISORS = [
         fig.appendChild(img);
       }
       card.appendChild(fig);
-      var h3 = el("h3");
+      var text = el("div", "advisor-text");
+      var h3 = el("h3"), nameBox = h3;
+      if (a.url) {
+        nameBox = el("a");
+        nameBox.href = a.url;
+        nameBox.target = "_blank";
+        nameBox.rel = "noopener noreferrer";
+        h3.appendChild(nameBox);
+      }
       a.name.trim().split(/\s+/).forEach(function (word, k) {
-        if (k) h3.appendChild(document.createTextNode(" "));
-        h3.appendChild(word.indexOf("-") >= 0 ? el("span", "nobr", word) : document.createTextNode(word));
+        if (k) nameBox.appendChild(document.createTextNode(" "));
+        nameBox.appendChild(word.indexOf("-") >= 0 ? el("span", "nobr", word) : document.createTextNode(word));
       });
-      card.appendChild(h3);
-      card.appendChild(el("p", "adv-title", a.title));
-      card.appendChild(el("p", "adv-org", a.org));
+      text.appendChild(h3);
+      text.appendChild(el("p", "adv-org", a.org));
+      if (!strip) text.appendChild(el("p", "adv-title", a.title));
+      card.appendChild(text);
       grid.appendChild(card);
     });
   });
@@ -2286,6 +2440,13 @@ var header = document.getElementById("siteHeader");
 var parallaxEls = [];
 function collectParallax() { parallaxEls = [].slice.call(document.querySelectorAll(".page.active [data-parallax]")); }
 
+/* The bar's full height, from --headerH rather than measured: once the bar
+   condenses on scroll, measuring it would give the small height, and every
+   scroll threshold below is defined against the full one. */
+function tallHeader() {
+  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--headerH")) || 152;
+}
+
 /* how far the photographic head runs, so the bar knows when to solidify */
 var headStop = 0;
 function measureHead() {
@@ -2294,7 +2455,7 @@ function measureHead() {
   /* before layout settles offsetHeight can read 0; assume a tall head rather
      than snapping the bar to solid over the photograph */
   var hh = head.offsetHeight || head.getBoundingClientRect().height || window.innerHeight * 0.6;
-  headStop = Math.max(0, hh - (header.offsetHeight || 92) - 8);
+  headStop = Math.max(0, hh - tallHeader() - 8);
   /* the bar fills in at the instant the running animation finishes — the
      flight on home, the stars-and-bars morph elsewhere */
   if (flyOn) headStop = flyStart + flyDist;
@@ -2348,7 +2509,7 @@ function measureFly() {
       /* engage as the stars approach the bar rather than after they reach
          it, so the morph is under way while the head is still on screen */
       var mTop = mark.getBoundingClientRect().top + window.pageYOffset;
-      flagStart = Math.max(0, Math.round(mTop - (header.offsetHeight || 152) - 40));
+      flagStart = Math.max(0, Math.round(mTop - tallHeader() - 40));
       flagDist = 240;
     }
   }
@@ -2365,7 +2526,12 @@ function measureFly() {
      Starting any later would strand it above the viewport and make it
      stall against the clamp while the wordmark carried on scrolling. */
   var aTop = anchor.getBoundingClientRect().top + window.pageYOffset;
-  var barTop = slot.getBoundingClientRect().top;
+  /* where the header logo sits in the full-height bar. If the bar happens
+     to be condensed while this runs (a resize mid-page), work it out from
+     the full geometry instead: the 116px logo centred in the bar. */
+  var barTop = header.classList.contains("condensed")
+    ? (tallHeader() - 116) / 2
+    : slot.getBoundingClientRect().top;
   flyStart = Math.max(0, Math.round(aTop - barTop));
   /* travel distance sets the pace: the further it runs, the more scroll the
      flight takes and the slower it reads */
@@ -2488,7 +2654,9 @@ function positionFlag(y) {
 
   var p = Math.min(1, Math.max(0, (y - flagStart) / flagDist));
   var moving = p > 0 && p < 1;
-  if (!flyOn) setBarSurface(p);
+  /* No setBarSurface here any more: on inner pages the bar is solid from
+     the start (see HEADER ON INNER PAGES in the CSS), and on home the
+     flight drives the surface. */
   mark.style.visibility = p > 0 ? "hidden" : "visible";
   flyFlag.classList.toggle("on", moving);
   if (!moving) return;
@@ -2531,6 +2699,8 @@ function onScroll() {
     var y = window.pageYOffset;
     var floating = y < headStop;
     header.classList.toggle("floating", floating);
+    /* tighten the bar a beat after it solidifies (desktop CSS only) */
+    header.classList.toggle("condensed", y > headStop + 80);
     if (!floating) closeMenu();
     if (!reduced) {
       parallaxEls.forEach(function (el) {
@@ -2585,7 +2755,8 @@ function refreshChrome() {
     resetFlyer(flyFlag);
     unhide(".flag-mark");
   }
-  if (!flyOn && !flagOn) header.style.backgroundColor = "";
+  /* only the home flight sets an inline surface; clear any it left behind */
+  if (!flyOn) header.style.backgroundColor = "";
 
   onScroll();
 }
