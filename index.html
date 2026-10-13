@@ -462,6 +462,13 @@ html[data-route]:not([data-route="home"]) .site-header.floating .menu-btn { opac
    ================================================================ */
 .page-head { padding: calc(var(--headerH) + 56px) 0 96px; }
 .page-head .photo-bg img { object-position: center 32%; }
+/* Inner pages have a solid bar from the first frame, so the photo starts
+   below it rather than behind it: shifted down by the bar's height, same
+   size, with the trim coming off the bottom instead of the top. */
+.page-head .photo-bg {
+  top: calc(var(--headerH) - 8%);
+  bottom: calc(-8% - var(--headerH));
+}
 .page-head .photo-scrim { background: rgba(var(--scrim), var(--scrim-band)); }
 .page-head .eyebrow { font-size: 15px; font-weight: 700; color: var(--accent-lift); margin-bottom: 20px; }
 /* Sized off viewport width so it always fits on one line rather than dropping
@@ -677,6 +684,51 @@ h2 {
   .advisory-home { padding: 64px 0; }
   .advisors-strip .advisor { grid-template-columns: 48px 1fr; gap: 14px; padding: 12px 0; }
   .advisors-strip .advisor h3 { font-size: 17px; }
+}
+
+/* ================================================================
+   ABOUT LAYOUT  (desktop only, over 1080px)
+   What we do, How we do it and Types of events on the left; the
+   advisory board and the team in a grey panel on the right. Inside
+   the layout the sections drop their own full-width bands and padding,
+   and the columns supply the spacing instead. At 1080px and below
+   none of this applies: the page is stacked bands, people first.
+   ================================================================ */
+@media (min-width: 1081px) {
+  .about-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) clamp(330px, 29vw, 380px);
+    column-gap: 64px; align-items: start;
+    max-width: 1180px; margin: 0 auto; padding: 88px 40px 96px;
+  }
+  .about-main { grid-column: 1; grid-row: 1; }
+  .about-side { grid-column: 2; grid-row: 1; background: var(--paper-alt); padding: 34px 30px 36px; }
+  .about-layout .section { padding: 0; background: none; }
+  .about-layout .wrap { max-width: none; padding: 0; }
+
+  /* left column: space between sections; How we do it goes to one column */
+  .about-main > .section + .section { margin-top: 88px; }
+  .about-main .two-col { grid-template-columns: 1fr; gap: 0; }
+
+  /* right column: smaller headings, advisors as a ruled list */
+  .about-side h2 { font-size: 30px; margin-bottom: 18px; }
+  .about-side .people-adv + .people-team > .wrap::before { margin: 34px 0 30px; }
+  .about-side .advisors { grid-template-columns: 1fr; gap: 0; margin-top: 0; }
+  .about-side .advisor { grid-template-columns: 64px 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .about-side .advisor:last-child { border-bottom: 1px solid var(--line); }
+  .about-side .advisor h3 { font-size: 17px; margin-bottom: 3px; }
+  .about-side .advisor .adv-org { font-size: 14.5px; }
+  .about-side .advisor .adv-title { font-size: 13.5px; margin-top: 1px; }
+  .about-side .advisor-photo .initials { font-size: 18px; }
+
+  /* team: photo beside name and role, bio underneath */
+  .about-side .team { grid-template-columns: 1fr; gap: 30px; margin-top: 0; }
+  .about-side .member { display: grid; grid-template-columns: 88px 1fr; column-gap: 16px; align-items: center; }
+  .about-side .member-photo { margin: 0; max-width: none; }
+  .about-side .member > p { grid-column: 1 / -1; margin-top: 14px; font-size: 15px; line-height: 1.55; }
+  .about-side .member h3 { font-size: 20px; }
+  .about-side .member .role { font-size: 15.5px; margin: 4px 0 0; }
+  .about-side .member .role-sub { font-size: 13px; margin: 0; }
+  .about-side .member-photo .initials { font-size: 26px; }
 }
 
 /* ================================================================
@@ -1034,7 +1086,7 @@ html[data-route="conduct"] .join { display: none; }
 
 /* The Lincoln Memorial scan has a grey frame at its left and right edges
    that showed as vertical bands on wide screens; overscan it sideways. */
-.page[data-page="resources"] .photo-bg { inset: -8% -6%; }
+.page[data-page="resources"] .photo-bg { left: -6%; right: -6%; }
 
 /* "Host with us" as a ruled list: icon, title and text, button at right.
    .cards.res-rows outranks the .cards grid, so the rows stack. */
@@ -1482,11 +1534,18 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <!-- PEOPLE. The advisory board and the team share one grey band right
-       under the opening photo, advisors first, so they are the first
-       thing you see. A thin rule inside the band separates the two.
-       ADVISORY BOARD, full: filled from ADVISORS in the script; the home
-       page shows a compact strip of the same list. -->
+  <!-- ABOUT LAYOUT. On desktop (over 1080px) this is two columns: What
+       we do, How we do it and Types of events on the left, and the
+       advisory board and team in a grey panel on the right, both visible
+       as soon as you leave the photo. On tablets and phones it falls back
+       to stacked full-width bands, people first. The people come first in
+       the markup for that reason; CSS places them on the right. -->
+  <div class="about-layout">
+  <div class="about-side">
+
+  <!-- PEOPLE. Advisory board first, then the team, with a thin rule
+       between. ADVISORY BOARD, full: filled from ADVISORS in the script;
+       the home page shows a compact strip of the same list. -->
   <section class="section section-alt people-adv">
     <div class="wrap">
       <h2 class="reveal">Our advisory board</h2>
@@ -1514,41 +1573,50 @@ footer .flag-mark { margin-bottom: 22px; }
           <figure class="member-photo" style="--pos: 50% 50%;">
             <img src="images/abi-olvera.jpg" alt="Abi Olvera">
           </figure>
-          <div class="member-name">
-            <h3>Abi Olvera</h3>
-            <a class="li-link" href="https://www.linkedin.com/in/abiolvera/" target="_blank" rel="noopener noreferrer" aria-label="Abi Olvera on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          <div class="member-head">
+            <div class="member-name">
+              <h3>Abi Olvera</h3>
+              <a class="li-link" href="https://www.linkedin.com/in/abiolvera/" target="_blank" rel="noopener noreferrer" aria-label="Abi Olvera on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+            </div>
+            <p class="role">Executive Director</p>
+            <p class="role-sub">Co-founder</p>
           </div>
-          <p class="role">Executive Director</p>
-          <p class="role-sub">Co-founder</p>
           <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes about the institutional frictions that make housing, clinics, and daycare scarce.</p>
         </div>
         <div class="member reveal reveal-2">
           <figure class="member-photo" style="--pos: 50% 26%;">
             <img src="images/tobias-amstutz.jpg" alt="Tobias Amstutz">
           </figure>
-          <div class="member-name">
-            <h3>Tobias Amstutz</h3>
-            <a class="li-link" href="https://www.linkedin.com/in/tobias-toby-amstutz-62a606230" target="_blank" rel="noopener noreferrer" aria-label="Tobias Amstutz on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          <div class="member-head">
+            <div class="member-name">
+              <h3>Tobias Amstutz</h3>
+              <a class="li-link" href="https://www.linkedin.com/in/tobias-toby-amstutz-62a606230" target="_blank" rel="noopener noreferrer" aria-label="Tobias Amstutz on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+            </div>
+            <p class="role">Programs Director</p>
+            <p class="role-sub">Co-founder</p>
           </div>
-          <p class="role">Programs Director</p>
-          <p class="role-sub">Co-founder</p>
           <p>Tobias runs the day to day programming and organizes the events. He previously interned at the Niskanen Center, where he worked on abundance policy. He was also a fellow on Alex Bores' congressional campaign.</p>
         </div>
         <div class="member reveal reveal-3">
           <figure class="member-photo" style="--pos: 52% 50%;">
             <img src="images/allister-chang.webp" alt="Allister Chang">
           </figure>
-          <div class="member-name">
-            <h3>Allister Chang</h3>
-            <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+          <div class="member-head">
+            <div class="member-name">
+              <h3>Allister Chang</h3>
+              <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+            </div>
+            <p class="role">Strategic Advisor</p>
+            <p class="role-sub">Co-founder</p>
           </div>
-          <p class="role">Strategic Advisor</p>
-          <p class="role-sub">Co-founder</p>
           <p>Allister helped DC Abundance get established as an organization and advises us on DC government. He represents Ward 2 on the DC State Board of Education, where he was the first Asian American elected. He previously ran Libraries Without Borders, and has been a fellow at Halcyon and a visiting researcher at the Global Public Policy Institute.</p>
         </div>
       </div>
     </div>
   </section>
+
+  </div><!-- /.about-side -->
+  <div class="about-main">
 
   <section class="section">
     <div class="wrap">
@@ -1671,6 +1739,9 @@ footer .flag-mark { margin-bottom: 22px; }
       </ul>
     </div>
   </section>
+
+  </div><!-- /.about-main -->
+  </div><!-- /.about-layout -->
 
   <section class="section section-quiet">
     <div class="wrap">
@@ -2300,14 +2371,20 @@ var EVENTS = [
    If a photo is missing, the card shows the person's initials
    instead of a broken image.
    ------------------------------------------------------------ */
+/* Shown in alphabetical order by last name. The script sorts the list
+   itself, so a new advisor can be added anywhere in it. */
 var ADVISORS = [
-  { name: "Jennifer Pahlka",   title: "Co-founder, Board Chair, and CEO",  org: "Recoding America",            url: "https://recodingamerica.org/people/jennifer-pahlka", photo: "images/advisors/jennifer-pahlka.jpg" },
-  { name: "Jason Crawford",    title: "Founder and President",             org: "Roots of Progress Institute", url: "https://rootsofprogress.org/member/jason-crawford/", photo: "images/advisors/jason-crawford.jpg" },
-  { name: "Will Poff-Webster", title: "Director of Infrastructure Policy", org: "Institute for Progress",      url: "https://ifp.org/author/will-poff-webster/",          photo: "images/advisors/will-poff-webster.jpg" },
   { name: "Misha Chellam",     title: "Founder",                           org: "Abundance Network",           url: "https://www.abundancenetwork.com/team/",             photo: "images/advisors/misha-chellam.jpg" },
+  { name: "Jason Crawford",    title: "Founder and President",             org: "Roots of Progress Institute", url: "https://rootsofprogress.org/member/jason-crawford/", photo: "images/advisors/jason-crawford.jpg" },
+  { name: "Derek Kaufman",     title: "Founder and CEO",                   org: "Inclusive Abundance",         url: "https://www.inclusiveabundance.org/about-ia/our-team", photo: "images/advisors/derek-kaufman.jpg" },
   { name: "Matthew Meyers",    title: "Abundance Coordinator",             org: "Niskanen Center",             url: "https://www.niskanencenter.org/author/mmeyers",      photo: "images/advisors/matthew-meyers.jpg" },
-  { name: "Derek Kaufman",     title: "Founder and CEO",                   org: "Inclusive Abundance",         url: "https://www.inclusiveabundance.org/about-ia/our-team", photo: "images/advisors/derek-kaufman.jpg" }
+  { name: "Jennifer Pahlka",   title: "Co-founder, Board Chair, and CEO",  org: "Recoding America",            url: "https://recodingamerica.org/people/jennifer-pahlka", photo: "images/advisors/jennifer-pahlka.jpg" },
+  { name: "Will Poff-Webster", title: "Director of Infrastructure Policy", org: "Institute for Progress",      url: "https://ifp.org/author/will-poff-webster/",          photo: "images/advisors/will-poff-webster.jpg" }
 ];
+ADVISORS.sort(function (a, b) {
+  function key(p) { var w = p.name.trim().split(/\s+/); return (w[w.length - 1] + " " + w[0]).toLowerCase(); }
+  return key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0;
+});
 
 (function buildAdvisors() {
   var grids = document.querySelectorAll("[data-advisors]");
