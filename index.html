@@ -2425,18 +2425,15 @@ ADVISORS.sort(function (a, b) {
      linkedin  their LinkedIn profile
      photo     square headshot in images/council/, cropped like the
                advisors (head about 60% of the square's height)
-   Sorted by last name, like the board.
+   Shown in the order written here (not sorted): the founding
+   volunteers first, Ashley then Luca, then everyone else.
    ------------------------------------------------------------ */
 var COUNCIL = [
-  { name: "Michael Boyce",      lines: ["Senior AI Advisor, State of Maryland"],                                  tag: "",                   linkedin: "https://www.linkedin.com/in/michael-boyce-public-sector-ai/", photo: "images/council/michael-boyce.jpg" },
-  { name: "Chris Comer",        lines: ["Managing Director, Tawiran"],                                            tag: "",                   linkedin: "https://www.linkedin.com/in/christopher-c-75ba8346/",         photo: "images/council/chris-comer.jpg" },
+  { name: "Ashley Nagel",       lines: ["Sr. Manager, Government Innovation"],                                    tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/ashley-nagel/",                  photo: "images/council/ashley-nagel.jpg" },
   { name: "Luca Gattoni-Celli", lines: ["Resident Fellow for Housing, FREOPP", "Founder, NOVA YIMBYs"],           tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/lucagattonicelli/",              photo: "images/council/luca-gattoni-celli.jpg" },
-  { name: "Ashley Nagel",       lines: ["Sr. Manager, Government Innovation"],                                    tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/ashley-nagel/",                  photo: "images/council/ashley-nagel.jpg" }
+  { name: "Michael Boyce",      lines: ["Senior AI Advisor, State of Maryland"],                                  tag: "",                   linkedin: "https://www.linkedin.com/in/michael-boyce-public-sector-ai/", photo: "images/council/michael-boyce.jpg" },
+  { name: "Chris Comer",        lines: ["Managing Director, Tawiran"],                                            tag: "",                   linkedin: "https://www.linkedin.com/in/christopher-c-75ba8346/",         photo: "images/council/chris-comer.jpg" }
 ];
-COUNCIL.sort(function (a, b) {
-  function key(p) { var w = p.name.trim().split(/\s+/); return (w[w.length - 1] + " " + w[0]).toLowerCase(); }
-  return key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0;
-});
 
 /* Builds both people lists: ADVISORS into [data-advisors], COUNCIL
    into [data-council]. One builder so the two always share a layout. */
