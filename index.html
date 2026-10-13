@@ -611,6 +611,21 @@ h2 {
 @media (max-width: 940px) {
   .people-adv + .people-team > .wrap::before { margin-bottom: 60px; }
 }
+/* the coordinating council follows the team in the same band, the same way */
+.people-team + .people-council { padding-top: 0; }
+.people-team + .people-council > .wrap::before {
+  content: ""; display: block; border-top: 1px solid var(--line); margin-bottom: 88px;
+}
+@media (max-width: 940px) {
+  .people-team + .people-council > .wrap::before { margin-bottom: 60px; }
+}
+.council-lede { font-size: 17px; line-height: 1.55; color: var(--body); max-width: 40em; margin: -8px 0 26px; }
+/* council rows: name with its LinkedIn mark, then job lines, then tag */
+.council .member-name { gap: 9px; margin-bottom: 4px; }
+.council .member-name h3 { margin-bottom: 0; }
+.council .li-link svg { width: 16px; height: 16px; }
+.council .adv-line { font-size: 15px; line-height: 1.4; color: var(--body); text-wrap: balance; }
+.council .adv-tag { font-size: 13.5px; line-height: 1.4; color: var(--muted); margin-top: 3px; }
 .tag {
   display: inline-block; font-size: 11.5px; font-weight: 600; letter-spacing: .06em;
   color: var(--accent); border: 1px solid var(--accent); padding: 4px 9px; margin-bottom: 14px;
@@ -711,7 +726,11 @@ h2 {
 
   /* right column: smaller headings, advisors as a ruled list */
   .about-side h2 { font-size: 30px; margin-bottom: 18px; }
-  .about-side .people-adv + .people-team > .wrap::before { margin: 34px 0 30px; }
+  .about-side .people-adv + .people-team > .wrap::before,
+  .about-side .people-team + .people-council > .wrap::before { margin: 34px 0 30px; }
+  .about-side .council-lede { font-size: 15px; margin: -6px 0 16px; }
+  .about-side .council .adv-line { font-size: 14px; }
+  .about-side .council .adv-tag { font-size: 12.5px; }
   .about-side .advisors { grid-template-columns: 1fr; gap: 0; margin-top: 0; }
   .about-side .advisor { grid-template-columns: 64px 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); }
   .about-side .advisor:last-child { border-bottom: 1px solid var(--line); }
@@ -1615,6 +1634,16 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
+  <!-- COORDINATING COUNCIL. Filled from COUNCIL in the script; same row
+       layout as the advisory board, with LinkedIn marks. -->
+  <section class="section section-alt people-council">
+    <div class="wrap">
+      <h2 class="reveal">Our coordinating council</h2>
+      <p class="council-lede reveal">The coordinating council is a group of our most engaged volunteers. They help us host specific events.</p>
+      <div class="advisors council" data-council></div>
+    </div>
+  </section>
+
   </div><!-- /.about-side -->
   <div class="about-main">
 
@@ -2386,10 +2415,33 @@ ADVISORS.sort(function (a, b) {
   return key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0;
 });
 
-(function buildAdvisors() {
-  var grids = document.querySelectorAll("[data-advisors]");
-  if (!grids.length) return;
-  /* textContent only, as in the calendar, so nothing in the list can
+/* ------------------------------------------------------------
+   COORDINATING COUNCIL  (About, under Our team)
+   Our most engaged volunteers. Same row layout as the advisory
+   board, with a LinkedIn mark beside each name.
+     name      as it should appear
+     lines     their job, one line per role
+     tag       optional, e.g. "Founding Volunteer"
+     linkedin  their LinkedIn profile
+     photo     square headshot in images/council/, cropped like the
+               advisors (head about 60% of the square's height)
+   Sorted by last name, like the board.
+   ------------------------------------------------------------ */
+var COUNCIL = [
+  { name: "Michael Boyce",      lines: ["Senior AI Advisor, State of Maryland"],                                  tag: "",                   linkedin: "https://www.linkedin.com/in/michael-boyce-public-sector-ai/", photo: "images/council/michael-boyce.jpg" },
+  { name: "Chris Comer",        lines: ["Managing Director, Tawiran"],                                            tag: "",                   linkedin: "https://www.linkedin.com/in/christopher-c-75ba8346/",         photo: "images/council/chris-comer.jpg" },
+  { name: "Luca Gattoni-Celli", lines: ["Resident Fellow for Housing, FREOPP", "Founder, NOVA YIMBYs"],           tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/lucagattonicelli/",              photo: "images/council/luca-gattoni-celli.jpg" },
+  { name: "Ashley Nagel",       lines: ["Sr. Manager, Government Innovation"],                                    tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/ashley-nagel/",                  photo: "images/council/ashley-nagel.jpg" }
+];
+COUNCIL.sort(function (a, b) {
+  function key(p) { var w = p.name.trim().split(/\s+/); return (w[w.length - 1] + " " + w[0]).toLowerCase(); }
+  return key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0;
+});
+
+/* Builds both people lists: ADVISORS into [data-advisors], COUNCIL
+   into [data-council]. One builder so the two always share a layout. */
+(function buildPeople() {
+  /* textContent only, as in the calendar, so nothing in the lists can
      ever turn into markup */
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -2401,28 +2453,56 @@ ADVISORS.sort(function (a, b) {
     var w = name.trim().split(/\s+/);
     return (w[0].charAt(0) + (w.length > 1 ? w[w.length - 1].charAt(0) : "")).toUpperCase();
   }
-  grids.forEach(function (grid) {
+  /* square photo, with the person's initials underneath as a fallback */
+  function photo(p) {
+    var fig = el("figure", "advisor-photo");
+    var ini = el("span", "initials", initials(p.name));
+    ini.setAttribute("aria-hidden", "true");
+    fig.appendChild(ini);
+    if (p.photo) {
+      var img = document.createElement("img");
+      /* the name sits right beside the photo, so the image itself is
+         not announced a second time */
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      if (p.pos) fig.style.setProperty("--pos", p.pos);
+      img.addEventListener("error", function () { if (img.parentNode) img.parentNode.removeChild(img); });
+      img.src = p.photo;
+      fig.appendChild(img);
+    }
+    return fig;
+  }
+  /* the name, keeping a hyphenated surname in one piece */
+  function fillName(box, name) {
+    name.trim().split(/\s+/).forEach(function (word, k) {
+      if (k) box.appendChild(document.createTextNode(" "));
+      box.appendChild(word.indexOf("-") >= 0 ? el("span", "nobr", word) : document.createTextNode(word));
+    });
+  }
+  /* the same LinkedIn mark the team uses (the #li-mark symbol) */
+  function linkedIn(p) {
+    var a = el("a", "li-link");
+    a.href = p.linkedin; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.setAttribute("aria-label", p.name + " on LinkedIn");
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("aria-hidden", "true");
+    var use = document.createElementNS(NS, "use");
+    use.setAttribute("href", "#li-mark");
+    svg.appendChild(use); a.appendChild(svg);
+    return a;
+  }
+  function card(i) {
+    /* staggered by column, so each row of three arrives left to right */
+    return el("div", "advisor reveal" + (i % 3 ? " reveal-" + (i % 3 + 1) : ""));
+  }
+
+  document.querySelectorAll("[data-advisors]").forEach(function (grid) {
     var strip = grid.classList.contains("advisors-strip");
     ADVISORS.forEach(function (a, i) {
-      /* staggered by column, so each row of three arrives left to right */
-      var card = el("div", "advisor reveal" + (i % 3 ? " reveal-" + (i % 3 + 1) : ""));
-      var fig = el("figure", "advisor-photo");
-      var ini = el("span", "initials", initials(a.name));
-      ini.setAttribute("aria-hidden", "true");
-      fig.appendChild(ini);
-      if (a.photo) {
-        var img = document.createElement("img");
-        /* the name sits right beside the photo, so the image itself is
-           not announced a second time */
-        img.alt = "";
-        img.loading = "lazy";
-        img.decoding = "async";
-        if (a.pos) fig.style.setProperty("--pos", a.pos);
-        img.addEventListener("error", function () { if (img.parentNode) img.parentNode.removeChild(img); });
-        img.src = a.photo;
-        fig.appendChild(img);
-      }
-      card.appendChild(fig);
+      var c = card(i);
+      c.appendChild(photo(a));
       var text = el("div", "advisor-text");
       var h3 = el("h3"), nameBox = h3;
       if (a.url) {
@@ -2432,15 +2512,30 @@ ADVISORS.sort(function (a, b) {
         nameBox.rel = "noopener noreferrer";
         h3.appendChild(nameBox);
       }
-      a.name.trim().split(/\s+/).forEach(function (word, k) {
-        if (k) nameBox.appendChild(document.createTextNode(" "));
-        nameBox.appendChild(word.indexOf("-") >= 0 ? el("span", "nobr", word) : document.createTextNode(word));
-      });
+      fillName(nameBox, a.name);
       text.appendChild(h3);
       text.appendChild(el("p", "adv-org", a.org));
       if (!strip) text.appendChild(el("p", "adv-title", a.title));
-      card.appendChild(text);
-      grid.appendChild(card);
+      c.appendChild(text);
+      grid.appendChild(c);
+    });
+  });
+
+  document.querySelectorAll("[data-council]").forEach(function (grid) {
+    COUNCIL.forEach(function (m, i) {
+      var c = card(i);
+      c.appendChild(photo(m));
+      var text = el("div", "advisor-text");
+      var head = el("div", "member-name");
+      var h3 = el("h3");
+      fillName(h3, m.name);
+      head.appendChild(h3);
+      if (m.linkedin) head.appendChild(linkedIn(m));
+      text.appendChild(head);
+      (m.lines || []).forEach(function (line) { text.appendChild(el("p", "adv-line", line)); });
+      if (m.tag) text.appendChild(el("p", "adv-tag", m.tag));
+      c.appendChild(text);
+      grid.appendChild(c);
     });
   });
 })();
