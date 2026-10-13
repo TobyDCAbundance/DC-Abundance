@@ -702,6 +702,38 @@ h2 {
 }
 
 /* ================================================================
+   ON THIS PAGE  (About)
+   A row of jump buttons just under the photo. They wrap onto a second
+   line on narrow screens rather than scrolling sideways, so every one
+   is visible without hunting.
+   ================================================================ */
+.page-jump { background: var(--paper); border-bottom: 1px solid var(--line); }
+.page-jump .wrap {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding-top: 20px; padding-bottom: 20px;
+}
+.jump-label { font-size: 14px; font-weight: 700; color: var(--muted); margin-right: 6px; }
+.jump-chip {
+  background: none; border: 1px solid var(--line); padding: 8px 14px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1.2; color: var(--ink);
+  transition: border-color .2s ease, color .2s ease;
+}
+.jump-chip:hover, .jump-chip:focus-visible { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 600px) {
+  .page-jump .wrap { gap: 8px; padding-top: 16px; padding-bottom: 16px; }
+  .jump-label { flex-basis: 100%; margin: 0 0 2px; font-size: 13px; }
+  .jump-chip { font-size: 14px; padding: 7px 11px; }
+}
+/* where a jump lands: the heading just clear of the fixed bar */
+.page[data-page="about"] [id^="about-"] { scroll-margin-top: calc(var(--headerH) - 40px); }
+@media (min-width: 941px) and (max-width: 1080px) {
+  .page[data-page="about"] [id^="about-"] { scroll-margin-top: 24px; }
+}
+@media (min-width: 1081px) {
+  .page[data-page="about"] [id^="about-"] { scroll-margin-top: 104px; }
+}
+
+/* ================================================================
    ABOUT LAYOUT  (desktop only, over 1080px)
    What we do, How we do it and Types of events on the left; the
    advisory board and the team in a grey panel on the right. Inside
@@ -1553,6 +1585,22 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
+  <!-- ON THIS PAGE. Jump links, so nobody (especially on a phone, where
+       the people come first) has to scroll past everyone to reach what
+       we do. Buttons rather than links: the address bar's # is taken by
+       the page router, so these scroll with data-scroll instead. -->
+  <nav class="page-jump" aria-label="On this page">
+    <div class="wrap">
+      <span class="jump-label">On this page</span>
+      <button class="jump-chip" type="button" data-scroll="about-what">What we do</button>
+      <button class="jump-chip" type="button" data-scroll="about-how">How we do it</button>
+      <button class="jump-chip" type="button" data-scroll="about-events">Types of events</button>
+      <button class="jump-chip" type="button" data-scroll="about-advisors">Advisory board</button>
+      <button class="jump-chip" type="button" data-scroll="about-team">Team</button>
+      <button class="jump-chip" type="button" data-scroll="about-council">Coordinating council</button>
+    </div>
+  </nav>
+
   <!-- ABOUT LAYOUT. On desktop (over 1080px) this is two columns: What
        we do, How we do it and Types of events on the left, and the
        advisory board and team in a grey panel on the right, both visible
@@ -1565,14 +1613,14 @@ footer .flag-mark { margin-bottom: 22px; }
   <!-- PEOPLE. Advisory board first, then the team, with a thin rule
        between. ADVISORY BOARD, full: filled from ADVISORS in the script;
        the home page shows a compact strip of the same list. -->
-  <section class="section section-alt people-adv">
+  <section class="section section-alt people-adv" id="about-advisors">
     <div class="wrap">
       <h2 class="reveal">Our advisory board</h2>
       <div class="advisors" data-advisors></div>
     </div>
   </section>
 
-  <section class="section section-alt people-team">
+  <section class="section section-alt people-team" id="about-team">
     <div class="wrap">
       <h2 class="reveal">Our team</h2>
       <!-- --pos is object-position: horizontal then vertical. Only the axis
@@ -1636,7 +1684,7 @@ footer .flag-mark { margin-bottom: 22px; }
 
   <!-- COORDINATING COUNCIL. Filled from COUNCIL in the script; same row
        layout as the advisory board, with LinkedIn marks. -->
-  <section class="section section-alt people-council">
+  <section class="section section-alt people-council" id="about-council">
     <div class="wrap">
       <h2 class="reveal">Our coordinating council</h2>
       <p class="council-lede reveal">The coordinating council is a group of our most engaged volunteers. They help us host specific events.</p>
@@ -1647,7 +1695,7 @@ footer .flag-mark { margin-bottom: 22px; }
   </div><!-- /.about-side -->
   <div class="about-main">
 
-  <section class="section">
+  <section class="section" id="about-what">
     <div class="wrap">
       <h2 class="reveal">What we do</h2>
       <!-- The grid and its expanded state share one box. Opening a card fades
@@ -1726,7 +1774,7 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <section class="section section-alt">
+  <section class="section section-alt" id="about-how">
     <div class="wrap two-col">
       <div class="reveal">
         <div class="rule draw"></div>
@@ -1740,7 +1788,7 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="about-events">
     <div class="wrap">
       <h2 class="reveal">Types of events</h2>
       <ul class="kinds">
