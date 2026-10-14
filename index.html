@@ -703,35 +703,40 @@ h2 {
 }
 
 /* ================================================================
-   ON THIS PAGE  (About)
-   A row of jump buttons just under the photo. They wrap onto a second
-   line on narrow screens rather than scrolling sideways, so every one
-   is visible without hunting.
+   TYPES OF EVENTS DROPDOWN  (About)
+   A <details> element. At 1080px and below, where the page is one
+   stacked column, it is a dropdown, closed to start, so the page runs
+   straight from How we do it to the people. Above that it is an
+   ordinary open section: the script keeps it open there, and the
+   summary is simply its heading.
    ================================================================ */
-.page-jump { background: var(--paper); border-bottom: 1px solid var(--line); }
-.page-jump .wrap {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
-  padding-top: 20px; padding-bottom: 20px;
+.events-drop > summary {
+  list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-.jump-label { font-size: 14px; font-weight: 700; color: var(--muted); margin-right: 6px; }
-.jump-chip {
-  background: none; border: 1px solid var(--line); padding: 8px 14px;
-  font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1.2; color: var(--ink);
-  transition: border-color .2s ease, color .2s ease;
-}
-.jump-chip:hover, .jump-chip:focus-visible { border-color: var(--accent); color: var(--accent); }
-@media (max-width: 600px) {
-  .page-jump .wrap { gap: 8px; padding-top: 16px; padding-bottom: 16px; }
-  .jump-label { flex-basis: 100%; margin: 0 0 2px; font-size: 13px; }
-  .jump-chip { font-size: 14px; padding: 7px 11px; }
-}
-/* where a jump lands: the heading just clear of the fixed bar */
-.page[data-page="about"] [id^="about-"] { scroll-margin-top: calc(var(--headerH) - 40px); }
-@media (min-width: 941px) and (max-width: 1080px) {
-  .page[data-page="about"] [id^="about-"] { scroll-margin-top: 24px; }
-}
+.events-drop > summary::-webkit-details-marker { display: none; }
 @media (min-width: 1081px) {
-  .page[data-page="about"] [id^="about-"] { scroll-margin-top: 104px; }
+  .events-drop > summary { cursor: default; }
+  .events-drop .drop-icon { display: none; }
+}
+@media (max-width: 1080px) {
+  #about-events { padding: 30px 0; }
+  .events-drop > summary { cursor: pointer; padding: 6px 0; }
+  .events-drop > summary h2 { margin-bottom: 0; font-size: clamp(26px, 6vw, 34px); transition: color .2s ease; }
+  .events-drop[open] > summary { margin-bottom: 18px; }
+  /* a chevron drawn from two borders: points down when closed, up when open */
+  .drop-icon {
+    flex: none; width: 13px; height: 13px; margin: 0 6px 6px 0;
+    border-right: 3px solid var(--accent); border-bottom: 3px solid var(--accent);
+    transform: rotate(45deg); transition: transform .3s var(--ease), margin .3s var(--ease);
+  }
+  .events-drop[open] .drop-icon { transform: rotate(-135deg); margin: 6px 6px 0 0; }
+}
+@media (max-width: 1080px) and (prefers-reduced-motion: reduce) {
+  .drop-icon { transition: none; }
+}
+/* only where there is a real pointer: on phones a tap would leave it stuck red */
+@media (max-width: 1080px) and (hover: hover) {
+  .events-drop > summary:hover h2 { color: var(--accent); }
 }
 
 /* ================================================================
@@ -740,7 +745,8 @@ h2 {
    advisory board and the team in a grey panel on the right. Inside
    the layout the sections drop their own full-width bands and padding,
    and the columns supply the spacing instead. At 1080px and below
-   none of this applies: the page is stacked bands, people first.
+   none of this applies: the page is stacked bands in markup order,
+   What we do first and the people last.
    ================================================================ */
 @media (min-width: 1081px) {
   .about-layout {
@@ -1586,114 +1592,14 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
-  <!-- ON THIS PAGE. Jump links, so nobody (especially on a phone, where
-       the people come first) has to scroll past everyone to reach what
-       we do. Buttons rather than links: the address bar's # is taken by
-       the page router, so these scroll with data-scroll instead. -->
-  <nav class="page-jump" aria-label="On this page">
-    <div class="wrap">
-      <span class="jump-label">On this page</span>
-      <button class="jump-chip" type="button" data-scroll="about-what">What we do</button>
-      <button class="jump-chip" type="button" data-scroll="about-how">How we do it</button>
-      <button class="jump-chip" type="button" data-scroll="about-events">Types of events</button>
-      <button class="jump-chip" type="button" data-scroll="about-advisors">Advisors</button>
-      <button class="jump-chip" type="button" data-scroll="about-team">Team</button>
-      <button class="jump-chip" type="button" data-scroll="about-council">Coordinating council</button>
-    </div>
-  </nav>
-
   <!-- ABOUT LAYOUT. On desktop (over 1080px) this is two columns: What
        we do, How we do it and Types of events on the left, and the
-       advisory board and team in a grey panel on the right, both visible
-       as soon as you leave the photo. On tablets and phones it falls back
-       to stacked full-width bands, people first. The people come first in
-       the markup for that reason; CSS places them on the right. -->
+       advisors, team and coordinating council in a grey panel on the
+       right. On tablets and phones it stacks in markup order: What we do,
+       How we do it, Types of events (a dropdown there), then the people.
+       CSS places each column explicitly on desktop, so the markup order
+       only decides the stacked order. -->
   <div class="about-layout">
-  <div class="about-side">
-
-  <!-- PEOPLE. Advisory board first, then the team, with a thin rule
-       between. ADVISORY BOARD, full: filled from ADVISORS in the script;
-       the home page shows a compact strip of the same list. -->
-  <section class="section section-alt people-adv" id="about-advisors">
-    <div class="wrap">
-      <h2 class="reveal">Our advisors</h2>
-      <div class="advisors" data-advisors></div>
-    </div>
-  </section>
-
-  <section class="section section-alt people-team" id="about-team">
-    <div class="wrap">
-      <h2 class="reveal">Our team</h2>
-      <!-- --pos is object-position: horizontal then vertical. Only the axis
-           being cropped has any effect, which depends on the photo's shape:
-           a landscape photo crops left/right, a tall one crops top/bottom.
-           Head sizes are matched by supplying better-framed originals, not by
-           zooming, which softens small images and adds noise. -->
-      <!-- LinkedIn mark, defined once and referenced three times below. -->
-      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-        <symbol id="li-mark" viewBox="0 0 24 24">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
-        </symbol>
-      </svg>
-
-      <div class="team">
-        <div class="member reveal">
-          <figure class="member-photo" style="--pos: 50% 50%;">
-            <img src="images/abi-olvera.jpg" alt="Abi Olvera">
-          </figure>
-          <div class="member-head">
-            <div class="member-name">
-              <h3>Abi Olvera</h3>
-              <a class="li-link" href="https://www.linkedin.com/in/abiolvera/" target="_blank" rel="noopener noreferrer" aria-label="Abi Olvera on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
-            </div>
-            <p class="role">Executive Director</p>
-            <p class="role-sub">Co-founder</p>
-          </div>
-          <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes <a href="https://abio.substack.com/" target="_blank" rel="noopener">Positive Sum</a>, a Substack on the institutional frictions that make housing, clinics, and daycare scarce.</p>
-        </div>
-        <div class="member reveal reveal-2">
-          <figure class="member-photo" style="--pos: 50% 26%;">
-            <img src="images/tobias-amstutz.jpg" alt="Tobias Amstutz">
-          </figure>
-          <div class="member-head">
-            <div class="member-name">
-              <h3>Tobias Amstutz</h3>
-              <a class="li-link" href="https://www.linkedin.com/in/tobias-toby-amstutz-62a606230" target="_blank" rel="noopener noreferrer" aria-label="Tobias Amstutz on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
-            </div>
-            <p class="role">Programs Director</p>
-            <p class="role-sub">Co-founder</p>
-          </div>
-          <p>Tobias runs the day to day programming and organizes the events. He previously interned at the Niskanen Center, where he worked on abundance policy. He was also a fellow on Alex Bores' congressional campaign.</p>
-        </div>
-        <div class="member reveal reveal-3">
-          <figure class="member-photo" style="--pos: 50% 50%;">
-            <img src="images/allister-chang.jpg" alt="Allister Chang">
-          </figure>
-          <div class="member-head">
-            <div class="member-name">
-              <h3>Allister Chang</h3>
-              <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
-            </div>
-            <p class="role">DC Director</p>
-            <p class="role-sub">Co-founder</p>
-          </div>
-          <p>Allister leads our local work in DC. He represents Ward 2 on the DC State Board of Education. He previously co-founded Fabric Health and was the Executive Director of Libraries Without Borders.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- COORDINATING COUNCIL. Filled from COUNCIL in the script; same row
-       layout as the advisory board, with LinkedIn marks. -->
-  <section class="section section-alt people-council" id="about-council">
-    <div class="wrap">
-      <h2 class="reveal">Our coordinating council</h2>
-      <p class="council-lede reveal">Our coordinating council is made up of community members who lead some of our most important initiatives.</p>
-      <div class="advisors council" data-council></div>
-    </div>
-  </section>
-
-  </div><!-- /.about-side -->
   <div class="about-main">
 
   <section class="section" id="about-what">
@@ -1789,9 +1695,12 @@ footer .flag-mark { margin-bottom: 22px; }
     </div>
   </section>
 
+  <!-- On desktop this is an ordinary section (kept open by the script);
+       on tablets and phones it is a dropdown, closed to start. -->
   <section class="section" id="about-events">
     <div class="wrap">
-      <h2 class="reveal">Types of events</h2>
+      <details class="events-drop" open>
+      <summary><h2 class="reveal">Types of events</h2><span class="drop-icon" aria-hidden="true"></span></summary>
       <ul class="kinds">
         <li class="reveal">
           <span class="kind-num">01</span>
@@ -1815,10 +1724,97 @@ footer .flag-mark { margin-bottom: 22px; }
           </div>
         </li>
       </ul>
+      </details>
     </div>
   </section>
 
   </div><!-- /.about-main -->
+
+  <div class="about-side">
+
+  <!-- PEOPLE. Advisory board first, then the team, with a thin rule
+       between. ADVISORY BOARD, full: filled from ADVISORS in the script;
+       the home page shows a compact strip of the same list. -->
+  <section class="section section-alt people-adv" id="about-advisors">
+    <div class="wrap">
+      <h2 class="reveal">Our advisors</h2>
+      <div class="advisors" data-advisors></div>
+    </div>
+  </section>
+
+  <section class="section section-alt people-team" id="about-team">
+    <div class="wrap">
+      <h2 class="reveal">Our team</h2>
+      <!-- --pos is object-position: horizontal then vertical. Only the axis
+           being cropped has any effect, which depends on the photo's shape:
+           a landscape photo crops left/right, a tall one crops top/bottom.
+           Head sizes are matched by supplying better-framed originals, not by
+           zooming, which softens small images and adds noise. -->
+      <!-- LinkedIn mark, defined once and referenced three times below. -->
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="li-mark" viewBox="0 0 24 24">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+        </symbol>
+      </svg>
+
+      <div class="team">
+        <div class="member reveal">
+          <figure class="member-photo" style="--pos: 50% 50%;">
+            <img src="images/abi-olvera.jpg" alt="Abi Olvera">
+          </figure>
+          <div class="member-head">
+            <div class="member-name">
+              <h3>Abi Olvera</h3>
+              <a class="li-link" href="https://www.linkedin.com/in/abiolvera/" target="_blank" rel="noopener noreferrer" aria-label="Abi Olvera on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+            </div>
+            <p class="role">Executive Director</p>
+            <p class="role-sub">Co-founder</p>
+          </div>
+          <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes <a href="https://abio.substack.com/" target="_blank" rel="noopener">Positive Sum</a>, a Substack on the institutional frictions that make housing, clinics, and daycare scarce.</p>
+        </div>
+        <div class="member reveal reveal-2">
+          <figure class="member-photo" style="--pos: 50% 26%;">
+            <img src="images/tobias-amstutz.jpg" alt="Tobias Amstutz">
+          </figure>
+          <div class="member-head">
+            <div class="member-name">
+              <h3>Tobias Amstutz</h3>
+              <a class="li-link" href="https://www.linkedin.com/in/tobias-toby-amstutz-62a606230" target="_blank" rel="noopener noreferrer" aria-label="Tobias Amstutz on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+            </div>
+            <p class="role">Programs Director</p>
+            <p class="role-sub">Co-founder</p>
+          </div>
+          <p>Tobias runs the day to day programming and organizes the events. He previously interned at the Niskanen Center, where he worked on abundance policy. He was also a fellow on Alex Bores' congressional campaign.</p>
+        </div>
+        <div class="member reveal reveal-3">
+          <figure class="member-photo" style="--pos: 50% 50%;">
+            <img src="images/allister-chang.jpg" alt="Allister Chang">
+          </figure>
+          <div class="member-head">
+            <div class="member-name">
+              <h3>Allister Chang</h3>
+              <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+            </div>
+            <p class="role">DC Director</p>
+            <p class="role-sub">Co-founder</p>
+          </div>
+          <p>Allister leads our local work in DC. He represents Ward 2 on the DC State Board of Education. He previously co-founded Fabric Health and was the Executive Director of Libraries Without Borders.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COORDINATING COUNCIL. Filled from COUNCIL in the script; same row
+       layout as the advisory board, with LinkedIn marks. -->
+  <section class="section section-alt people-council" id="about-council">
+    <div class="wrap">
+      <h2 class="reveal">Our coordinating council</h2>
+      <p class="council-lede reveal">Our coordinating council is made up of community members who lead some of our most important initiatives.</p>
+      <div class="advisors council" data-council></div>
+    </div>
+  </section>
+
+  </div><!-- /.about-side -->
   </div><!-- /.about-layout -->
 
   <section class="section section-quiet">
@@ -3131,6 +3127,29 @@ document.querySelectorAll(".cards-stage").forEach(function (stage) {
    sections. The offset comes from scroll-margin-top in CSS, so the
    fixed bar never covers the heading it lands on.
    ------------------------------------------------------------ */
+/* ------------------------------------------------------------
+   TYPES OF EVENTS DROPDOWN  (About)
+   Closed to start where the page is one stacked column (1080px and
+   below), open and not closable on the two-column desktop layout.
+   Re-checked when the window crosses that width.
+   ------------------------------------------------------------ */
+(function eventsDropdown() {
+  var drop = document.querySelector(".events-drop");
+  if (!drop) return;
+  var mq = window.matchMedia ? window.matchMedia("(max-width: 1080px)") : null;
+  function stacked() { return !!(mq && mq.matches); }
+  function sync() { drop.open = !stacked(); }
+  sync();
+  if (mq) {
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else if (mq.addListener) mq.addListener(sync);
+  }
+  /* on desktop the heading is just a heading: clicking it does nothing */
+  drop.querySelector("summary").addEventListener("click", function (e) {
+    if (!stacked()) e.preventDefault();
+  });
+})();
+
 document.querySelectorAll("[data-scroll]").forEach(function (btn) {
   btn.addEventListener("click", function () {
     var el = document.getElementById(btn.getAttribute("data-scroll"));
