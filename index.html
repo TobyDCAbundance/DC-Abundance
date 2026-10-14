@@ -22,7 +22,7 @@
   · Outside form links live in ONE place: the SIGNUP_URL and
     FEEDBACK_URL constants in the script at the bottom. Anything
     carrying .js-signup or .js-feedback is wired up from there.
-  · The advisory board appears twice (About, and Home above the signup
+  · The advisors appear twice (About, and Home above the signup
     form) but is written once: the ADVISORS list in the script at the
     bottom fills every element marked data-advisors.
   · Team bios on the About page are PLACEHOLDERS and marked as such
@@ -601,6 +601,7 @@ h2 {
 .member .role { font-size: 19px; font-weight: 600; color: var(--body); margin: 8px 0 2px; }
 .member .role-sub { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
 .member p { font-size: 16.5px; color: var(--body); line-height: 1.6; }
+.member p a { color: var(--accent); font-weight: 600; }
 /* About: the advisory board and the team share one grey band under the
    opening photo. Instead of a second section's full top padding, a thin
    rule across the column separates them. */
@@ -1545,7 +1546,7 @@ footer .flag-mark { margin-bottom: 22px; }
        with titles, is at the foot of the About page. -->
   <section class="section advisory-home">
     <div class="wrap">
-      <h2 class="reveal">Our advisory board</h2>
+      <h2 class="reveal">Our advisors</h2>
       <div class="advisors advisors-strip" data-advisors></div>
     </div>
   </section>
@@ -1595,7 +1596,7 @@ footer .flag-mark { margin-bottom: 22px; }
       <button class="jump-chip" type="button" data-scroll="about-what">What we do</button>
       <button class="jump-chip" type="button" data-scroll="about-how">How we do it</button>
       <button class="jump-chip" type="button" data-scroll="about-events">Types of events</button>
-      <button class="jump-chip" type="button" data-scroll="about-advisors">Advisory board</button>
+      <button class="jump-chip" type="button" data-scroll="about-advisors">Advisors</button>
       <button class="jump-chip" type="button" data-scroll="about-team">Team</button>
       <button class="jump-chip" type="button" data-scroll="about-council">Coordinating council</button>
     </div>
@@ -1615,7 +1616,7 @@ footer .flag-mark { margin-bottom: 22px; }
        the home page shows a compact strip of the same list. -->
   <section class="section section-alt people-adv" id="about-advisors">
     <div class="wrap">
-      <h2 class="reveal">Our advisory board</h2>
+      <h2 class="reveal">Our advisors</h2>
       <div class="advisors" data-advisors></div>
     </div>
   </section>
@@ -1648,7 +1649,7 @@ footer .flag-mark { margin-bottom: 22px; }
             <p class="role">Executive Director</p>
             <p class="role-sub">Co-founder</p>
           </div>
-          <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes about the institutional frictions that make housing, clinics, and daycare scarce.</p>
+          <p>Abi sets the strategy and direction for DC Abundance. She spent a decade as a U.S. diplomat before moving into AI research. She is a fellow at the Roots of Progress Institute and writes <a href="https://abio.substack.com/" target="_blank" rel="noopener">Positive Sum</a>, a Substack on the institutional frictions that make housing, clinics, and daycare scarce.</p>
         </div>
         <div class="member reveal reveal-2">
           <figure class="member-photo" style="--pos: 50% 26%;">
@@ -1665,18 +1666,18 @@ footer .flag-mark { margin-bottom: 22px; }
           <p>Tobias runs the day to day programming and organizes the events. He previously interned at the Niskanen Center, where he worked on abundance policy. He was also a fellow on Alex Bores' congressional campaign.</p>
         </div>
         <div class="member reveal reveal-3">
-          <figure class="member-photo" style="--pos: 52% 50%;">
-            <img src="images/allister-chang.webp" alt="Allister Chang">
+          <figure class="member-photo" style="--pos: 50% 50%;">
+            <img src="images/allister-chang.jpg" alt="Allister Chang">
           </figure>
           <div class="member-head">
             <div class="member-name">
               <h3>Allister Chang</h3>
               <a class="li-link" href="https://www.linkedin.com/in/allisterchang/" target="_blank" rel="noopener noreferrer" aria-label="Allister Chang on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
             </div>
-            <p class="role">Strategic Advisor</p>
+            <p class="role">DC Director</p>
             <p class="role-sub">Co-founder</p>
           </div>
-          <p>Allister helped DC Abundance get established as an organization and advises us on DC government. He represents Ward 2 on the DC State Board of Education, where he was the first Asian American elected. He previously ran Libraries Without Borders, and has been a fellow at Halcyon and a visiting researcher at the Global Public Policy Institute.</p>
+          <p>Allister leads our local work in DC. He represents Ward 2 on the DC State Board of Education. He previously co-founded Fabric Health and was the Executive Director of Libraries Without Borders.</p>
         </div>
       </div>
     </div>
@@ -1687,7 +1688,7 @@ footer .flag-mark { margin-bottom: 22px; }
   <section class="section section-alt people-council" id="about-council">
     <div class="wrap">
       <h2 class="reveal">Our coordinating council</h2>
-      <p class="council-lede reveal">The coordinating council is a group of our most engaged volunteers. They help us host specific events.</p>
+      <p class="council-lede reveal">Our coordinating council is made up of community members who lead some of our most important initiatives.</p>
       <div class="advisors council" data-council></div>
     </div>
   </section>
@@ -2468,7 +2469,8 @@ ADVISORS.sort(function (a, b) {
    Our most engaged volunteers. Same row layout as the advisory
    board, with a LinkedIn mark beside each name.
      name      as it should appear
-     lines     their job, one line per role
+     lines     what they focus on for us, one line each (not their
+               job titles: these are community roles)
      tag       optional, e.g. "Founding Volunteer"
      linkedin  their LinkedIn profile
      photo     square headshot in images/council/, cropped like the
@@ -2477,10 +2479,10 @@ ADVISORS.sort(function (a, b) {
    volunteers first, Ashley then Luca, then everyone else.
    ------------------------------------------------------------ */
 var COUNCIL = [
-  { name: "Ashley Nagel",       lines: ["Sr. Manager, Government Innovation"],                                    tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/ashley-nagel/",                  photo: "images/council/ashley-nagel.jpg" },
-  { name: "Luca Gattoni-Celli", lines: ["Resident Fellow for Housing, FREOPP", "Founder, NOVA YIMBYs"],           tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/lucagattonicelli/",              photo: "images/council/luca-gattoni-celli.jpg" },
-  { name: "Michael Boyce",      lines: ["Senior AI Advisor, State of Maryland"],                                  tag: "",                   linkedin: "https://www.linkedin.com/in/michael-boyce-public-sector-ai/", photo: "images/council/michael-boyce.jpg" },
-  { name: "Chris Comer",        lines: ["Managing Director, Tawiran"],                                            tag: "",                   linkedin: "https://www.linkedin.com/in/christopher-c-75ba8346/",         photo: "images/council/chris-comer.jpg" }
+  { name: "Ashley Nagel",       lines: ["Focuses on congressional state capacity"],                               tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/ashley-nagel/",                  photo: "images/council/ashley-nagel.jpg" },
+  { name: "Luca Gattoni-Celli", lines: ["Focuses on housing and infrastructure"],                                 tag: "Founding Volunteer", linkedin: "https://www.linkedin.com/in/lucagattonicelli/",              photo: "images/council/luca-gattoni-celli.jpg" },
+  { name: "Michael Boyce",      lines: ["Focuses on technical communication"],                                    tag: "",                   linkedin: "https://www.linkedin.com/in/michael-boyce-public-sector-ai/", photo: "images/council/michael-boyce.jpg" },
+  { name: "Chris Comer",        lines: ["Focuses on DC city government and local government initiatives"],        tag: "",                   linkedin: "https://www.linkedin.com/in/christopher-c-75ba8346/",         photo: "images/council/chris-comer.jpg" }
 ];
 
 /* Builds both people lists: ADVISORS into [data-advisors], COUNCIL
